@@ -6,7 +6,6 @@
 if (!defined('ABSPATH')) {
     exit;
 }
-
 $currency_symbol = get_option('dl_currency_symbol', 'Kč');
 ?>
 <div class="wrap dl-admin-wrap">
@@ -29,7 +28,7 @@ $currency_symbol = get_option('dl_currency_symbol', 'Kč');
         <div class="dl-stat-card dl-stat-alert">
             <h3><?php _e('Pending Orders', 'developer-lessons'); ?></h3>
             <div class="dl-stat-value"><?php echo intval($pending_orders); ?></div>
-            <a href="<?php echo admin_url('edit.php?post_type=lesson&page=dl-orders&status=awaiting_payment'); ?>"><?php _e('View Orders', 'developer-lessons'); ?></a>
+            <a href="<?php echo admin_url('admin.php?page=dl-orders&status=awaiting_payment'); ?>"><?php _e('View Orders', 'developer-lessons'); ?></a>
         </div>
     </div>
 
@@ -54,7 +53,7 @@ $currency_symbol = get_option('dl_currency_symbol', 'Kč');
                     <?php foreach ($recent_orders as $order): ?>
                         <tr>
                             <td><strong>#<?php echo esc_html($order->order_number); ?></strong></td>
-                            <td><?php echo esc_html($order->display_name); ?></td>
+                            <td><?php echo esc_html($order->display_name ?: 'Guest'); ?></td>
                             <td><?php echo number_format((float)$order->total, 2); ?> <?php echo esc_html($currency_symbol); ?></td>
                             <td>
                                 <span class="dl-order-status dl-status-<?php echo esc_attr($order->status); ?>">
@@ -67,8 +66,8 @@ $currency_symbol = get_option('dl_currency_symbol', 'Kč');
                 <?php endif; ?>
             </tbody>
         </table>
-        <p>
-            <a href="<?php echo admin_url('edit.php?post_type=lesson&page=dl-orders'); ?>" class="button">
+        <p style="margin-top: 15px;">
+            <a href="<?php echo admin_url('admin.php?page=dl-orders'); ?>" class="button">
                 <?php _e('View All Orders', 'developer-lessons'); ?>
             </a>
         </p>

@@ -34,9 +34,8 @@ $statuses = array(
         <?php endif; ?>
     <?php endif; ?>
 
-    <div class="dl-orders-filter">
+    <div class="dl-orders-filter" style="margin-bottom: 15px;">
         <form method="get">
-            <input type="hidden" name="post_type" value="lesson">
             <input type="hidden" name="page" value="dl-orders">
             <select name="status" onchange="this.form.submit()">
                 <?php foreach ($statuses as $value => $label): ?>
@@ -53,7 +52,7 @@ $statuses = array(
             <tr>
                 <th><?php _e('Order', 'developer-lessons'); ?></th>
                 <th><?php _e('Customer', 'developer-lessons'); ?></th>
-                <th><?php _e('Payment Method', 'developer-lessons'); ?></th>
+                <th><?php _e('Payment', 'developer-lessons'); ?></th>
                 <th><?php _e('Total', 'developer-lessons'); ?></th>
                 <th><?php _e('Status', 'developer-lessons'); ?></th>
                 <th><?php _e('Date', 'developer-lessons'); ?></th>
@@ -68,46 +67,37 @@ $statuses = array(
             <?php else: ?>
                 <?php foreach ($orders as $order): ?>
                     <tr>
+                        <td><strong>#<?php echo esc_html($order->order_number); ?></strong></td>
                         <td>
-                            <strong>#<?php echo esc_html($order->order_number); ?></strong>
-                        </td>
-                        <td>
-                            <?php echo esc_html($order->display_name); ?><br>
+                            <?php echo esc_html($order->display_name ?: 'Guest'); ?><br>
                             <small><?php echo esc_html($order->user_email); ?></small>
                         </td>
                         <td>
-                            <?php 
-                            echo $order->payment_method === 'comgate' 
-                                ? __('Card (Comgate)', 'developer-lessons') 
-                                : __('Bank Transfer', 'developer-lessons'); 
-                            ?>
+                            <?php echo $order->payment_method === 'comgate' ? __('Card', 'developer-lessons') : __('Bank Transfer', 'developer-lessons'); ?>
                         </td>
                         <td>
                             <?php echo number_format((float)$order->total, 2); ?> <?php echo esc_html($currency_symbol); ?>
-                            <?php if ($order->discount > 0): ?>
-                                <br><small><?php _e('Discount:', 'developer-lessons'); ?> -<?php echo number_format((float)$order->discount, 2); ?></small>
-                            <?php endif; ?>
                         </td>
                         <td>
                             <span class="dl-order-status dl-status-<?php echo esc_attr($order->status); ?>">
                                 <?php echo isset($statuses[$order->status]) ? esc_html($statuses[$order->status]) : esc_html($order->status); ?>
                             </span>
                         </td>
-                        <td>
-                            <?php echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($order->created_at)); ?>
-                        </td>
+                        <td><?php echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($order->created_at)); ?></td>
                         <td>
                             <?php if (in_array($order->status, array('pending', 'awaiting_payment'))): ?>
-                                <a href="<?php echo wp_nonce_url(admin_url('edit.php?post_type=lesson&page=dl-orders&dl_action=confirm_payment&order_id=' . $order->id), 'dl_admin_action'); ?>" 
-                                   class="button button-small" 
-                                   onclick="return confirm('<?php _e('Confirm payment for this order?', 'developer-lessons'); ?>')">
-                                    <?php _e('Confirm Payment', 'developer-lessons'); ?>
+                                <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=dl-orders&dl_action=confirm_payment&order_id=' . $order->id), 'dl_admin_action'); ?>" 
+                                   class="button button-small button-primary" 
+                                   onclick="return confirm('<?php _e('Confirm payment?', 'developer-lessons'); ?>')">
+                                    <?php _e('Confirm', 'developer-lessons'); ?>
                                 </a>
-                                <a href="<?php echo wp_nonce_url(admin_url('edit.php?post_type=lesson&page=dl-orders&dl_action=cancel_order&order_id=' . $order->id), 'dl_admin_action'); ?>" 
+                                <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=dl-orders&dl_action=cancel_order&order_id=' . $order->id), 'dl_admin_action'); ?>" 
                                    class="button button-small" 
                                    onclick="return confirm('<?php _e('Cancel this order?', 'developer-lessons'); ?>')">
                                     <?php _e('Cancel', 'developer-lessons'); ?>
                                 </a>
+                            <?php else: ?>
+                                —
                             <?php endif; ?>
                         </td>
                     </tr>
