@@ -1,0 +1,159 @@
+.dl-admin-wrap {
+  margin: 20px 20px 20px 0;
+}
+.dl-admin-wrap h1 {
+  margin-bottom: 20px;
+}
+
+.dl-dashboard-stats,
+.dl-stats-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.dl-stat-card {
+  background: #fff;
+  border: 1px solid #e2e4e7;
+  border-radius: 4px;
+  padding: 20px;
+  text-align: center;
+}
+.dl-stat-card h3 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: #555;
+  font-weight: normal;
+}
+.dl-stat-card .dl-stat-value {
+  font-size: 32px;
+  font-weight: 600;
+  color: #0073aa;
+  margin-bottom: 10px;
+}
+.dl-stat-card a {
+  font-size: 13px;
+}
+.dl-stat-card.dl-stat-alert {
+  border-color: #ffb900;
+}
+.dl-stat-card.dl-stat-alert .dl-stat-value {
+  color: #ffb900;
+}
+
+.dl-dashboard-section {
+  background: #fff;
+  border: 1px solid #e2e4e7;
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.dl-dashboard-section h2 {
+  margin-top: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e4e7;
+}
+
+.dl-order-status {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.dl-order-status.dl-status-pending, .dl-order-status.dl-status-awaiting_payment {
+  background: #fff1cc;
+  color: #996f00;
+}
+.dl-order-status.dl-status-processing {
+  background: #aae4ff;
+  color: #005177;
+}
+.dl-order-status.dl-status-completed {
+  background: #fbfefc;
+  color: #296b2f;
+}
+.dl-order-status.dl-status-failed, .dl-order-status.dl-status-cancelled, .dl-order-status.dl-status-expired {
+  background: #fae0e0;
+  color: #bb2020;
+}
+
+.dl-settings-content {
+  background: #fff;
+  border: 1px solid #e2e4e7;
+  border-top: none;
+  padding: 20px;
+}
+.dl-settings-content h2 {
+  margin-top: 30px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e4e7;
+}
+.dl-settings-content h2:first-child {
+  margin-top: 0;
+}
+
+.dl-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+@media (max-width: 1200px) {
+  .dl-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dl-stats-section {
+  background: #fff;
+  border: 1px solid #e2e4e7;
+  border-radius: 4px;
+  padding: 20px;
+}
+.dl-stats-section h2 {
+  margin-top: 0;
+  font-size: 16px;
+}
+.dl-stats-section.dl-stats-wide {
+  grid-column: span 2;
+}
+@media (max-width: 1200px) {
+  .dl-stats-section.dl-stats-wide {
+    grid-column: span 1;
+  }
+}
+
+.dl-stats-filter {
+  margin-bottom: 20px;
+}
+.dl-stats-filter select {
+  min-width: 200px;
+}
+
+.dl-orders-filter {
+  margin-bottom: 15px;
+}
+.dl-orders-filter select {
+  min-width: 150px;
+}
+
+.dl-status-active {
+  color: #46b450;
+  font-weight: 500;
+}
+
+.dl-status-inactive {
+  color: #dc3232;
+  font-weight: 500;
+}
+
+.dl-free-badge {
+  display: inline-block;
+  background: #46b450;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 500;
+}

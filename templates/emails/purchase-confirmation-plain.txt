@@ -1,0 +1,19 @@
+{site_name}
+================
+
+Thank you for your purchase!
+
+Hello {user_name},
+
+Your payment has been processed successfully. You now have full access to the lessons you purchased.
+
+Order Details
+-------------
+Order Number: {order_number}
+Date: {order_date}
+Total: {order_total}
+
+Access your lessons here: {dashboard_url}
+
+---
+© {year} {site_name}. All rights reserved.

@@ -1,0 +1,195 @@
+// Developer Lessons Admin Styles
+
+// Variables
+$primary-color: #0073aa;
+$success-color: #46b450;
+$warning-color: #ffb900;
+$error-color: #dc3232;
+$border-color: #e2e4e7;
+
+// Admin Wrapper
+.dl-admin-wrap {
+    margin: 20px 20px 20px 0;
+
+    h1 {
+        margin-bottom: 20px;
+    }
+}
+
+// Dashboard Stats
+.dl-dashboard-stats,
+.dl-stats-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.dl-stat-card {
+    background: #fff;
+    border: 1px solid $border-color;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+
+    h3 {
+        margin: 0 0 10px;
+        font-size: 14px;
+        color: #555;
+        font-weight: normal;
+    }
+
+    .dl-stat-value {
+        font-size: 32px;
+        font-weight: 600;
+        color: $primary-color;
+        margin-bottom: 10px;
+    }
+
+    a {
+        font-size: 13px;
+    }
+
+    &.dl-stat-alert {
+        border-color: $warning-color;
+
+        .dl-stat-value {
+            color: $warning-color;
+        }
+    }
+}
+
+// Dashboard Section
+.dl-dashboard-section {
+    background: #fff;
+    border: 1px solid $border-color;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+
+    h2 {
+        margin-top: 0;
+        padding-bottom: 10px;
+        border-bottom: 1px solid $border-color;
+    }
+}
+
+// Order Status Labels
+.dl-order-status {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+
+    &.dl-status-pending,
+    &.dl-status-awaiting_payment {
+        background: lighten($warning-color, 40%);
+        color: darken($warning-color, 20%);
+    }
+
+    &.dl-status-processing {
+        background: lighten($primary-color, 50%);
+        color: darken($primary-color, 10%);
+    }
+
+    &.dl-status-completed {
+        background: lighten($success-color, 50%);
+        color: darken($success-color, 20%);
+    }
+
+    &.dl-status-failed,
+    &.dl-status-cancelled,
+    &.dl-status-expired {
+        background: lighten($error-color, 40%);
+        color: darken($error-color, 10%);
+    }
+}
+
+// Settings Page
+.dl-settings-content {
+    background: #fff;
+    border: 1px solid $border-color;
+    border-top: none;
+    padding: 20px;
+
+    h2 {
+        margin-top: 30px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid $border-color;
+
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+}
+
+// Statistics Grid
+.dl-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+
+    @media (max-width: 1200px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.dl-stats-section {
+    background: #fff;
+    border: 1px solid $border-color;
+    border-radius: 4px;
+    padding: 20px;
+
+    h2 {
+        margin-top: 0;
+        font-size: 16px;
+    }
+
+    &.dl-stats-wide {
+        grid-column: span 2;
+
+        @media (max-width: 1200px) {
+            grid-column: span 1;
+        }
+    }
+}
+
+.dl-stats-filter {
+    margin-bottom: 20px;
+
+    select {
+        min-width: 200px;
+    }
+}
+
+// Orders Filter
+.dl-orders-filter {
+    margin-bottom: 15px;
+
+    select {
+        min-width: 150px;
+    }
+}
+
+// Cron Status
+.dl-status-active {
+    color: $success-color;
+    font-weight: 500;
+}
+
+.dl-status-inactive {
+    color: $error-color;
+    font-weight: 500;
+}
+
+// Free Badge
+.dl-free-badge {
+    display: inline-block;
+    background: $success-color;
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 500;
+}
