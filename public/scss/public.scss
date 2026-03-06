@@ -700,3 +700,174 @@ $border-radius: 4px;
         margin: 10px 0;
     }
 }
+// Buy All Lessons Box
+.dl-buy-all-box {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px solid #0073aa;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    max-width: 500px;
+    margin: 30px auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+    &.dl-login-required,
+    &.dl-all-purchased {
+        background: #f8f9fa;
+        border-color: #ddd;
+    }
+
+    &.dl-all-purchased {
+        border-color: #46b450;
+        
+        p {
+            color: #46b450;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+    }
+}
+
+.dl-buy-all-header {
+    margin-bottom: 20px;
+
+    h3 {
+        margin: 0 0 5px;
+        font-size: 24px;
+        color: #333;
+    }
+
+    .dl-lesson-count {
+        display: inline-block;
+        background: #0073aa;
+        color: #fff;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+}
+
+.dl-buy-all-pricing {
+    margin-bottom: 25px;
+}
+
+.dl-original-price {
+    margin-bottom: 10px;
+
+    .dl-strikethrough {
+        text-decoration: line-through;
+        color: #999;
+        font-size: 18px;
+    }
+
+    .dl-discount-badge {
+        display: inline-block;
+        background: #46b450;
+        color: #fff;
+        padding: 3px 10px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-left: 10px;
+    }
+}
+
+.dl-final-price {
+    font-size: 36px;
+    font-weight: 700;
+    color: #0073aa;
+}
+
+.dl-savings {
+    color: #46b450;
+    font-weight: 500;
+    margin: 10px 0 0;
+}
+
+.dl-discount-hint {
+    color: #666;
+    font-size: 14px;
+    margin: 10px 0 0;
+}
+
+.dl-add-all-btn,
+.dl-go-to-checkout-btn {
+    width: 100%;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: 600;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 115, 170, 0.3);
+    }
+}
+
+.dl-go-to-checkout-btn {
+    background: #46b450;
+    
+    &:hover {
+        background: darken(#46b450, 10%);
+        box-shadow: 0 4px 12px rgba(70, 180, 80, 0.3);
+    }
+}
+
+.dl-buy-all-note {
+    margin: 15px 0 0;
+    color: #666;
+    font-size: 13px;
+}
+
+// Compact variant (add class="compact" to shortcode)
+.dl-buy-all-box.compact {
+    padding: 20px;
+    max-width: 350px;
+
+    .dl-buy-all-header h3 {
+        font-size: 18px;
+    }
+
+    .dl-final-price {
+        font-size: 28px;
+    }
+
+    .dl-add-all-btn {
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+}
+
+// Horizontal variant
+.dl-buy-all-box.horizontal {
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    .dl-buy-all-header {
+        margin-bottom: 0;
+        flex: 1;
+    }
+
+    .dl-buy-all-pricing {
+        margin-bottom: 0;
+        flex: 1;
+        text-align: center;
+    }
+
+    .dl-add-all-btn {
+        width: auto;
+        min-width: 250px;
+    }
+
+    .dl-buy-all-note {
+        width: 100%;
+        text-align: center;
+        margin-top: 0;
+    }
+}

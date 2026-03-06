@@ -15,12 +15,18 @@
             // Add to basket
             $(document).on('click', '.dl-add-to-basket-btn', this.addToBasket.bind(this));
             
+            // Add ALL to basket
+            $(document).on('click', '.dl-add-all-btn', this.addAllToBasket.bind(this));
+            
             // Remove from basket
             $(document).on('click', '.dl-basket-remove, .dl-remove-item', this.removeFromBasket.bind(this));
             
             // Basket toggle
             $(document).on('click', '#dl-basket-toggle', this.toggleBasket.bind(this));
             $(document).on('click', '.dl-basket-close, #dl-basket-overlay', this.closeBasket.bind(this));
+            
+            // View basket button
+            $(document).on('click', '.dl-view-basket-btn', this.openBasket.bind(this));
             
             // Checkout form
             $(document).on('submit', '#dl-checkout-form', this.processCheckout.bind(this));
@@ -58,12 +64,59 @@
                         DeveloperLessons.showNotification(response.data.message, 'success');
                         DeveloperLessons.refreshBasketSidebar();
                         
-                        // Change button text
-                        $btn.text(dl_public.strings.view_basket);
-                        $btn.off('click').on('click', function(e) {
-                            e.preventDefault();
-                            DeveloperLessons.openBasket();
-                        });
+                        // Change button to view basket
+                        $btn.text(dl_public.strings.view_basket)
+                            .removeClass('dl-add-to-basket-btn')
+                            .addClass('dl-view-basket-btn')
+                            .prop('disabled', false);
+                    } else {
+                        DeveloperLessons.showNotification(response.data.message, 'error');
+                        $btn.prop('disabled', false).text(originalText);
+                    }
+                },
+                error: function() {
+                    DeveloperLessons.showNotification(dl_public.strings.error, 'error');
+                    $btn.prop('disabled', false).text(originalText);
+                }
+            });
+        },
+
+        addAllToBasket: function(e) {
+            e.preventDefault();
+
+            if (!dl_public.is_logged_in) {
+                alert(dl_public.strings.please_login);
+                return;
+            }
+
+            const $btn = $(e.currentTarget);
+            const originalText = $btn.text();
+
+            $btn.prop('disabled', true).text(dl_public.strings.processing);
+
+            $.ajax({
+                url: dl_public.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'dl_add_all_to_basket',
+                    nonce: dl_public.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        DeveloperLessons.updateBasketCount(response.data.count);
+                        DeveloperLessons.showNotification(response.data.message, 'success');
+                        DeveloperLessons.refreshBasketSidebar();
+                        
+                        // Change button to go to checkout
+                        $btn.text(dl_public.strings.go_to_checkout || 'Go to Checkout')
+                            .removeClass('dl-add-all-btn')
+                            .addClass('dl-go-to-checkout-btn')
+                            .prop('disabled', false)
+                            .off('click')
+                            .on('click', function(e) {
+                                e.preventDefault();
+                                window.location.href = dl_public.checkout_url;
+                            });
                     } else {
                         DeveloperLessons.showNotification(response.data.message, 'error');
                         $btn.prop('disabled', false).text(originalText);
@@ -127,7 +180,8 @@
             }
         },
 
-        openBasket: function() {
+        openBasket: function(e) {
+            if (e) e.preventDefault();
             $('#dl-basket-sidebar').addClass('active');
             $('#dl-basket-overlay').addClass('active');
             $('body').css('overflow', 'hidden');
@@ -188,7 +242,7 @@
                         const $content = $('.dl-basket-content');
                         
                         if (data.items.length === 0) {
-                            $content.html('<p class="dl-basket-empty">' + 'Your basket is empty.' + '</p>');
+                            $content.html('<p class="dl-basket-empty">' + (dl_public.strings.basket_empty || 'Your basket is empty.') + '</p>');
                         } else {
                             let html = '<ul class="dl-basket-items">';
                             
@@ -204,7 +258,7 @@
                             
                             html += '</ul>';
                             html += '<div class="dl-basket-total">';
-                            html += '<span>Total:</span>';
+                            html += '<span>' + (dl_public.strings.total || 'Total:') + '</span>';
                             html += '<span class="dl-basket-total-amount">' + DeveloperLessons.formatPrice(data.total) + '</span>';
                             html += '</div>';
                             
@@ -216,8 +270,15 @@
         },
 
         formatPrice: function(amount) {
-            // Simple formatter - adjust as needed
-            return parseFloat(amount).toFixed(2).replace('.', ',') + ' Kč';
+            // Get from localized settings or use default
+            const symbol = dl_public.currency_symbol || 'Kč';
+            const position = dl_public.currency_position || 'after';
+            const formatted = parseFloat(amount).toFixed(2).replace('.', ',');
+            
+            if (position === 'before') {
+                return symbol + ' ' + formatted;
+            }
+            return formatted + ' ' + symbol;
         },
 
         processCheckout: function(e) {
@@ -230,7 +291,7 @@
             const agreeTerms = $form.find('#agree_terms').is(':checked');
 
             if (!paymentMethod) {
-                $messages.html('<div class="dl-error">Please select a payment method.</div>');
+                $messages.html('<div class="dl-error">' + (dl_public.strings.select_payment || 'Please select a payment method.') + '</div>');
                 return;
             }
 
@@ -251,12 +312,12 @@
                         window.location.href = response.data.redirect;
                     } else {
                         $messages.html('<div class="dl-error">' + (response.data.message || dl_public.strings.error) + '</div>');
-                        $btn.prop('disabled', false).text('Complete Purchase');
+                        $btn.prop('disabled', false).text(dl_public.strings.complete_purchase || 'Complete Purchase');
                     }
                 },
                 error: function() {
                     $messages.html('<div class="dl-error">' + dl_public.strings.error + '</div>');
-                    $btn.prop('disabled', false).text('Complete Purchase');
+                    $btn.prop('disabled', false).text(dl_public.strings.complete_purchase || 'Complete Purchase');
                 }
             });
         },
@@ -276,7 +337,8 @@
                 color: '#fff',
                 borderRadius: '4px',
                 zIndex: 10000,
-                boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                maxWidth: '400px'
             });
 
             $('body').append($notification);
