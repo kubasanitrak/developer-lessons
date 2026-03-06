@@ -54,14 +54,9 @@ class DL_Bank_Transfer {
         $iban = get_option('dl_bank_iban');
         $bic = get_option('dl_bank_bic');
 
-        // Generate QR code
+        // Generate QR code using Paylibo API
         $qr_generator = new DL_QR_Generator();
-        $qr_code = $qr_generator->generate_payment_qr(
-            $iban,
-            $order->total,
-            $order->currency,
-            $order->order_number
-        );
+        $qr_code = $qr_generator->generate_order_qr($order, 250);
 
         ob_start();
         ?>
@@ -77,25 +72,35 @@ class DL_Bank_Transfer {
                 <h3><?php _e('Bank Account Details', 'developer-lessons'); ?></h3>
                 
                 <table class="dl-bank-details-table">
+                    <?php if (!empty($account_name)): ?>
                     <tr>
                         <th><?php _e('Account Name:', 'developer-lessons'); ?></th>
                         <td><?php echo esc_html($account_name); ?></td>
                     </tr>
+                    <?php endif; ?>
                     <tr>
                         <th><?php _e('Account Number:', 'developer-lessons'); ?></th>
-                        <td><?php echo esc_html($account_number . '/' . $bank_code); ?></td>
+                        <td><strong><?php echo esc_html($account_number . '/' . $bank_code); ?></strong></td>
                     </tr>
+                    <?php if (!empty($iban)): ?>
                     <tr>
                         <th><?php _e('IBAN:', 'developer-lessons'); ?></th>
                         <td><?php echo esc_html($iban); ?></td>
                     </tr>
+                    <?php endif; ?>
+                    <?php if (!empty($bic)): ?>
                     <tr>
                         <th><?php _e('BIC/SWIFT:', 'developer-lessons'); ?></th>
                         <td><?php echo esc_html($bic); ?></td>
                     </tr>
+                    <?php endif; ?>
+                    <tr>
+                        <th><?php _e('Amount:', 'developer-lessons'); ?></th>
+                        <td><strong><?php echo DL_Payments::format_price($order->total); ?></strong></td>
+                    </tr>
                     <tr>
                         <th><?php _e('Variable Symbol:', 'developer-lessons'); ?></th>
-                        <td><strong><?php echo esc_html($order->order_number); ?></strong></td>
+                        <td><strong class="dl-variable-symbol"><?php echo esc_html(preg_replace('/[^0-9]/', '', $order->order_number)); ?></strong></td>
                     </tr>
                 </table>
             </div>
@@ -103,16 +108,25 @@ class DL_Bank_Transfer {
             <?php if ($qr_code): ?>
             <div class="dl-qr-payment">
                 <h3><?php _e('Pay with QR Code', 'developer-lessons'); ?></h3>
-                <p><?php _e('Scan this QR code with your banking app:', 'developer-lessons'); ?></p>
+                <p><?php _e('Scan this QR code with your banking app for instant payment:', 'developer-lessons'); ?></p>
                 <div class="dl-qr-code">
-                    <img src="<?php echo esc_url($qr_code); ?>" alt="<?php _e('Payment QR Code', 'developer-lessons'); ?>">
+                    <img src="<?php echo esc_url($qr_code); ?>" alt="<?php _e('Payment QR Code', 'developer-lessons'); ?>" width="250" height="250">
                 </div>
+                <p class="dl-qr-hint"><?php _e('Works with all Czech banking apps', 'developer-lessons'); ?></p>
+            </div>
+            <?php else: ?>
+            <div class="dl-qr-payment dl-qr-unavailable">
+                <p><?php _e('QR code is not available. Please use the bank details above.', 'developer-lessons'); ?></p>
             </div>
             <?php endif; ?>
 
             <div class="dl-payment-notes">
-                <p><?php _e('Your order will be completed once we receive your payment. This usually takes 1-2 business days.', 'developer-lessons'); ?></p>
-                <p><strong><?php _e('Important: Use the order number as the variable symbol/reference for your payment.', 'developer-lessons'); ?></strong></p>
+                <h4><?php _e('Important Information', 'developer-lessons'); ?></h4>
+                <ul>
+                    <li><?php _e('Your order will be completed once we receive your payment.', 'developer-lessons'); ?></li>
+                    <li><?php _e('Payment processing usually takes 1-2 business days.', 'developer-lessons'); ?></li>
+                    <li><strong><?php _e('Always use the variable symbol for your payment!', 'developer-lessons'); ?></strong></li>
+                </ul>
             </div>
 
             <div class="dl-payment-actions">
@@ -128,6 +142,7 @@ class DL_Bank_Transfer {
         <?php
         return ob_get_clean();
     }
+
 
     /**
      * Admin: Confirm bank transfer payment
