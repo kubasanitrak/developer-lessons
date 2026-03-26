@@ -1,17 +1,887 @@
+# Czech translation for Developer Lessons plugin.
+# Copyright (C) 2024 Developer
+# This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-20-03 22:04+0000\n"
-"PO-Revision-Date: 2017-10-09T20:46:49+00:00\n"
+"Project-Id-Version: Developer Lessons 1.0.0\n"
+"Report-Msgid-Bugs-To: [github.com](https://github.com/kubasanitrak/developer-lessons/issues\n)"
+"POT-Creation-Date: 2024-01-15 12:00:00+00:00\n"
+"PO-Revision-Date: 2024-01-15 12:00:00+00:00\n"
 "Last-Translator: \n"
-"Language-Team: \n"
+"Language-Team: Czech\n"
 "Language: cs_CZ\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : "
-"2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n>=2 && n<=4 ? 1 : 2);\n"
+"X-Generator: Poedit 3.4\n"
+"X-Domain: developer-lessons\n"
 
-msgid "previous"
-msgstr "předchozí"
+#. Plugin Name of the plugin
+msgid "Developer Lessons"
+msgstr "Výukové lekce"
+
+#. Description of the plugin
+msgid "Pay-per-post functionality for lesson content with Comgate and Bank Transfer payments."
+msgstr "Funkce platby za příspěvek pro výukový obsah s platbami přes Comgate a bankovní převod."
+
+#. Author of the plugin
+msgid "Developer"
+msgstr "Vývojář"
+
+msgid "Lessons"
+msgstr "Lekce"
+
+msgid "All Lessons"
+msgstr "Všechny lekce"
+
+msgid "Add New"
+msgstr "Přidat novou"
+
+msgid "Categories"
+msgstr "Kategorie"
+
+msgid "Dashboard"
+msgstr "Přehled"
+
+msgid "Orders"
+msgstr "Objednávky"
+
+msgid "Statistics"
+msgstr "Statistiky"
+
+msgid "Settings"
+msgstr "Nastavení"
+
+msgid "General"
+msgstr "Obecné"
+
+msgid "Pricing"
+msgstr "Ceny"
+
+msgid "Comgate"
+msgstr "Comgate"
+
+msgid "Bank Transfer"
+msgstr "Bankovní převod"
+
+msgid "Emails"
+msgstr "E-maily"
+
+msgid "Advanced"
+msgstr "Pokročilé"
+
+msgid "Developer Lessons Settings"
+msgstr "Nastavení výukových lekcí"
+
+msgid "Settings saved."
+msgstr "Nastavení uloženo."
+
+msgid "Currency Settings"
+msgstr "Nastavení měny"
+
+msgid "Currency Code"
+msgstr "Kód měny"
+
+msgid "ISO 4217 currency code (e.g., CZK, EUR, USD)"
+msgstr "Kód měny dle ISO 4217 (např. CZK, EUR, USD)"
+
+msgid "Currency Symbol"
+msgstr "Symbol měny"
+
+msgid "Symbol Position"
+msgstr "Pozice symbolu"
+
+msgid "Before amount ($ 100)"
+msgstr "Před částkou ($ 100)"
+
+msgid "After amount (100 Kč)"
+msgstr "Za částkou (100 Kč)"
+
+msgid "Page Settings"
+msgstr "Nastavení stránek"
+
+msgid "Terms & Conditions Page"
+msgstr "Stránka obchodních podmínek"
+
+msgid "— Select —"
+msgstr "— Vyberte —"
+
+msgid "Landing Page (for non-logged-in users)"
+msgstr "Vstupní stránka (pro nepřihlášené uživatele)"
+
+msgid "— Use WordPress Login —"
+msgstr "— Použít přihlášení WordPress —"
+
+msgid "Bundle Discounts"
+msgstr "Balíčkové slevy"
+
+msgid "Set discounts for purchasing multiple lessons at once."
+msgstr "Nastavte slevy pro nákup více lekcí najednou."
+
+msgid "5+ Lessons Discount (%)"
+msgstr "Sleva za 5+ lekcí (%)"
+
+msgid "10+ Lessons Discount (%)"
+msgstr "Sleva za 10+ lekcí (%)"
+
+msgid "Comgate Payment Gateway"
+msgstr "Platební brána Comgate"
+
+msgid "Enable Card Payments"
+msgstr "Povolit platby kartou"
+
+msgid "Enable Comgate payment gateway"
+msgstr "Povolit platební bránu Comgate"
+
+msgid "Merchant ID"
+msgstr "ID obchodníka"
+
+msgid "Secret Key"
+msgstr "Tajný klíč"
+
+msgid "Test Mode"
+msgstr "Testovací režim"
+
+msgid "Enable test mode (sandbox)"
+msgstr "Povolit testovací režim (sandbox)"
+
+msgid "Bank Transfer Settings"
+msgstr "Nastavení bankovního převodu"
+
+msgid "Enable Bank Transfer"
+msgstr "Povolit bankovní převod"
+
+msgid "Enable bank transfer payments"
+msgstr "Povolit platby bankovním převodem"
+
+msgid "Account Name"
+msgstr "Název účtu"
+
+msgid "Account Number"
+msgstr "Číslo účtu"
+
+msgid "Without bank code"
+msgstr "Bez kódu banky"
+
+msgid "Bank Code"
+msgstr "Kód banky"
+
+msgid "IBAN"
+msgstr "IBAN"
+
+msgid "BIC/SWIFT"
+msgstr "BIC/SWIFT"
+
+msgid "Sender Settings"
+msgstr "Nastavení odesílatele"
+
+msgid "Sender Name"
+msgstr "Jméno odesílatele"
+
+msgid "Sender Email"
+msgstr "E-mail odesílatele"
+
+msgid "Template Settings"
+msgstr "Nastavení šablon"
+
+msgid "Email Format"
+msgstr "Formát e-mailu"
+
+msgid "HTML"
+msgstr "HTML"
+
+msgid "Plain Text"
+msgstr "Prostý text"
+
+msgid "Admin Notifications"
+msgstr "Oznámení pro administrátora"
+
+msgid "Enable Notifications"
+msgstr "Povolit oznámení"
+
+msgid "Send email notifications for new purchases"
+msgstr "Odesílat e-mailová oznámení o nových nákupech"
+
+msgid "Notification Email"
+msgstr "E-mail pro oznámení"
+
+msgid "Email Types"
+msgstr "Typy e-mailů"
+
+msgid "Email Type"
+msgstr "Typ e-mailu"
+
+msgid "Recipient"
+msgstr "Příjemce"
+
+msgid "Trigger"
+msgstr "Spouštěč"
+
+msgid "Purchase Confirmation"
+msgstr "Potvrzení nákupu"
+
+msgid "Customer"
+msgstr "Zákazník"
+
+msgid "Payment Completed"
+msgstr "Platba dokončena"
+
+msgid "Admin Notification"
+msgstr "Oznámení administrátorovi"
+
+msgid "Admin"
+msgstr "Administrátor"
+
+msgid "New Purchase"
+msgstr "Nový nákup"
+
+msgid "Order Expiry Warning"
+msgstr "Upozornění na expiraci objednávky"
+
+msgid "Order Expiring Soon"
+msgstr "Objednávka brzy vyprší"
+
+msgid "Order Settings"
+msgstr "Nastavení objednávek"
+
+msgid "Order Expiry Time (hours)"
+msgstr "Doba platnosti objednávky (hodiny)"
+
+msgid "Pending orders will expire after this time"
+msgstr "Čekající objednávky vyprší po uplynutí této doby"
+
+msgid "Expiry Notification"
+msgstr "Oznámení o expiraci"
+
+msgid "Notify customers when their order is about to expire"
+msgstr "Upozornit zákazníky, když jejich objednávka brzy vyprší"
+
+msgid "Basket Settings"
+msgstr "Nastavení košíku"
+
+msgid "Basket Cleanup Time (hours)"
+msgstr "Doba vyčištění košíku (hodiny)"
+
+msgid "Remove basket items older than this"
+msgstr "Odstranit položky košíku starší než"
+
+msgid "Data Management"
+msgstr "Správa dat"
+
+msgid "Uninstall Behavior"
+msgstr "Chování při odinstalaci"
+
+msgid "Delete all plugin data when uninstalling (WARNING: This cannot be undone!)"
+msgstr "Smazat všechna data pluginu při odinstalaci (VAROVÁNÍ: Tuto akci nelze vrátit zpět!)"
+
+msgid "Cron Jobs Status"
+msgstr "Stav naplánovaných úloh"
+
+msgid "Job"
+msgstr "Úloha"
+
+msgid "Next Run"
+msgstr "Další spuštění"
+
+msgid "Status"
+msgstr "Stav"
+
+msgid "Hourly Tasks"
+msgstr "Hodinové úlohy"
+
+msgid "Daily Tasks"
+msgstr "Denní úlohy"
+
+msgid "Scheduled"
+msgstr "Naplánováno"
+
+msgid "Not Scheduled"
+msgstr "Nenaplánováno"
+
+msgid "System Info"
+msgstr "Informace o systému"
+
+msgid "Plugin Version"
+msgstr "Verze pluginu"
+
+msgid "WordPress Version"
+msgstr "Verze WordPress"
+
+msgid "PHP Version"
+msgstr "Verze PHP"
+
+msgid "Database Version"
+msgstr "Verze databáze"
+
+msgid "Lessons Dashboard"
+msgstr "Přehled lekcí"
+
+msgid "Published Lessons"
+msgstr "Publikované lekce"
+
+msgid "Manage Lessons"
+msgstr "Spravovat lekce"
+
+msgid "Total Sales"
+msgstr "Celkové prodeje"
+
+msgid "Total Revenue"
+msgstr "Celkové tržby"
+
+msgid "Pending Orders"
+msgstr "Čekající objednávky"
+
+msgid "View Orders"
+msgstr "Zobrazit objednávky"
+
+msgid "Recent Orders"
+msgstr "Poslední objednávky"
+
+msgid "Order"
+msgstr "Objednávka"
+
+msgid "Total"
+msgstr "Celkem"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "No orders yet."
+msgstr "Zatím žádné objednávky."
+
+msgid "View All Orders"
+msgstr "Zobrazit všechny objednávky"
+
+msgid "Payment confirmed successfully."
+msgstr "Platba byla úspěšně potvrzena."
+
+msgid "Order cancelled."
+msgstr "Objednávka byla zrušena."
+
+msgid "All"
+msgstr "Vše"
+
+msgid "Pending"
+msgstr "Čekající"
+
+msgid "Awaiting Payment"
+msgstr "Čeká na platbu"
+
+msgid "Processing"
+msgstr "Zpracovává se"
+
+msgid "Completed"
+msgstr "Dokončeno"
+
+msgid "Failed"
+msgstr "Neúspěšné"
+
+msgid "Expired"
+msgstr "Vypršelo"
+
+msgid "Cancelled"
+msgstr "Zrušeno"
+
+msgid "Payment"
+msgstr "Platba"
+
+msgid "Actions"
+msgstr "Akce"
+
+msgid "No orders found."
+msgstr "Žádné objednávky nenalezeny."
+
+msgid "Card"
+msgstr "Karta"
+
+msgid "Card (Comgate)"
+msgstr "Karta (Comgate)"
+
+msgid "Confirm payment?"
+msgstr "Potvrdit platbu?"
+
+msgid "Confirm"
+msgstr "Potvrdit"
+
+msgid "Cancel this order?"
+msgstr "Zrušit tuto objednávku?"
+
+msgid "Cancel"
+msgstr "Zrušit"
+
+msgid "Discount:"
+msgstr "Sleva:"
+
+msgid "Last 7 Days"
+msgstr "Posledních 7 dní"
+
+msgid "Last 30 Days"
+msgstr "Posledních 30 dní"
+
+msgid "Last 90 Days"
+msgstr "Posledních 90 dní"
+
+msgid "Last Year"
+msgstr "Poslední rok"
+
+msgid "All Time"
+msgstr "Celé období"
+
+msgid "Total Orders"
+msgstr "Celkem objednávek"
+
+msgid "Avg. Order Value"
+msgstr "Průměrná hodnota objednávky"
+
+msgid "Top Selling Lessons"
+msgstr "Nejprodávanější lekce"
+
+msgid "Lesson"
+msgstr "Lekce"
+
+msgid "Sales"
+msgstr "Prodeje"
+
+msgid "Revenue"
+msgstr "Tržby"
+
+msgid "No data available"
+msgstr "Žádná data nejsou k dispozici"
+
+msgid "Sales by Price Range"
+msgstr "Prodeje podle cenového rozmezí"
+
+msgid "Price Range"
+msgstr "Cenové rozmezí"
+
+msgid "Count"
+msgstr "Počet"
+
+msgid "Sales by Bundle Size"
+msgstr "Prodeje podle velikosti balíčku"
+
+msgid "Bundle Type"
+msgstr "Typ balíčku"
+
+msgid "Daily Sales"
+msgstr "Denní prodeje"
+
+msgid "Add New Lesson"
+msgstr "Přidat novou lekci"
+
+msgid "Edit Lesson"
+msgstr "Upravit lekci"
+
+msgid "New Lesson"
+msgstr "Nová lekce"
+
+msgid "View Lesson"
+msgstr "Zobrazit lekci"
+
+msgid "Search Lessons"
+msgstr "Hledat lekce"
+
+msgid "No lessons found"
+msgstr "Žádné lekce nenalezeny"
+
+msgid "No lessons found in trash"
+msgstr "V koši nejsou žádné lekce"
+
+msgid "Category"
+msgstr "Kategorie"
+
+msgid "Lesson Settings"
+msgstr "Nastavení lekce"
+
+msgid "Teaser Content (shown to non-purchasers)"
+msgstr "Ukázkový obsah (zobrazený uživatelům bez přístupu)"
+
+msgid "Lesson Statistics"
+msgstr "Statistiky lekce"
+
+msgid "Access Type"
+msgstr "Typ přístupu"
+
+msgid "Paid"
+msgstr "Placené"
+
+msgid "Free for Registered Users"
+msgstr "Zdarma pro registrované uživatele"
+
+msgid "Price"
+msgstr "Cena"
+
+msgid "This content will be shown to logged-in users who have not purchased this lesson. The full content above will only be visible after purchase."
+msgstr "Tento obsah bude zobrazen přihlášeným uživatelům, kteří si tuto lekci nezakoupili. Celý obsah výše bude viditelný až po zakoupení."
+
+msgid "Total Sales:"
+msgstr "Celkové prodeje:"
+
+msgid "Total Revenue:"
+msgstr "Celkové tržby:"
+
+msgid "Free"
+msgstr "Zdarma"
+
+msgid "You own this lesson"
+msgstr "Tuto lekci vlastníte"
+
+msgid "Get Full Access to This Lesson"
+msgstr "Získejte plný přístup k této lekci"
+
+msgid "View Basket"
+msgstr "Zobrazit košík"
+
+msgid "Add to Basket"
+msgstr "Přidat do košíku"
+
+msgid "Instant access after payment"
+msgstr "Okamžitý přístup po zaplacení"
+
+msgid "This lesson is free for registered users."
+msgstr "Tato lekce je zdarma pro registrované uživatele."
+
+msgid "Please log in to add items to basket."
+msgstr "Pro přidání položek do košíku se prosím přihlaste."
+
+msgid "You have already purchased this lesson."
+msgstr "Tuto lekci jste si již zakoupili."
+
+msgid "This lesson is already in your basket."
+msgstr "Tato lekce je již ve vašem košíku."
+
+msgid "Lesson added to basket!"
+msgstr "Lekce byla přidána do košíku!"
+
+msgid "Failed to add lesson to basket."
+msgstr "Nepodařilo se přidat lekci do košíku."
+
+msgid "Invalid lesson."
+msgstr "Neplatná lekce."
+
+msgid "Please log in."
+msgstr "Prosím přihlaste se."
+
+msgid "Item removed from basket."
+msgstr "Položka byla odstraněna z košíku."
+
+msgid "Failed to remove item."
+msgstr "Nepodařilo se odstranit položku."
+
+#, php-format
+msgid "%d lessons added to basket!"
+msgstr "%d lekcí bylo přidáno do košíku!"
+
+msgid "All available lessons are already in your basket."
+msgstr "Všechny dostupné lekce jsou již ve vašem košíku."
+
+msgid "No lessons available to purchase."
+msgstr "Žádné lekce nejsou k dispozici ke koupi."
+
+msgid "Get All Lessons"
+msgstr "Získat všechny lekce"
+
+#, php-format
+msgid "%d lessons"
+msgstr "%d lekcí"
+
+#, php-format
+msgid "You save %s with bundle discount!"
+msgstr "Ušetříte %s díky balíčkové slevě!"
+
+#, php-format
+msgid "Add %d more for %d%% bundle discount!"
+msgstr "Přidejte ještě %d pro %d%% balíčkovou slevu!"
+
+#, php-format
+msgid "Add All %d Lessons to Basket"
+msgstr "Přidat všech %d lekcí do košíku"
+
+msgid "Instant access to all lessons after payment"
+msgstr "Okamžitý přístup ke všem lekcím po zaplacení"
+
+msgid "Please log in to purchase lessons."
+msgstr "Pro zakoupení lekcí se prosím přihlaste."
+
+msgid "Log In"
+msgstr "Přihlásit se"
+
+msgid "You already own all available lessons!"
+msgstr "Již vlastníte všechny dostupné lekce!"
+
+msgid "Bank Transfer Payment"
+msgstr "Platba bankovním převodem"
+
+msgid "Order Number:"
+msgstr "Číslo objednávky:"
+
+msgid "Amount:"
+msgstr "Částka:"
+
+msgid "Bank Account Details"
+msgstr "Údaje o bankovním účtu"
+
+msgid "Account Name:"
+msgstr "Název účtu:"
+
+msgid "Account Number:"
+msgstr "Číslo účtu:"
+
+msgid "IBAN:"
+msgstr "IBAN:"
+
+msgid "BIC/SWIFT:"
+msgstr "BIC/SWIFT:"
+
+msgid "Variable Symbol:"
+msgstr "Variabilní symbol:"
+
+msgid "Pay with QR Code"
+msgstr "Zaplatit pomocí QR kódu"
+
+msgid "Scan this QR code with your banking app for instant payment:"
+msgstr "Naskenujte tento QR kód vaší bankovní aplikací pro okamžitou platbu:"
+
+msgid "Payment QR Code"
+msgstr "Platební QR kód"
+
+msgid "Works with all Czech banking apps"
+msgstr "Funguje se všemi českými bankovními aplikacemi"
+
+msgid "QR code is not available. Please use the bank details above."
+msgstr "QR kód není k dispozici. Použijte prosím výše uvedené bankovní údaje."
+
+msgid "Important Information"
+msgstr "Důležité informace"
+
+msgid "Your order will be completed once we receive your payment."
+msgstr "Vaše objednávka bude dokončena po obdržení platby."
+
+msgid "Payment processing usually takes 1-2 business days."
+msgstr "Zpracování platby obvykle trvá 1-2 pracovní dny."
+
+msgid "Always use the variable symbol for your payment!"
+msgstr "Vždy použijte variabilní symbol pro vaši platbu!"
+
+msgid "Go to My Lessons"
+msgstr "Přejít na mé lekce"
+
+msgid "Order not found."
+msgstr "Objednávka nenalezena."
+
+msgid "Permission denied."
+msgstr "Přístup odepřen."
+
+msgid "Invalid order."
+msgstr "Neplatná objednávka."
+
+msgid "Payment confirmed and order completed."
+msgstr "Platba potvrzena a objednávka dokončena."
+
+msgid "Failed to confirm payment."
+msgstr "Nepodařilo se potvrdit platbu."
+
+msgid "Please log in to access checkout."
+msgstr "Pro přístup k pokladně se prosím přihlaste."
+
+msgid "Your basket is empty."
+msgstr "Váš košík je prázdný."
+
+msgid "Browse Lessons"
+msgstr "Procházet lekce"
+
+msgid "Invalid payment method."
+msgstr "Neplatný způsob platby."
+
+msgid "Card payments are not available."
+msgstr "Platby kartou nejsou k dispozici."
+
+msgid "Bank transfer is not available."
+msgstr "Bankovní převod není k dispozici."
+
+msgid "Please agree to the terms and conditions."
+msgstr "Prosím souhlaste s obchodními podmínkami."
+
+msgid "Failed to create order."
+msgstr "Nepodařilo se vytvořit objednávku."
+
+msgid "Payment initialization failed."
+msgstr "Inicializace platby selhala."
+
+#, php-format
+msgid "Order %s"
+msgstr "Objednávka %s"
+
+msgid "Payment creation failed."
+msgstr "Vytvoření platby selhalo."
+
+msgid "QR code could not be generated. Please use the bank details above."
+msgstr "QR kód se nepodařilo vygenerovat. Použijte prosím výše uvedené bankovní údaje."
+
+msgid "Your Basket"
+msgstr "Váš košík"
+
+msgid "Total:"
+msgstr "Celkem:"
+
+msgid "Go to Checkout"
+msgstr "Přejít k pokladně"
+
+msgid "Added to basket!"
+msgstr "Přidáno do košíku!"
+
+msgid "All lessons added to basket!"
+msgstr "Všechny lekce byly přidány do košíku!"
+
+msgid "An error occurred. Please try again."
+msgstr "Došlo k chybě. Zkuste to prosím znovu."
+
+msgid "Processing..."
+msgstr "Zpracovávám..."
+
+msgid "Please select a payment method."
+msgstr "Prosím vyberte způsob platby."
+
+msgid "Complete Purchase"
+msgstr "Dokončit nákup"
+
+msgid "Your Order"
+msgstr "Vaše objednávka"
+
+msgid "Subtotal"
+msgstr "Mezisoučet"
+
+#, php-format
+msgid "Bundle Discount (%d%%)"
+msgstr "Balíčková sleva (%d%%)"
+
+msgid "Payment Method"
+msgstr "Způsob platby"
+
+msgid "Pay by Card"
+msgstr "Zaplatit kartou"
+
+msgid "Secure payment via Comgate"
+msgstr "Bezpečná platba přes Comgate"
+
+msgid "Pay via bank transfer with QR code"
+msgstr "Zaplatit bankovním převodem s QR kódem"
+
+#, php-format
+msgid "I agree to the <a href=\"%s\" target=\"_blank\">Terms and Conditions</a>"
+msgstr "Souhlasím s <a href=\"%s\" target=\"_blank\">obchodními podmínkami</a>"
+
+msgid "Amount"
+msgstr "Částka"
+
+msgid "View Payment Info"
+msgstr "Zobrazit platební údaje"
+
+msgid "My Lessons"
+msgstr "Moje lekce"
+
+msgid "You have not purchased any lessons yet."
+msgstr "Zatím jste si nezakoupili žádné lekce."
+
+#, php-format
+msgid "Purchased on %s"
+msgstr "Zakoupeno %s"
+
+msgid "Payment Failed"
+msgstr "Platba selhala"
+
+msgid "Unfortunately, your payment could not be processed. Please try again or choose a different payment method."
+msgstr "Bohužel se nepodařilo zpracovat vaši platbu. Zkuste to prosím znovu nebo zvolte jiný způsob platby."
+
+msgid "Try Again"
+msgstr "Zkusit znovu"
+
+msgid "Return to Home"
+msgstr "Zpět na úvodní stránku"
+
+msgid "Payment Successful!"
+msgstr "Platba byla úspěšná!"
+
+msgid "Thank you for your purchase. You now have access to your lessons."
+msgstr "Děkujeme za váš nákup. Nyní máte přístup k vašim lekcím."
+
+msgid "Order Details"
+msgstr "Podrobnosti objednávky"
+
+msgid "Purchased Lessons:"
+msgstr "Zakoupené lekce:"
+
+msgid "New Purchase Notification"
+msgstr "Oznámení o novém nákupu"
+
+msgid "New Purchase Received"
+msgstr "Přijat nový nákup"
+
+msgid "A new purchase has been completed on your site."
+msgstr "Na vašem webu byl dokončen nový nákup."
+
+msgid "Customer:"
+msgstr "Zákazník:"
+
+msgid "Payment Method:"
+msgstr "Způsob platby:"
+
+msgid "Lessons Purchased"
+msgstr "Zakoupené lekce"
+
+msgid "View in Admin"
+msgstr "Zobrazit v administraci"
+
+msgid "Your Order is Expiring Soon"
+msgstr "Vaše objednávka brzy vyprší"
+
+msgid "Your pending order is about to expire. Please complete the payment to access your lessons."
+msgstr "Vaše čekající objednávka brzy vyprší. Dokončete prosím platbu pro přístup k vašim lekcím."
+
+msgid "Expires:"
+msgstr "Vyprší:"
+
+msgid "Complete Payment"
+msgstr "Dokončit platbu"
+
+msgid "If you no longer wish to complete this order, you can ignore this email."
+msgstr "Pokud si již nepřejete tuto objednávku dokončit, můžete tento e-mail ignorovat."
+
+#, php-format
+msgid "Your Purchase Confirmation - Order %s"
+msgstr "Potvrzení vašeho nákupu - Objednávka %s"
+
+msgid "Thank you for your purchase!"
+msgstr "Děkujeme za váš nákup!"
+
+#, php-format
+msgid "Hello %s,"
+msgstr "Dobrý den %s,"
+
+msgid "Your payment has been processed successfully. You now have full access to the lessons you purchased."
+msgstr "Vaše platba byla úspěšně zpracována. Nyní máte plný přístup k zakoupeným lekcím."
+
+msgid "Date:"
+msgstr "Datum:"
+
+msgid "Discount"
+msgstr "Sleva"
+
+msgid "Access Your Lessons"
+msgstr "Přejít k vašim lekcím"
+
+msgid "All rights reserved."
+msgstr "Všechna práva vyhrazena."
+
+msgid "Checkout"
+msgstr "Pokladna"
+
+msgid "Payment Successful"
+msgstr "Platba úspěšná"
+
+msgid "Error message"
+msgstr "Chybová zpráva"
+
+msgid "Orders table not found. Please deactivate and reactivate the plugin."
+msgstr "Tabulka objednávek nenalezena. Deaktivujte a znovu aktivujte plugin."

@@ -1,0 +1,1176 @@
+# Copyright (C) 2024 Developer
+# This file is distributed under the GPL-2.0+.
+msgid ""
+msgstr ""
+"Project-Id-Version: Developer Lessons 1.0.0\n"
+"Report-Msgid-Bugs-To: [github.com](https://github.com/kubasanitrak/developer-lessons/issues\n)"
+"POT-Creation-Date: 2024-01-15 12:00:00+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: WP-CLI\n"
+"X-Domain: developer-lessons\n"
+
+#. Plugin Name of the plugin
+msgid "Developer Lessons"
+msgstr ""
+
+#. Description of the plugin
+msgid "Pay-per-post functionality for lesson content with Comgate and Bank Transfer payments."
+msgstr ""
+
+#. Author of the plugin
+msgid "Developer"
+msgstr ""
+
+#: admin/class-dl-admin.php
+msgid "Lessons"
+msgstr ""
+
+#: admin/class-dl-admin.php
+msgid "All Lessons"
+msgstr ""
+
+#: admin/class-dl-admin.php
+msgid "Add New"
+msgstr ""
+
+#: admin/class-dl-admin.php
+msgid "Categories"
+msgstr ""
+
+#: admin/class-dl-admin.php
+msgid "Dashboard"
+msgstr ""
+
+#: admin/class-dl-admin.php
+msgid "Orders"
+msgstr ""
+
+#: admin/class-dl-admin.php
+msgid "Statistics"
+msgstr ""
+
+#: admin/class-dl-admin.php
+msgid "Settings"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "General"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Pricing"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Comgate"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Bank Transfer"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Emails"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Advanced"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Developer Lessons Settings"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Settings saved."
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Currency Settings"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Currency Code"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "ISO 4217 currency code (e.g., CZK, EUR, USD)"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Currency Symbol"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Symbol Position"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Before amount ($ 100)"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "After amount (100 Kč)"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Page Settings"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Terms & Conditions Page"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "— Select —"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Landing Page (for non-logged-in users)"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "— Use WordPress Login —"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Bundle Discounts"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Set discounts for purchasing multiple lessons at once."
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "5+ Lessons Discount (%)"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "10+ Lessons Discount (%)"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Comgate Payment Gateway"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Enable Card Payments"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Enable Comgate payment gateway"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Merchant ID"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Secret Key"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Test Mode"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Enable test mode (sandbox)"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Bank Transfer Settings"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Enable Bank Transfer"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Enable bank transfer payments"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Account Name"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Account Number"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Without bank code"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Bank Code"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "IBAN"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "BIC/SWIFT"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Sender Settings"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Sender Name"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Sender Email"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Template Settings"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Email Format"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "HTML"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Plain Text"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Admin Notifications"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Enable Notifications"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Send email notifications for new purchases"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Notification Email"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Email Types"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Email Type"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Recipient"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Trigger"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Purchase Confirmation"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Customer"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Payment Completed"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Admin Notification"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Admin"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "New Purchase"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Order Expiry Warning"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Order Expiring Soon"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Order Settings"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Order Expiry Time (hours)"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Pending orders will expire after this time"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Expiry Notification"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Notify customers when their order is about to expire"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Basket Settings"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Basket Cleanup Time (hours)"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Remove basket items older than this"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Data Management"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Uninstall Behavior"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Delete all plugin data when uninstalling (WARNING: This cannot be undone!)"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Cron Jobs Status"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Job"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Next Run"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Status"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Hourly Tasks"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Daily Tasks"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Scheduled"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Not Scheduled"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "System Info"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Plugin Version"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "WordPress Version"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "PHP Version"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Database Version"
+msgstr ""
+
+#: admin/partials/dashboard-page.php
+msgid "Lessons Dashboard"
+msgstr ""
+
+#: admin/partials/dashboard-page.php
+msgid "Published Lessons"
+msgstr ""
+
+#: admin/partials/dashboard-page.php
+msgid "Manage Lessons"
+msgstr ""
+
+#: admin/partials/dashboard-page.php
+msgid "Total Sales"
+msgstr ""
+
+#: admin/partials/dashboard-page.php
+msgid "Total Revenue"
+msgstr ""
+
+#: admin/partials/dashboard-page.php
+msgid "Pending Orders"
+msgstr ""
+
+#: admin/partials/dashboard-page.php
+msgid "View Orders"
+msgstr ""
+
+#: admin/partials/dashboard-page.php
+msgid "Recent Orders"
+msgstr ""
+
+#: admin/partials/dashboard-page.php admin/partials/orders-page.php
+msgid "Order"
+msgstr ""
+
+#: admin/partials/dashboard-page.php admin/partials/orders-page.php
+msgid "Total"
+msgstr ""
+
+#: admin/partials/dashboard-page.php admin/partials/orders-page.php
+msgid "Date"
+msgstr ""
+
+#: admin/partials/dashboard-page.php
+msgid "No orders yet."
+msgstr ""
+
+#: admin/partials/dashboard-page.php
+msgid "View All Orders"
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Payment confirmed successfully."
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Order cancelled."
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "All"
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Pending"
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Awaiting Payment"
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Processing"
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Completed"
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Failed"
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Expired"
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Cancelled"
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Payment"
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Actions"
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "No orders found."
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Card"
+msgstr ""
+
+#: admin/partials/orders-page.php includes/class-dl-checkout.php
+msgid "Card (Comgate)"
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Confirm payment?"
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Confirm"
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Cancel this order?"
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Cancel"
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Discount:"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "Last 7 Days"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "Last 30 Days"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "Last 90 Days"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "Last Year"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "All Time"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "Total Orders"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "Avg. Order Value"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "Top Selling Lessons"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "Lesson"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "Sales"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "Revenue"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "No data available"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "Sales by Price Range"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "Price Range"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "Count"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "Sales by Bundle Size"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "Bundle Type"
+msgstr ""
+
+#: admin/partials/statistics-page.php
+msgid "Daily Sales"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "Add New Lesson"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "Edit Lesson"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "New Lesson"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "View Lesson"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "Search Lessons"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "No lessons found"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "No lessons found in trash"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "Category"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "Lesson Settings"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "Teaser Content (shown to non-purchasers)"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "Lesson Statistics"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "Access Type"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "Paid"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "Free for Registered Users"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "Price"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "This content will be shown to logged-in users who have not purchased this lesson. The full content above will only be visible after purchase."
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "Total Sales:"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "Total Revenue:"
+msgstr ""
+
+#: includes/class-dl-post-types.php
+msgid "Free"
+msgstr ""
+
+#: includes/class-dl-access-control.php
+msgid "You own this lesson"
+msgstr ""
+
+#: includes/class-dl-access-control.php
+msgid "Get Full Access to This Lesson"
+msgstr ""
+
+#: includes/class-dl-access-control.php public/js/public.js
+msgid "View Basket"
+msgstr ""
+
+#: includes/class-dl-access-control.php public/js/public.js
+msgid "Add to Basket"
+msgstr ""
+
+#: includes/class-dl-access-control.php
+msgid "Instant access after payment"
+msgstr ""
+
+#: includes/class-dl-access-control.php
+msgid "This lesson is free for registered users."
+msgstr ""
+
+#: includes/class-dl-basket.php
+msgid "Please log in to add items to basket."
+msgstr ""
+
+#: includes/class-dl-basket.php
+msgid "You have already purchased this lesson."
+msgstr ""
+
+#: includes/class-dl-basket.php
+msgid "This lesson is already in your basket."
+msgstr ""
+
+#: includes/class-dl-basket.php
+msgid "Lesson added to basket!"
+msgstr ""
+
+#: includes/class-dl-basket.php
+msgid "Failed to add lesson to basket."
+msgstr ""
+
+#: includes/class-dl-basket.php
+msgid "Invalid lesson."
+msgstr ""
+
+#: includes/class-dl-basket.php
+msgid "Please log in."
+msgstr ""
+
+#: includes/class-dl-basket.php
+msgid "Item removed from basket."
+msgstr ""
+
+#: includes/class-dl-basket.php
+msgid "Failed to remove item."
+msgstr ""
+
+#: includes/class-dl-basket.php
+#, php-format
+msgid "%d lessons added to basket!"
+msgstr ""
+
+#: includes/class-dl-basket.php
+msgid "All available lessons are already in your basket."
+msgstr ""
+
+#: includes/class-dl-basket.php
+msgid "No lessons available to purchase."
+msgstr ""
+
+#: includes/class-dl-basket.php
+msgid "Get All Lessons"
+msgstr ""
+
+#: includes/class-dl-basket.php
+#, php-format
+msgid "%d lessons"
+msgstr ""
+
+#: includes/class-dl-basket.php
+#, php-format
+msgid "You save %s with bundle discount!"
+msgstr ""
+
+#: includes/class-dl-basket.php
+#, php-format
+msgid "Add %d more for %d%% bundle discount!"
+msgstr ""
+
+#: includes/class-dl-basket.php
+#, php-format
+msgid "Add All %d Lessons to Basket"
+msgstr ""
+
+#: includes/class-dl-basket.php
+msgid "Instant access to all lessons after payment"
+msgstr ""
+
+#: includes/class-dl-basket.php
+msgid "Please log in to purchase lessons."
+msgstr ""
+
+#: includes/class-dl-basket.php
+msgid "Log In"
+msgstr ""
+
+#: includes/class-dl-basket.php
+msgid "You already own all available lessons!"
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Bank Transfer Payment"
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Order Number:"
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Amount:"
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Bank Account Details"
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Account Name:"
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Account Number:"
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "IBAN:"
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "BIC/SWIFT:"
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Variable Symbol:"
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Pay with QR Code"
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Scan this QR code with your banking app for instant payment:"
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php includes/class-dl-qr-generator.php
+msgid "Payment QR Code"
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Works with all Czech banking apps"
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "QR code is not available. Please use the bank details above."
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Important Information"
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Your order will be completed once we receive your payment."
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Payment processing usually takes 1-2 business days."
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Always use the variable symbol for your payment!"
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php public/partials/dashboard-page.php
+msgid "Go to My Lessons"
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Order not found."
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Permission denied."
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Invalid order."
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Payment confirmed and order completed."
+msgstr ""
+
+#: includes/class-dl-bank-transfer.php
+msgid "Failed to confirm payment."
+msgstr ""
+
+#: includes/class-dl-checkout.php
+msgid "Please log in to access checkout."
+msgstr ""
+
+#: includes/class-dl-checkout.php public/partials/checkout-page.php
+msgid "Your basket is empty."
+msgstr ""
+
+#: includes/class-dl-checkout.php public/partials/dashboard-page.php
+msgid "Browse Lessons"
+msgstr ""
+
+#: includes/class-dl-checkout.php
+msgid "Invalid payment method."
+msgstr ""
+
+#: includes/class-dl-checkout.php
+msgid "Card payments are not available."
+msgstr ""
+
+#: includes/class-dl-checkout.php
+msgid "Bank transfer is not available."
+msgstr ""
+
+#: includes/class-dl-checkout.php
+msgid "Please agree to the terms and conditions."
+msgstr ""
+
+#: includes/class-dl-checkout.php
+msgid "Failed to create order."
+msgstr ""
+
+#: includes/class-dl-checkout.php
+msgid "Payment initialization failed."
+msgstr ""
+
+#: includes/class-dl-comgate.php
+#, php-format
+msgid "Order %s"
+msgstr ""
+
+#: includes/class-dl-comgate.php
+msgid "Payment creation failed."
+msgstr ""
+
+#: includes/class-dl-qr-generator.php
+msgid "QR code could not be generated. Please use the bank details above."
+msgstr ""
+
+#: public/class-dl-public.php
+msgid "Your Basket"
+msgstr ""
+
+#: public/class-dl-public.php public/partials/checkout-page.php
+msgid "Total:"
+msgstr ""
+
+#: public/class-dl-public.php
+msgid "Go to Checkout"
+msgstr ""
+
+#: public/class-dl-public.php public/js/public.js
+msgid "Added to basket!"
+msgstr ""
+
+#: public/class-dl-public.php
+msgid "All lessons added to basket!"
+msgstr ""
+
+#: public/class-dl-public.php public/js/public.js
+msgid "An error occurred. Please try again."
+msgstr ""
+
+#: public/class-dl-public.php public/js/public.js
+msgid "Processing..."
+msgstr ""
+
+#: public/class-dl-public.php
+msgid "Please select a payment method."
+msgstr ""
+
+#: public/class-dl-public.php public/partials/checkout-page.php
+msgid "Complete Purchase"
+msgstr ""
+
+#: public/partials/checkout-page.php
+msgid "Your Order"
+msgstr ""
+
+#: public/partials/checkout-page.php
+msgid "Subtotal"
+msgstr ""
+
+#: public/partials/checkout-page.php
+#, php-format
+msgid "Bundle Discount (%d%%)"
+msgstr ""
+
+#: public/partials/checkout-page.php
+msgid "Payment Method"
+msgstr ""
+
+#: public/partials/checkout-page.php
+msgid "Pay by Card"
+msgstr ""
+
+#: public/partials/checkout-page.php
+msgid "Secure payment via Comgate"
+msgstr ""
+
+#: public/partials/checkout-page.php
+msgid "Pay via bank transfer with QR code"
+msgstr ""
+
+#: public/partials/checkout-page.php
+#, php-format
+msgid "I agree to the <a href=\"%s\" target=\"_blank\">Terms and Conditions</a>"
+msgstr ""
+
+#: public/partials/dashboard-page.php
+msgid "Pending Orders"
+msgstr ""
+
+#: public/partials/dashboard-page.php
+msgid "Amount"
+msgstr ""
+
+#: public/partials/dashboard-page.php
+msgid "View Payment Info"
+msgstr ""
+
+#: public/partials/dashboard-page.php
+msgid "My Lessons"
+msgstr ""
+
+#: public/partials/dashboard-page.php
+msgid "You have not purchased any lessons yet."
+msgstr ""
+
+#: public/partials/dashboard-page.php
+#, php-format
+msgid "Purchased on %s"
+msgstr ""
+
+#: public/partials/payment-failed.php
+msgid "Payment Failed"
+msgstr ""
+
+#: public/partials/payment-failed.php
+msgid "Unfortunately, your payment could not be processed. Please try again or choose a different payment method."
+msgstr ""
+
+#: public/partials/payment-failed.php
+msgid "Try Again"
+msgstr ""
+
+#: public/partials/payment-failed.php
+msgid "Return to Home"
+msgstr ""
+
+#: public/partials/payment-success.php
+msgid "Payment Successful!"
+msgstr ""
+
+#: public/partials/payment-success.php
+msgid "Thank you for your purchase. You now have access to your lessons."
+msgstr ""
+
+#: public/partials/payment-success.php
+msgid "Order Details"
+msgstr ""
+
+#: public/partials/payment-success.php
+msgid "Purchased Lessons:"
+msgstr ""
+
+#: templates/emails/admin-notification.php
+msgid "New Purchase Notification"
+msgstr ""
+
+#: templates/emails/admin-notification.php
+msgid "New Purchase Received"
+msgstr ""
+
+#: templates/emails/admin-notification.php
+msgid "A new purchase has been completed on your site."
+msgstr ""
+
+#: templates/emails/admin-notification.php
+msgid "Customer:"
+msgstr ""
+
+#: templates/emails/admin-notification.php
+msgid "Total:"
+msgstr ""
+
+#: templates/emails/admin-notification.php
+msgid "Payment Method:"
+msgstr ""
+
+#: templates/emails/admin-notification.php
+msgid "Lessons Purchased"
+msgstr ""
+
+#: templates/emails/admin-notification.php
+msgid "View in Admin"
+msgstr ""
+
+#: templates/emails/order-expiry.php
+msgid "Your Order is Expiring Soon"
+msgstr ""
+
+#: templates/emails/order-expiry.php
+msgid "Your pending order is about to expire. Please complete the payment to access your lessons."
+msgstr ""
+
+#: templates/emails/order-expiry.php
+msgid "Expires:"
+msgstr ""
+
+#: templates/emails/order-expiry.php
+msgid "Complete Payment"
+msgstr ""
+
+#: templates/emails/order-expiry.php
+msgid "If you no longer wish to complete this order, you can ignore this email."
+msgstr ""
+
+#: templates/emails/purchase-confirmation.php
+#, php-format
+msgid "Your Purchase Confirmation - Order %s"
+msgstr ""
+
+#: templates/emails/purchase-confirmation.php
+msgid "Thank you for your purchase!"
+msgstr ""
+
+#: templates/emails/purchase-confirmation.php
+#, php-format
+msgid "Hello %s,"
+msgstr ""
+
+#: templates/emails/purchase-confirmation.php
+msgid "Your payment has been processed successfully. You now have full access to the lessons you purchased."
+msgstr ""
+
+#: templates/emails/purchase-confirmation.php
+msgid "Date:"
+msgstr ""
+
+#: templates/emails/purchase-confirmation.php
+msgid "Discount"
+msgstr ""
+
+#: templates/emails/purchase-confirmation.php
+msgid "Access Your Lessons"
+msgstr ""
+
+#: templates/emails/purchase-confirmation.php
+msgid "All rights reserved."
+msgstr ""
+
+#: includes/class-dl-activator.php
+msgid "Checkout"
+msgstr ""
+
+#: includes/class-dl-activator.php
+msgid "Payment Successful"
+msgstr ""
+
+#: includes/class-dl-activator.php
+msgid "Error message"
+msgstr ""
+
+#: admin/partials/orders-page.php
+msgid "Orders table not found. Please deactivate and reactivate the plugin."
+msgstr ""

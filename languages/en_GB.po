@@ -1,17 +1,887 @@
+# British English translation for Developer Lessons plugin.
+# Copyright (C) 2024 Developer
+# This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-20-03 22:04+0000\n"
-"PO-Revision-Date: 2017-10-09T20:46:49+00:00\n"
+"Project-Id-Version: Developer Lessons 1.0.0\n"
+"Report-Msgid-Bugs-To: [github.com](https://github.com/kubasanitrak/developer-lessons/issues\n)"
+"POT-Creation-Date: 2024-01-15 12:00:00+00:00\n"
+"PO-Revision-Date: 2024-01-15 12:00:00+00:00\n"
 "Last-Translator: \n"
-"Language-Team: \n"
+"Language-Team: English (UK)\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : "
-"2);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4\n"
+"X-Domain: developer-lessons\n"
 
-msgid "předchozí"
-msgstr "previous"
+#. Plugin Name of the plugin
+msgid "Developer Lessons"
+msgstr "Developer Lessons"
+
+#. Description of the plugin
+msgid "Pay-per-post functionality for lesson content with Comgate and Bank Transfer payments."
+msgstr "Pay-per-post functionality for lesson content with Comgate and Bank Transfer payments."
+
+#. Author of the plugin
+msgid "Developer"
+msgstr "Developer"
+
+msgid "Lessons"
+msgstr "Lessons"
+
+msgid "All Lessons"
+msgstr "All Lessons"
+
+msgid "Add New"
+msgstr "Add New"
+
+msgid "Categories"
+msgstr "Categories"
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Orders"
+msgstr "Orders"
+
+msgid "Statistics"
+msgstr "Statistics"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "General"
+msgstr "General"
+
+msgid "Pricing"
+msgstr "Pricing"
+
+msgid "Comgate"
+msgstr "Comgate"
+
+msgid "Bank Transfer"
+msgstr "Bank Transfer"
+
+msgid "Emails"
+msgstr "Emails"
+
+msgid "Advanced"
+msgstr "Advanced"
+
+msgid "Developer Lessons Settings"
+msgstr "Developer Lessons Settings"
+
+msgid "Settings saved."
+msgstr "Settings saved."
+
+msgid "Currency Settings"
+msgstr "Currency Settings"
+
+msgid "Currency Code"
+msgstr "Currency Code"
+
+msgid "ISO 4217 currency code (e.g., CZK, EUR, USD)"
+msgstr "ISO 4217 currency code (e.g., CZK, EUR, USD)"
+
+msgid "Currency Symbol"
+msgstr "Currency Symbol"
+
+msgid "Symbol Position"
+msgstr "Symbol Position"
+
+msgid "Before amount ($ 100)"
+msgstr "Before amount ($ 100)"
+
+msgid "After amount (100 Kč)"
+msgstr "After amount (100 Kč)"
+
+msgid "Page Settings"
+msgstr "Page Settings"
+
+msgid "Terms & Conditions Page"
+msgstr "Terms & Conditions Page"
+
+msgid "— Select —"
+msgstr "— Select —"
+
+msgid "Landing Page (for non-logged-in users)"
+msgstr "Landing Page (for non-logged-in users)"
+
+msgid "— Use WordPress Login —"
+msgstr "— Use WordPress Login —"
+
+msgid "Bundle Discounts"
+msgstr "Bundle Discounts"
+
+msgid "Set discounts for purchasing multiple lessons at once."
+msgstr "Set discounts for purchasing multiple lessons at once."
+
+msgid "5+ Lessons Discount (%)"
+msgstr "5+ Lessons Discount (%)"
+
+msgid "10+ Lessons Discount (%)"
+msgstr "10+ Lessons Discount (%)"
+
+msgid "Comgate Payment Gateway"
+msgstr "Comgate Payment Gateway"
+
+msgid "Enable Card Payments"
+msgstr "Enable Card Payments"
+
+msgid "Enable Comgate payment gateway"
+msgstr "Enable Comgate payment gateway"
+
+msgid "Merchant ID"
+msgstr "Merchant ID"
+
+msgid "Secret Key"
+msgstr "Secret Key"
+
+msgid "Test Mode"
+msgstr "Test Mode"
+
+msgid "Enable test mode (sandbox)"
+msgstr "Enable test mode (sandbox)"
+
+msgid "Bank Transfer Settings"
+msgstr "Bank Transfer Settings"
+
+msgid "Enable Bank Transfer"
+msgstr "Enable Bank Transfer"
+
+msgid "Enable bank transfer payments"
+msgstr "Enable bank transfer payments"
+
+msgid "Account Name"
+msgstr "Account Name"
+
+msgid "Account Number"
+msgstr "Account Number"
+
+msgid "Without bank code"
+msgstr "Without bank code"
+
+msgid "Bank Code"
+msgstr "Bank Code"
+
+msgid "IBAN"
+msgstr "IBAN"
+
+msgid "BIC/SWIFT"
+msgstr "BIC/SWIFT"
+
+msgid "Sender Settings"
+msgstr "Sender Settings"
+
+msgid "Sender Name"
+msgstr "Sender Name"
+
+msgid "Sender Email"
+msgstr "Sender Email"
+
+msgid "Template Settings"
+msgstr "Template Settings"
+
+msgid "Email Format"
+msgstr "Email Format"
+
+msgid "HTML"
+msgstr "HTML"
+
+msgid "Plain Text"
+msgstr "Plain Text"
+
+msgid "Admin Notifications"
+msgstr "Admin Notifications"
+
+msgid "Enable Notifications"
+msgstr "Enable Notifications"
+
+msgid "Send email notifications for new purchases"
+msgstr "Send email notifications for new purchases"
+
+msgid "Notification Email"
+msgstr "Notification Email"
+
+msgid "Email Types"
+msgstr "Email Types"
+
+msgid "Email Type"
+msgstr "Email Type"
+
+msgid "Recipient"
+msgstr "Recipient"
+
+msgid "Trigger"
+msgstr "Trigger"
+
+msgid "Purchase Confirmation"
+msgstr "Purchase Confirmation"
+
+msgid "Customer"
+msgstr "Customer"
+
+msgid "Payment Completed"
+msgstr "Payment Completed"
+
+msgid "Admin Notification"
+msgstr "Admin Notification"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "New Purchase"
+msgstr "New Purchase"
+
+msgid "Order Expiry Warning"
+msgstr "Order Expiry Warning"
+
+msgid "Order Expiring Soon"
+msgstr "Order Expiring Soon"
+
+msgid "Order Settings"
+msgstr "Order Settings"
+
+msgid "Order Expiry Time (hours)"
+msgstr "Order Expiry Time (hours)"
+
+msgid "Pending orders will expire after this time"
+msgstr "Pending orders will expire after this time"
+
+msgid "Expiry Notification"
+msgstr "Expiry Notification"
+
+msgid "Notify customers when their order is about to expire"
+msgstr "Notify customers when their order is about to expire"
+
+msgid "Basket Settings"
+msgstr "Basket Settings"
+
+msgid "Basket Cleanup Time (hours)"
+msgstr "Basket Cleanup Time (hours)"
+
+msgid "Remove basket items older than this"
+msgstr "Remove basket items older than this"
+
+msgid "Data Management"
+msgstr "Data Management"
+
+msgid "Uninstall Behavior"
+msgstr "Uninstall Behaviour"
+
+msgid "Delete all plugin data when uninstalling (WARNING: This cannot be undone!)"
+msgstr "Delete all plugin data when uninstalling (WARNING: This cannot be undone!)"
+
+msgid "Cron Jobs Status"
+msgstr "Cron Jobs Status"
+
+msgid "Job"
+msgstr "Job"
+
+msgid "Next Run"
+msgstr "Next Run"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Hourly Tasks"
+msgstr "Hourly Tasks"
+
+msgid "Daily Tasks"
+msgstr "Daily Tasks"
+
+msgid "Scheduled"
+msgstr "Scheduled"
+
+msgid "Not Scheduled"
+msgstr "Not Scheduled"
+
+msgid "System Info"
+msgstr "System Info"
+
+msgid "Plugin Version"
+msgstr "Plugin Version"
+
+msgid "WordPress Version"
+msgstr "WordPress Version"
+
+msgid "PHP Version"
+msgstr "PHP Version"
+
+msgid "Database Version"
+msgstr "Database Version"
+
+msgid "Lessons Dashboard"
+msgstr "Lessons Dashboard"
+
+msgid "Published Lessons"
+msgstr "Published Lessons"
+
+msgid "Manage Lessons"
+msgstr "Manage Lessons"
+
+msgid "Total Sales"
+msgstr "Total Sales"
+
+msgid "Total Revenue"
+msgstr "Total Revenue"
+
+msgid "Pending Orders"
+msgstr "Pending Orders"
+
+msgid "View Orders"
+msgstr "View Orders"
+
+msgid "Recent Orders"
+msgstr "Recent Orders"
+
+msgid "Order"
+msgstr "Order"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "No orders yet."
+msgstr "No orders yet."
+
+msgid "View All Orders"
+msgstr "View All Orders"
+
+msgid "Payment confirmed successfully."
+msgstr "Payment confirmed successfully."
+
+msgid "Order cancelled."
+msgstr "Order cancelled."
+
+msgid "All"
+msgstr "All"
+
+msgid "Pending"
+msgstr "Pending"
+
+msgid "Awaiting Payment"
+msgstr "Awaiting Payment"
+
+msgid "Processing"
+msgstr "Processing"
+
+msgid "Completed"
+msgstr "Completed"
+
+msgid "Failed"
+msgstr "Failed"
+
+msgid "Expired"
+msgstr "Expired"
+
+msgid "Cancelled"
+msgstr "Cancelled"
+
+msgid "Payment"
+msgstr "Payment"
+
+msgid "Actions"
+msgstr "Actions"
+
+msgid "No orders found."
+msgstr "No orders found."
+
+msgid "Card"
+msgstr "Card"
+
+msgid "Card (Comgate)"
+msgstr "Card (Comgate)"
+
+msgid "Confirm payment?"
+msgstr "Confirm payment?"
+
+msgid "Confirm"
+msgstr "Confirm"
+
+msgid "Cancel this order?"
+msgstr "Cancel this order?"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Discount:"
+msgstr "Discount:"
+
+msgid "Last 7 Days"
+msgstr "Last 7 Days"
+
+msgid "Last 30 Days"
+msgstr "Last 30 Days"
+
+msgid "Last 90 Days"
+msgstr "Last 90 Days"
+
+msgid "Last Year"
+msgstr "Last Year"
+
+msgid "All Time"
+msgstr "All Time"
+
+msgid "Total Orders"
+msgstr "Total Orders"
+
+msgid "Avg. Order Value"
+msgstr "Avg. Order Value"
+
+msgid "Top Selling Lessons"
+msgstr "Top Selling Lessons"
+
+msgid "Lesson"
+msgstr "Lesson"
+
+msgid "Sales"
+msgstr "Sales"
+
+msgid "Revenue"
+msgstr "Revenue"
+
+msgid "No data available"
+msgstr "No data available"
+
+msgid "Sales by Price Range"
+msgstr "Sales by Price Range"
+
+msgid "Price Range"
+msgstr "Price Range"
+
+msgid "Count"
+msgstr "Count"
+
+msgid "Sales by Bundle Size"
+msgstr "Sales by Bundle Size"
+
+msgid "Bundle Type"
+msgstr "Bundle Type"
+
+msgid "Daily Sales"
+msgstr "Daily Sales"
+
+msgid "Add New Lesson"
+msgstr "Add New Lesson"
+
+msgid "Edit Lesson"
+msgstr "Edit Lesson"
+
+msgid "New Lesson"
+msgstr "New Lesson"
+
+msgid "View Lesson"
+msgstr "View Lesson"
+
+msgid "Search Lessons"
+msgstr "Search Lessons"
+
+msgid "No lessons found"
+msgstr "No lessons found"
+
+msgid "No lessons found in trash"
+msgstr "No lessons found in bin"
+
+msgid "Category"
+msgstr "Category"
+
+msgid "Lesson Settings"
+msgstr "Lesson Settings"
+
+msgid "Teaser Content (shown to non-purchasers)"
+msgstr "Teaser Content (shown to non-purchasers)"
+
+msgid "Lesson Statistics"
+msgstr "Lesson Statistics"
+
+msgid "Access Type"
+msgstr "Access Type"
+
+msgid "Paid"
+msgstr "Paid"
+
+msgid "Free for Registered Users"
+msgstr "Free for Registered Users"
+
+msgid "Price"
+msgstr "Price"
+
+msgid "This content will be shown to logged-in users who have not purchased this lesson. The full content above will only be visible after purchase."
+msgstr "This content will be shown to logged-in users who have not purchased this lesson. The full content above will only be visible after purchase."
+
+msgid "Total Sales:"
+msgstr "Total Sales:"
+
+msgid "Total Revenue:"
+msgstr "Total Revenue:"
+
+msgid "Free"
+msgstr "Free"
+
+msgid "You own this lesson"
+msgstr "You own this lesson"
+
+msgid "Get Full Access to This Lesson"
+msgstr "Get Full Access to This Lesson"
+
+msgid "View Basket"
+msgstr "View Basket"
+
+msgid "Add to Basket"
+msgstr "Add to Basket"
+
+msgid "Instant access after payment"
+msgstr "Instant access after payment"
+
+msgid "This lesson is free for registered users."
+msgstr "This lesson is free for registered users."
+
+msgid "Please log in to add items to basket."
+msgstr "Please log in to add items to basket."
+
+msgid "You have already purchased this lesson."
+msgstr "You have already purchased this lesson."
+
+msgid "This lesson is already in your basket."
+msgstr "This lesson is already in your basket."
+
+msgid "Lesson added to basket!"
+msgstr "Lesson added to basket!"
+
+msgid "Failed to add lesson to basket."
+msgstr "Failed to add lesson to basket."
+
+msgid "Invalid lesson."
+msgstr "Invalid lesson."
+
+msgid "Please log in."
+msgstr "Please log in."
+
+msgid "Item removed from basket."
+msgstr "Item removed from basket."
+
+msgid "Failed to remove item."
+msgstr "Failed to remove item."
+
+#, php-format
+msgid "%d lessons added to basket!"
+msgstr "%d lessons added to basket!"
+
+msgid "All available lessons are already in your basket."
+msgstr "All available lessons are already in your basket."
+
+msgid "No lessons available to purchase."
+msgstr "No lessons available to purchase."
+
+msgid "Get All Lessons"
+msgstr "Get All Lessons"
+
+#, php-format
+msgid "%d lessons"
+msgstr "%d lessons"
+
+#, php-format
+msgid "You save %s with bundle discount!"
+msgstr "You save %s with bundle discount!"
+
+#, php-format
+msgid "Add %d more for %d%% bundle discount!"
+msgstr "Add %d more for %d%% bundle discount!"
+
+#, php-format
+msgid "Add All %d Lessons to Basket"
+msgstr "Add All %d Lessons to Basket"
+
+msgid "Instant access to all lessons after payment"
+msgstr "Instant access to all lessons after payment"
+
+msgid "Please log in to purchase lessons."
+msgstr "Please log in to purchase lessons."
+
+msgid "Log In"
+msgstr "Log In"
+
+msgid "You already own all available lessons!"
+msgstr "You already own all available lessons!"
+
+msgid "Bank Transfer Payment"
+msgstr "Bank Transfer Payment"
+
+msgid "Order Number:"
+msgstr "Order Number:"
+
+msgid "Amount:"
+msgstr "Amount:"
+
+msgid "Bank Account Details"
+msgstr "Bank Account Details"
+
+msgid "Account Name:"
+msgstr "Account Name:"
+
+msgid "Account Number:"
+msgstr "Account Number:"
+
+msgid "IBAN:"
+msgstr "IBAN:"
+
+msgid "BIC/SWIFT:"
+msgstr "BIC/SWIFT:"
+
+msgid "Variable Symbol:"
+msgstr "Variable Symbol:"
+
+msgid "Pay with QR Code"
+msgstr "Pay with QR Code"
+
+msgid "Scan this QR code with your banking app for instant payment:"
+msgstr "Scan this QR code with your banking app for instant payment:"
+
+msgid "Payment QR Code"
+msgstr "Payment QR Code"
+
+msgid "Works with all Czech banking apps"
+msgstr "Works with all Czech banking apps"
+
+msgid "QR code is not available. Please use the bank details above."
+msgstr "QR code is not available. Please use the bank details above."
+
+msgid "Important Information"
+msgstr "Important Information"
+
+msgid "Your order will be completed once we receive your payment."
+msgstr "Your order will be completed once we receive your payment."
+
+msgid "Payment processing usually takes 1-2 business days."
+msgstr "Payment processing usually takes 1-2 business days."
+
+msgid "Always use the variable symbol for your payment!"
+msgstr "Always use the variable symbol for your payment!"
+
+msgid "Go to My Lessons"
+msgstr "Go to My Lessons"
+
+msgid "Order not found."
+msgstr "Order not found."
+
+msgid "Permission denied."
+msgstr "Permission denied."
+
+msgid "Invalid order."
+msgstr "Invalid order."
+
+msgid "Payment confirmed and order completed."
+msgstr "Payment confirmed and order completed."
+
+msgid "Failed to confirm payment."
+msgstr "Failed to confirm payment."
+
+msgid "Please log in to access checkout."
+msgstr "Please log in to access checkout."
+
+msgid "Your basket is empty."
+msgstr "Your basket is empty."
+
+msgid "Browse Lessons"
+msgstr "Browse Lessons"
+
+msgid "Invalid payment method."
+msgstr "Invalid payment method."
+
+msgid "Card payments are not available."
+msgstr "Card payments are not available."
+
+msgid "Bank transfer is not available."
+msgstr "Bank transfer is not available."
+
+msgid "Please agree to the terms and conditions."
+msgstr "Please agree to the terms and conditions."
+
+msgid "Failed to create order."
+msgstr "Failed to create order."
+
+msgid "Payment initialization failed."
+msgstr "Payment initialisation failed."
+
+#, php-format
+msgid "Order %s"
+msgstr "Order %s"
+
+msgid "Payment creation failed."
+msgstr "Payment creation failed."
+
+msgid "QR code could not be generated. Please use the bank details above."
+msgstr "QR code could not be generated. Please use the bank details above."
+
+msgid "Your Basket"
+msgstr "Your Basket"
+
+msgid "Total:"
+msgstr "Total:"
+
+msgid "Go to Checkout"
+msgstr "Go to Checkout"
+
+msgid "Added to basket!"
+msgstr "Added to basket!"
+
+msgid "All lessons added to basket!"
+msgstr "All lessons added to basket!"
+
+msgid "An error occurred. Please try again."
+msgstr "An error occurred. Please try again."
+
+msgid "Processing..."
+msgstr "Processing..."
+
+msgid "Please select a payment method."
+msgstr "Please select a payment method."
+
+msgid "Complete Purchase"
+msgstr "Complete Purchase"
+
+msgid "Your Order"
+msgstr "Your Order"
+
+msgid "Subtotal"
+msgstr "Subtotal"
+
+#, php-format
+msgid "Bundle Discount (%d%%)"
+msgstr "Bundle Discount (%d%%)"
+
+msgid "Payment Method"
+msgstr "Payment Method"
+
+msgid "Pay by Card"
+msgstr "Pay by Card"
+
+msgid "Secure payment via Comgate"
+msgstr "Secure payment via Comgate"
+
+msgid "Pay via bank transfer with QR code"
+msgstr "Pay via bank transfer with QR code"
+
+#, php-format
+msgid "I agree to the <a href=\"%s\" target=\"_blank\">Terms and Conditions</a>"
+msgstr "I agree to the <a href=\"%s\" target=\"_blank\">Terms and Conditions</a>"
+
+msgid "Amount"
+msgstr "Amount"
+
+msgid "View Payment Info"
+msgstr "View Payment Info"
+
+msgid "My Lessons"
+msgstr "My Lessons"
+
+msgid "You have not purchased any lessons yet."
+msgstr "You have not purchased any lessons yet."
+
+#, php-format
+msgid "Purchased on %s"
+msgstr "Purchased on %s"
+
+msgid "Payment Failed"
+msgstr "Payment Failed"
+
+msgid "Unfortunately, your payment could not be processed. Please try again or choose a different payment method."
+msgstr "Unfortunately, your payment could not be processed. Please try again or choose a different payment method."
+
+msgid "Try Again"
+msgstr "Try Again"
+
+msgid "Return to Home"
+msgstr "Return to Home"
+
+msgid "Payment Successful!"
+msgstr "Payment Successful!"
+
+msgid "Thank you for your purchase. You now have access to your lessons."
+msgstr "Thank you for your purchase. You now have access to your lessons."
+
+msgid "Order Details"
+msgstr "Order Details"
+
+msgid "Purchased Lessons:"
+msgstr "Purchased Lessons:"
+
+msgid "New Purchase Notification"
+msgstr "New Purchase Notification"
+
+msgid "New Purchase Received"
+msgstr "New Purchase Received"
+
+msgid "A new purchase has been completed on your site."
+msgstr "A new purchase has been completed on your site."
+
+msgid "Customer:"
+msgstr "Customer:"
+
+msgid "Payment Method:"
+msgstr "Payment Method:"
+
+msgid "Lessons Purchased"
+msgstr "Lessons Purchased"
+
+msgid "View in Admin"
+msgstr "View in Admin"
+
+msgid "Your Order is Expiring Soon"
+msgstr "Your Order is Expiring Soon"
+
+msgid "Your pending order is about to expire. Please complete the payment to access your lessons."
+msgstr "Your pending order is about to expire. Please complete the payment to access your lessons."
+
+msgid "Expires:"
+msgstr "Expires:"
+
+msgid "Complete Payment"
+msgstr "Complete Payment"
+
+msgid "If you no longer wish to complete this order, you can ignore this email."
+msgstr "If you no longer wish to complete this order, you can ignore this email."
+
+#, php-format
+msgid "Your Purchase Confirmation - Order %s"
+msgstr "Your Purchase Confirmation - Order %s"
+
+msgid "Thank you for your purchase!"
+msgstr "Thank you for your purchase!"
+
+#, php-format
+msgid "Hello %s,"
+msgstr "Hello %s,"
+
+msgid "Your payment has been processed successfully. You now have full access to the lessons you purchased."
+msgstr "Your payment has been processed successfully. You now have full access to the lessons you purchased."
+
+msgid "Date:"
+msgstr "Date:"
+
+msgid "Discount"
+msgstr "Discount"
+
+msgid "Access Your Lessons"
+msgstr "Access Your Lessons"
+
+msgid "All rights reserved."
+msgstr "All rights reserved."
+
+msgid "Checkout"
+msgstr "Checkout"
+
+msgid "Payment Successful"
+msgstr "Payment Successful"
+
+msgid "Error message"
+msgstr "Error message"
+
+msgid "Orders table not found. Please deactivate and reactivate the plugin."
+msgstr "Orders table not found. Please deactivate and reactivate the plugin."
