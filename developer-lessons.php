@@ -52,13 +52,14 @@ require_once DL_PLUGIN_DIR . 'includes/class-dl-loader.php';
 function dl_init() {
     $loader = new DL_Loader();
     $loader->run();
+    load_plugin_textdomain('developer-lessons', false, dirname(DL_PLUGIN_BASENAME) . '/languages/');
 }
 add_action('plugins_loaded', 'dl_init');
 
 /**
  * Load text domain
  */
-function dl_load_textdomain() {
-    load_plugin_textdomain('developer-lessons', false, dirname(DL_PLUGIN_BASENAME) . '/languages/');
-}
-add_action('init', 'dl_load_textdomain');
+// function dl_load_textdomain() {
+    // load_plugin_textdomain('developer-lessons', false, dirname(DL_PLUGIN_BASENAME) . '/languages/');
+// }
+// add_action('init', 'dl_load_textdomain');
