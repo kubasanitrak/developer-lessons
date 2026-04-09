@@ -13,7 +13,7 @@ if (isset($_GET['order']) && isset($_GET['method']) && $_GET['method'] === 'bank
     return;
 }
 ?>
-<div class="dl-checkout">
+<div class="dl-checkout padded-content">
     <div class="dl-checkout-content">
         <h2><?php _e('Your Order', 'developer-lessons'); ?></h2>
         

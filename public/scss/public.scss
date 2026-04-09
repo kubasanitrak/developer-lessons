@@ -1,25 +1,29 @@
-// Developer Lessons Public Styles
+@import '1-settings/_colors';
+@import '1-settings/_vars';
+// @import '1-settings/_custom-ff';
+
+@import '1-tools/_mixins';
 
 // Variables
-$primary-color: #0073aa;
-$primary-hover: darken($primary-color, 10%);
-$success-color: #46b450;
-$error-color: #dc3232;
+$primary-color: hsla(var(--LKBA-green-hsl), 0.88);
+$primary-hover: hsla(var(--LKBA-green-hsl), 0.95);
+$success-color: #00573f;
+$error-color: #e92f3d;
 $warning-color: #ffb900;
-$text-color: #333;
-$light-gray: #f7f7f7;
-$border-color: #ddd;
-$border-radius: 4px;
+$text-color: var(--black);
+$light-gray: var(--LKBA-cream);
+$border-color:var(--LKBA-cream-dark);
+$border-radius: 7px;
 
 // Buttons
 .dl-btn {
     display: inline-block;
     padding: 10px 20px;
-    background: $primary-color;
+    background: hsla(var(--LKBA-green-hsl), 0.88);
     color: #fff;
     text-decoration: none;
     border: none;
-    border-radius: $border-radius;
+    border-radius: 7px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
@@ -63,19 +67,19 @@ $border-radius: 4px;
 
 .dl-teaser-content {
     position: relative;
-    max-height: 400px;
+    // max-height: 400px;
     overflow: hidden;
 
-    &::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 150px;
-        background: linear-gradient(transparent, #fff);
-        pointer-events: none;
-    }
+    // &::after {
+    //     content: '';
+    //     position: absolute;
+    //     bottom: 0;
+    //     left: 0;
+    //     right: 0;
+    //     height: 150px;
+    //     background: linear-gradient(transparent, #fff);
+    //     pointer-events: none;
+    // }
 }
 
 .dl-lesson-cta {
@@ -85,10 +89,10 @@ $border-radius: 4px;
 .dl-cta-box {
     background: $light-gray;
     border: 2px solid $primary-color;
-    border-radius: 8px;
+    border-radius: $border-radius;
     padding: 30px;
     text-align: center;
-    max-width: 400px;
+    // max-width: 400px;
     margin: 0 auto;
 
     h3 {
@@ -124,6 +128,7 @@ $border-radius: 4px;
     width: 400px;
     max-width: 100%;
     height: 100vh;
+    height: 100dvh;
     background: #fff;
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
     z-index: 9999;
@@ -140,7 +145,7 @@ $border-radius: 4px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    padding: calc(var(--pad-T) * 1.5) calc(var(--pad-R) * .25) var(--pad-T);
     border-bottom: 1px solid $border-color;
 
     h3 {
@@ -163,13 +168,13 @@ $border-radius: 4px;
 .dl-basket-content {
     flex: 1;
     overflow-y: auto;
-    padding: 20px;
+    padding: calc(var(--pad-T) * 1.0) calc(var(--pad-R) * .25) var(--pad-T);
 }
 
 .dl-basket-empty {
     text-align: center;
     color: #666;
-    padding: 40px 0;
+    padding: calc(var(--pad-T) * 3.0) 0;
 }
 
 .dl-basket-items {
@@ -182,7 +187,7 @@ $border-radius: 4px;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 15px 0;
+    padding-block: calc(var(--pad-T) * .5);
     border-bottom: 1px solid $border-color;
 
     &:last-child {
@@ -228,14 +233,14 @@ $border-radius: 4px;
 .dl-basket-total {
     display: flex;
     justify-content: space-between;
-    padding: 20px 0;
+    padding-block: calc(var(--pad-T) * .5) 0;
     border-top: 2px solid $text-color;
     font-size: 18px;
     font-weight: 600;
 }
 
 .dl-basket-footer {
-    padding: 20px;
+    padding: calc(var(--pad-T) * .5) calc(var(--pad-R) * .25) calc(var(--pad-T) * 2);
     border-top: 1px solid $border-color;
 }
 
@@ -290,7 +295,7 @@ $border-radius: 4px;
         font-weight: 700;
         min-width: 22px;
         height: 22px;
-        border-radius: 11px;
+        border-radius: 20vh;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -300,7 +305,7 @@ $border-radius: 4px;
 
 // Checkout
 .dl-checkout {
-    max-width: 800px;
+    // max-width: 800px;
     margin: 0 auto;
 }
 
@@ -363,7 +368,7 @@ $border-radius: 4px;
 }
 
 .dl-payment-methods {
-    margin-bottom: 20px;
+    margin-bottom: calc(var(--pad-T) * 1.0);
 }
 
 .dl-payment-method {
@@ -442,7 +447,7 @@ $border-radius: 4px;
 
 // Bank Transfer
 .dl-bank-transfer-info {
-    max-width: 600px;
+    // max-width: 600px;
     margin: 0 auto;
 }
 
@@ -515,7 +520,7 @@ $border-radius: 4px;
     margin: 30px 0;
     padding: 25px;
     background: #f8f9fa;
-    border-radius: 8px;
+    border-radius: $border-radius;
 
     h3 {
         margin: 0 0 10px;
@@ -533,7 +538,7 @@ $border-radius: 4px;
     padding: 15px;
     background: #fff;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: $border-radius;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
     img {
