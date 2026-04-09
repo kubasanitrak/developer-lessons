@@ -198,7 +198,7 @@ class DL_Admin_Settings {
                     <td>
                         <input type="number" name="dl_bundle_5_discount" id="dl_bundle_5_discount" 
                                value="<?php echo esc_attr(get_option('dl_bundle_5_discount', 10)); ?>"
-                               min="0" max="100" step="1" class="small-text">%
+                               min="0" max="100" step="0.0000001" class="small-text">%
                     </td>
                 </tr>
                 <tr>
@@ -206,7 +206,7 @@ class DL_Admin_Settings {
                     <td>
                         <input type="number" name="dl_bundle_10_discount" id="dl_bundle_10_discount" 
                                value="<?php echo esc_attr(get_option('dl_bundle_10_discount', 20)); ?>"
-                               min="0" max="100" step="1" class="small-text">%
+                               min="0" max="100" step="0.0000001" class="small-text">%
                     </td>
                 </tr>
             </table>

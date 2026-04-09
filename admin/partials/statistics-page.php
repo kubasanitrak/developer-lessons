@@ -14,7 +14,6 @@ $currency_symbol = get_option('dl_currency_symbol', 'Kč');
 
     <div class="dl-stats-filter">
         <form method="get">
-            <input type="hidden" name="post_type" value="lesson">
             <input type="hidden" name="page" value="dl-statistics">
             <select name="range" onchange="this.form.submit()">
                 <option value="7days" <?php selected($range, '7days'); ?>><?php _e('Last 7 Days', 'developer-lessons'); ?></option>
@@ -25,7 +24,6 @@ $currency_symbol = get_option('dl_currency_symbol', 'Kč');
             </select>
         </form>
     </div>
-
 
     <!-- Summary Cards -->
     <div class="dl-stats-summary">
