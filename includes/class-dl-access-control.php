@@ -12,10 +12,6 @@ class DL_Access_Control {
     public function __construct() {
         add_action('template_redirect', array($this, 'check_lesson_access'));
         add_filter('the_content', array($this, 'filter_lesson_content'), 20);
-        
-        // Add shortcodes
-        add_shortcode('dl_buy_button', array($this, 'render_buy_button_shortcode'));
-        add_shortcode('dl_lesson_price', array($this, 'render_price_shortcode'));
     }
 
     /**
@@ -98,11 +94,6 @@ class DL_Access_Control {
         }
 
         $purchases_table = $wpdb->prefix . 'dl_purchases';
-        
-        // Check if table exists
-        if ($wpdb->get_var("SHOW TABLES LIKE '$purchases_table'") !== $purchases_table) {
-            return false;
-        }
 
         $purchased = $wpdb->get_var($wpdb->prepare(
             "SELECT id FROM $purchases_table WHERE user_id = %d AND lesson_id = %d",
@@ -119,115 +110,51 @@ class DL_Access_Control {
     private function get_teaser_with_cta($post) {
         $teaser_content = get_post_meta($post->ID, '_dl_teaser_content', true);
         $price = get_post_meta($post->ID, '_dl_price', true);
-        $formatted_price = DL_Payments::format_price($price);
+        $currency_symbol = get_option('dl_currency_symbol', 'Kč');
+        $currency_position = get_option('dl_currency_position', 'after');
 
-        ob_start();
-        ?>
-        <div class="dl-lesson-teaser">
-            <?php if (!empty($teaser_content)): ?>
-                <div class="dl-teaser-content">
-                    <?php echo wpautop($teaser_content); ?>
-                </div>
-            <?php endif; ?>
-            
-            <?php echo $this->get_cta_box($post->ID, $formatted_price); ?>
-        </div>
-        <?php
-        return ob_get_clean();
-    }
+        $POST_TITLE = esc_html( get_the_title() );
 
-    /**
-     * Get CTA box HTML
-     */
-    public function get_cta_box($lesson_id, $formatted_price = null) {
-        if ($formatted_price === null) {
-            $price = get_post_meta($lesson_id, '_dl_price', true);
-            $formatted_price = DL_Payments::format_price($price);
+        if ($currency_position === 'before') {
+            $formatted_price = $currency_symbol . ' ' . number_format((float)$price, 2);
+        } else {
+            $formatted_price = number_format((float)$price, 2) . ' ' . $currency_symbol;
         }
 
-        $basket = new DL_Basket();
-        $in_basket = $basket->is_in_basket($lesson_id);
-        $purchased = $this->user_has_purchased($lesson_id);
-
         ob_start();
         ?>
-        <div class="dl-lesson-cta">
-            <div class="dl-cta-box">
-                <?php if ($purchased): ?>
-                    <p class="dl-purchased-notice">✓ <?php _e('You own this lesson', 'developer-lessons'); ?></p>
-                <?php else: ?>
-                    <h3><?php _e('Get Full Access to This Lesson', 'developer-lessons'); ?></h3>
-                    <p class="dl-price"><?php echo esc_html($formatted_price); ?></p>
-                    
-                    <?php if ($in_basket): ?>
-                        <button type="button" class="dl-btn dl-btn-secondary dl-view-basket-btn">
-                            <?php _e('View Basket', 'developer-lessons'); ?>
-                        </button>
-                    <?php else: ?>
-                        <button type="button" 
-                                class="dl-add-to-basket-btn" 
-                                data-lesson-id="<?php echo esc_attr($lesson_id); ?>">
-                            <?php _e('Add to Basket', 'developer-lessons'); ?>
-                        </button>
-                    <?php endif; ?>
-                    
-                    <p class="dl-cta-note">
-                        <?php _e('Instant access after payment', 'developer-lessons'); ?>
-                    </p>
-                <?php endif; ?>
+        <!-- <div class="dl-lesson-teaser"> -->
+            <div class="lesson-title--container">
+                <!-- <h1 class=""><?php #echo get_field('lesson_title_1st_line', $post->ID); ?> <br> <span class="color-green"><?php #echo get_field('lesson_title_2nd_line', $post->ID); ?></span> </h1> -->
+                <h1 class=""><?php echo $POST_TITLE; ?> </h1>
             </div>
-        </div>
+            <div class="dl-teaser-content--img lesson-img">
+                <?php the_post_thumbnail( 'full', ['class' => 'grid-item--img', 'title' => $POST_TITLE, 'alt' => $POST_TITLE ] ); ?>
+            </div>
+            <div class="dl-teaser-content lesson-caption">
+                <?php echo wpautop($teaser_content); ?>
+            
+                <div class="dl-lesson-cta">
+                    <div class="dl-cta-overlay">
+                        <div class="dl-cta-box">
+                            <h3><?php _e('Get Full Access to This Lesson', 'developer-lessons'); ?></h3>
+                            <p class="dl-price"><?php echo esc_html($formatted_price); ?></p>
+                            <button type="button" 
+                                    class="dl-add-to-basket-btn" 
+                                    data-lesson-id="<?php echo esc_attr($post->ID); ?>">
+                                <?php _e('Add to Basket', 'developer-lessons'); ?>
+                            </button>
+                            <p class="dl-cta-note">
+                                <?php _e('Instant access after payment', 'developer-lessons'); ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- </div> -->
+         <h1 class=""><?php echo get_field('lesson_title_1st_line'); ?> <br> <span class="color-green"><?php echo get_field('lesson_title_2nd_line'); ?></span> </h1>
         <?php
         return ob_get_clean();
-    }
-
-    /**
-     * Shortcode: Buy button
-     * Usage: [dl_buy_button] or [dl_buy_button id="123"]
-     */
-    public function render_buy_button_shortcode($atts) {
-        $atts = shortcode_atts(array(
-            'id' => get_the_ID(),
-        ), $atts);
-
-        $lesson_id = intval($atts['id']);
-        
-        if (!$lesson_id || get_post_type($lesson_id) !== 'lesson') {
-            return '';
-        }
-
-        // Check if free
-        $access_type = get_post_meta($lesson_id, '_dl_access_type', true);
-        if ($access_type === 'free') {
-            return '<p class="dl-free-access">' . __('This lesson is free for registered users.', 'developer-lessons') . '</p>';
-        }
-
-        return $this->get_cta_box($lesson_id);
-    }
-
-    /**
-     * Shortcode: Lesson price
-     * Usage: [dl_lesson_price] or [dl_lesson_price id="123"]
-     */
-    public function render_price_shortcode($atts) {
-        $atts = shortcode_atts(array(
-            'id' => get_the_ID(),
-        ), $atts);
-
-        $lesson_id = intval($atts['id']);
-        
-        if (!$lesson_id) {
-            return '';
-        }
-
-        $access_type = get_post_meta($lesson_id, '_dl_access_type', true);
-        
-        if ($access_type === 'free') {
-            return '<span class="dl-price dl-price-free">' . __('Free', 'developer-lessons') . '</span>';
-        }
-
-        $price = get_post_meta($lesson_id, '_dl_price', true);
-        return '<span class="dl-price">' . DL_Payments::format_price($price) . '</span>';
     }
 
     /**
@@ -241,10 +168,6 @@ class DL_Access_Control {
         }
 
         $purchases_table = $wpdb->prefix . 'dl_purchases';
-        
-        if ($wpdb->get_var("SHOW TABLES LIKE '$purchases_table'") !== $purchases_table) {
-            return array();
-        }
 
         return $wpdb->get_col($wpdb->prepare(
             "SELECT lesson_id FROM $purchases_table WHERE user_id = %d",
