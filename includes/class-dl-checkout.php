@@ -62,8 +62,10 @@ class DL_Checkout {
             wp_send_json_error(array('message' => __('Please log in.', 'developer-lessons')));
         }
 
+        $user_id = get_current_user_id();
         $payment_method = isset($_POST['payment_method']) ? sanitize_text_field($_POST['payment_method']) : '';
         $agree_terms = isset($_POST['agree_terms']) ? (bool)$_POST['agree_terms'] : false;
+        $want_invoice = isset($_POST['want_invoice']) ? (bool)$_POST['want_invoice'] : false;
 
         // Validate payment method
         if (!in_array($payment_method, array('comgate', 'bank_transfer'))) {
@@ -85,8 +87,40 @@ class DL_Checkout {
             wp_send_json_error(array('message' => __('Please agree to the terms and conditions.', 'developer-lessons')));
         }
 
+        // Process invoice data
+        $invoice_data = null;
+        if ($want_invoice) {
+            $invoice_data = array(
+                'company_name' => isset($_POST['invoice_company_name']) ? sanitize_text_field($_POST['invoice_company_name']) : '',
+                'street' => isset($_POST['invoice_street']) ? sanitize_text_field($_POST['invoice_street']) : '',
+                'street_number' => isset($_POST['invoice_street_number']) ? sanitize_text_field($_POST['invoice_street_number']) : '',
+                'city' => isset($_POST['invoice_city']) ? sanitize_text_field($_POST['invoice_city']) : '',
+                'zip' => isset($_POST['invoice_zip']) ? sanitize_text_field($_POST['invoice_zip']) : '',
+                'ic' => isset($_POST['invoice_ic']) ? sanitize_text_field($_POST['invoice_ic']) : '',
+                'dic' => isset($_POST['invoice_dic']) ? sanitize_text_field($_POST['invoice_dic']) : '',
+            );
+
+            // Validate required invoice fields
+            if (empty($invoice_data['company_name']) || empty($invoice_data['street']) || 
+                empty($invoice_data['city']) || empty($invoice_data['zip']) || empty($invoice_data['ic'])) {
+                wp_send_json_error(array('message' => __('Please fill in all required invoice fields.', 'developer-lessons')));
+            }
+
+            // Save to user profile if requested
+            $save_to_profile = isset($_POST['save_invoice_to_profile']) ? (bool)$_POST['save_invoice_to_profile'] : false;
+            if ($save_to_profile) {
+                update_user_meta($user_id, 'dl_invoice_company_name', $invoice_data['company_name']);
+                update_user_meta($user_id, 'dl_invoice_street', $invoice_data['street']);
+                update_user_meta($user_id, 'dl_invoice_street_number', $invoice_data['street_number']);
+                update_user_meta($user_id, 'dl_invoice_city', $invoice_data['city']);
+                update_user_meta($user_id, 'dl_invoice_zip', $invoice_data['zip']);
+                update_user_meta($user_id, 'dl_invoice_ic', $invoice_data['ic']);
+                update_user_meta($user_id, 'dl_invoice_dic', $invoice_data['dic']);
+            }
+        }
+
         // Create order
-        $order_id = $this->create_order($payment_method);
+        $order_id = $this->create_order($payment_method, $invoice_data);
 
         if (!$order_id) {
             wp_send_json_error(array('message' => __('Failed to create order.', 'developer-lessons')));
@@ -122,7 +156,7 @@ class DL_Checkout {
     /**
      * Create order from basket
      */
-    private function create_order($payment_method) {
+    private function create_order($payment_method, $invoice_data = null) {
         global $wpdb;
 
         $user_id = get_current_user_id();
@@ -143,6 +177,9 @@ class DL_Checkout {
         $order_number = $this->generate_order_number();
         $expiry_hours = get_option('dl_order_expiry_time', 24);
 
+        // Prepare invoice data JSON
+        $invoice_json = $invoice_data ? json_encode($invoice_data) : null;
+
         // Insert order
         $wpdb->insert(
             $orders_table,
@@ -154,10 +191,11 @@ class DL_Checkout {
                 'total' => $total,
                 'discount' => $discount['amount'],
                 'currency' => $currency,
+                'invoice_data' => $invoice_json,
                 'created_at' => current_time('mysql'),
                 'expires_at' => date('Y-m-d H:i:s', strtotime("+{$expiry_hours} hours"))
             ),
-            array('%d', '%s', '%s', '%s', '%f', '%f', '%s', '%s', '%s')
+            array('%d', '%s', '%s', '%s', '%f', '%f', '%s', '%s', '%s', '%s')
         );
 
         $order_id = $wpdb->insert_id;
@@ -181,6 +219,7 @@ class DL_Checkout {
 
         return $order_id;
     }
+
 
     /**
      * Generate unique order number

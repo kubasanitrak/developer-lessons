@@ -1174,3 +1174,75 @@ msgstr ""
 #: admin/partials/orders-page.php
 msgid "Orders table not found. Please deactivate and reactivate the plugin."
 msgstr ""
+
+msgid "Invoice Details"
+msgstr ""
+
+msgid "I want an invoice for my purchase"
+msgstr ""
+
+msgid "Using your saved invoice details. You can update them below."
+msgstr ""
+
+msgid "Company Name"
+msgstr ""
+
+msgid "Street"
+msgstr ""
+
+msgid "Number"
+msgstr ""
+
+msgid "ZIP Code"
+msgstr ""
+
+msgid "City"
+msgstr ""
+
+msgid "Company ID (IČ)"
+msgstr ""
+
+msgid "VAT ID (DIČ)"
+msgstr ""
+
+msgid "e.g., 12345678"
+msgstr ""
+
+msgid "e.g., CZ12345678"
+msgstr ""
+
+msgid "Optional - fill in if you are a VAT payer"
+msgstr ""
+
+msgid "Save these details to my profile for future purchases"
+msgstr ""
+
+msgid "Please fill in all required invoice fields."
+msgstr ""
+
+msgid "8-digit company identification number"
+msgstr ""
+
+msgid "VAT identification number (e.g., CZ12345678). Leave empty if not a VAT payer."
+msgstr ""
+
+msgid "Please log in to manage your invoice details."
+msgstr ""
+
+msgid "These details will be used when you request an invoice during checkout."
+msgstr ""
+
+msgid "Save Invoice Details"
+msgstr ""
+
+msgid "Saving..."
+msgstr ""
+
+msgid "Invoice details saved successfully."
+msgstr ""
+
+msgid "Street Number"
+msgstr ""
+
+msgid "Leave empty if not a VAT payer"
+msgstr ""

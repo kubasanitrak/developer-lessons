@@ -32,6 +32,28 @@ class DL_Public {
             true
         );
         $page_ids = get_option('dl_page_ids', array());
+        // wp_localize_script('dl-public-js', 'dl_public', array(
+        //     'ajax_url' => admin_url('admin-ajax.php'),
+        //     'nonce' => wp_create_nonce('dl_nonce'),
+        //     'checkout_url' => isset($page_ids['checkout']) ? get_permalink($page_ids['checkout']) : '',
+        //     'is_logged_in' => is_user_logged_in(),
+        //     'currency_symbol' => get_option('dl_currency_symbol', 'Kč'),
+        //     'currency_position' => get_option('dl_currency_position', 'after'),
+        //     'strings' => array(
+        //         'added_to_basket' => __('Added to basket!', 'developer-lessons'),
+        //         'all_added' => __('All lessons added to basket!', 'developer-lessons'),
+        //         'error' => __('An error occurred. Please try again.', 'developer-lessons'),
+        //         'processing' => __('Processing...', 'developer-lessons'),
+        //         'add_to_basket' => __('Add to Basket', 'developer-lessons'),
+        //         'view_basket' => __('View Basket', 'developer-lessons'),
+        //         'go_to_checkout' => __('Go to Checkout', 'developer-lessons'),
+        //         'please_login' => __('Please log in to add items to basket.', 'developer-lessons'),
+        //         'basket_empty' => __('Your basket is empty.', 'developer-lessons'),
+        //         'total' => __('Total:', 'developer-lessons'),
+        //         'select_payment' => __('Please select a payment method.', 'developer-lessons'),
+        //         'complete_purchase' => __('Complete Purchase', 'developer-lessons')
+        //     )
+        // ));
         wp_localize_script('dl-public-js', 'dl_public', array(
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('dl_nonce'),
@@ -51,9 +73,13 @@ class DL_Public {
                 'basket_empty' => __('Your basket is empty.', 'developer-lessons'),
                 'total' => __('Total:', 'developer-lessons'),
                 'select_payment' => __('Please select a payment method.', 'developer-lessons'),
-                'complete_purchase' => __('Complete Purchase', 'developer-lessons')
+                'complete_purchase' => __('Complete Purchase', 'developer-lessons'),
+                'bundle_discount' => __('Bundle Discount (%d%%)', 'developer-lessons'),
+                'invoice_required' => __('Please fill in all required invoice fields.', 'developer-lessons'),
+                'saving' => __('Saving...', 'developer-lessons'),
             )
         ));
+
     }
 
     /**

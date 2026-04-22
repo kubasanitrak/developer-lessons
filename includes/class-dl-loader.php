@@ -16,6 +16,9 @@ class DL_Loader {
     /**
      * Load required files
      */
+    /**
+     * Load required files
+     */
     private function load_dependencies() {
         // Core includes
         require_once DL_PLUGIN_DIR . 'includes/class-dl-post-types.php';
@@ -28,6 +31,7 @@ class DL_Loader {
         require_once DL_PLUGIN_DIR . 'includes/class-dl-qr-generator.php';
         require_once DL_PLUGIN_DIR . 'includes/class-dl-emails.php';
         require_once DL_PLUGIN_DIR . 'includes/class-dl-user.php';
+        require_once DL_PLUGIN_DIR . 'includes/class-dl-user-profile.php'; // Add this line
         require_once DL_PLUGIN_DIR . 'includes/class-dl-cron.php';
         require_once DL_PLUGIN_DIR . 'includes/class-dl-ajax.php';
 
@@ -56,6 +60,7 @@ class DL_Loader {
         new DL_Bank_Transfer();
         new DL_Emails();
         new DL_User();
+        new DL_User_Profile(); // Add this line
         new DL_Cron();
         new DL_Ajax();
 

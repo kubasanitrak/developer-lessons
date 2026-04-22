@@ -11,6 +11,7 @@ class DL_Activator {
 
     public static function activate() {
         self::create_tables();
+        self::run_migrations(); // Add this line
         self::create_pages();
         self::set_default_options();
         self::schedule_cron_jobs();
@@ -21,6 +22,23 @@ class DL_Activator {
         // Set activation flag
         update_option('dl_plugin_activated', true);
     }
+    
+    /**
+     * Run database migrations
+     */
+    public static function run_migrations() {
+        global $wpdb;
+        
+        $orders_table = $wpdb->prefix . 'dl_orders';
+        
+        // Check if invoice_data column exists
+        $column_exists = $wpdb->get_results("SHOW COLUMNS FROM $orders_table LIKE 'invoice_data'");
+        
+        if (empty($column_exists)) {
+            $wpdb->query("ALTER TABLE $orders_table ADD COLUMN invoice_data longtext DEFAULT NULL AFTER transaction_id");
+        }
+    }
+
 
     /**
      * Create custom database tables
@@ -32,6 +50,7 @@ class DL_Activator {
         
         // Orders table
         $orders_table = $wpdb->prefix . 'dl_orders';
+        // Orders table (update the CREATE TABLE statement)
         $orders_sql = "CREATE TABLE $orders_table (
             id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             user_id bigint(20) UNSIGNED NOT NULL,
@@ -42,6 +61,7 @@ class DL_Activator {
             discount decimal(10,2) NOT NULL DEFAULT 0.00,
             currency varchar(3) NOT NULL DEFAULT 'CZK',
             transaction_id varchar(100) DEFAULT NULL,
+            invoice_data longtext DEFAULT NULL,
             created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             expires_at datetime DEFAULT NULL,
@@ -51,6 +71,7 @@ class DL_Activator {
             KEY order_number (order_number),
             KEY status (status)
         ) $charset_collate;";
+
         
         // Order items table
         $order_items_table = $wpdb->prefix . 'dl_order_items';

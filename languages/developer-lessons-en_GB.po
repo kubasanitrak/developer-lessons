@@ -885,3 +885,76 @@ msgstr "Error message"
 
 msgid "Orders table not found. Please deactivate and reactivate the plugin."
 msgstr "Orders table not found. Please deactivate and reactivate the plugin."
+
+msgid "Invoice Details"
+msgstr "Invoice Details"
+
+msgid "I want an invoice for my purchase"
+msgstr "I want an invoice for my purchase"
+
+msgid "Using your saved invoice details. You can update them below."
+msgstr "Using your saved invoice details. You can update them below."
+
+msgid "Company Name"
+msgstr "Company Name"
+
+msgid "Street"
+msgstr "Street"
+
+msgid "Number"
+msgstr "Number"
+
+msgid "ZIP Code"
+msgstr "ZIP Code"
+
+msgid "City"
+msgstr "City"
+
+msgid "Company ID (IČ)"
+msgstr "Company ID (IČ)"
+
+msgid "VAT ID (DIČ)"
+msgstr "VAT ID (DIČ)"
+
+msgid "e.g., 12345678"
+msgstr "e.g., 12345678"
+
+msgid "e.g., CZ12345678"
+msgstr "e.g., CZ12345678"
+
+msgid "Optional - fill in if you are a VAT payer"
+msgstr "Optional - fill in if you are a VAT payer"
+
+msgid "Save these details to my profile for future purchases"
+msgstr "Save these details to my profile for future purchases"
+
+msgid "Please fill in all required invoice fields."
+msgstr "Please fill in all required invoice fields."
+
+msgid "8-digit company identification number"
+msgstr "8-digit company identification number"
+
+msgid "VAT identification number (e.g., CZ12345678). Leave empty if not a VAT payer."
+msgstr "VAT identification number (e.g., CZ12345678). Leave empty if not a VAT payer."
+
+msgid "Please log in to manage your invoice details."
+msgstr "Please log in to manage your invoice details."
+
+msgid "These details will be used when you request an invoice during checkout."
+msgstr "These details will be used when you request an invoice during checkout."
+
+msgid "Save Invoice Details"
+msgstr "Save Invoice Details"
+
+msgid "Saving..."
+msgstr "Saving..."
+
+msgid "Invoice details saved successfully."
+msgstr "Invoice details saved successfully."
+
+msgid "Street Number"
+msgstr "Street Number"
+
+msgid "Leave empty if not a VAT payer"
+msgstr "Leave empty if not a VAT payer"
+

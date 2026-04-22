@@ -885,3 +885,75 @@ msgstr "Chybová zpráva"
 
 msgid "Orders table not found. Please deactivate and reactivate the plugin."
 msgstr "Tabulka objednávek nenalezena. Deaktivujte a znovu aktivujte plugin."
+
+msgid "Invoice Details"
+msgstr "Fakturační údaje"
+
+msgid "I want an invoice for my purchase"
+msgstr "Chci fakturu k mému nákupu"
+
+msgid "Using your saved invoice details. You can update them below."
+msgstr "Používám vaše uložené fakturační údaje. Níže je můžete aktualizovat."
+
+msgid "Company Name"
+msgstr "Název společnosti"
+
+msgid "Street"
+msgstr "Ulice"
+
+msgid "Number"
+msgstr "Číslo"
+
+msgid "ZIP Code"
+msgstr "PSČ"
+
+msgid "City"
+msgstr "Město"
+
+msgid "Company ID (IČ)"
+msgstr "IČ"
+
+msgid "VAT ID (DIČ)"
+msgstr "DIČ"
+
+msgid "e.g., 12345678"
+msgstr "např. 12345678"
+
+msgid "e.g., CZ12345678"
+msgstr "např. CZ12345678"
+
+msgid "Optional - fill in if you are a VAT payer"
+msgstr "Volitelné - vyplňte, pokud jste plátce DPH"
+
+msgid "Save these details to my profile for future purchases"
+msgstr "Uložit tyto údaje do mého profilu pro budoucí nákupy"
+
+msgid "Please fill in all required invoice fields."
+msgstr "Vyplňte prosím všechna povinná fakturační pole."
+
+msgid "8-digit company identification number"
+msgstr "8místné identifikační číslo společnosti"
+
+msgid "VAT identification number (e.g., CZ12345678). Leave empty if not a VAT payer."
+msgstr "Daňové identifikační číslo (např. CZ12345678). Ponechte prázdné, pokud nejste plátce DPH."
+
+msgid "Please log in to manage your invoice details."
+msgstr "Pro správu fakturačních údajů se prosím přihlaste."
+
+msgid "These details will be used when you request an invoice during checkout."
+msgstr "Tyto údaje budou použity, když si při pokladně vyžádáte fakturu."
+
+msgid "Save Invoice Details"
+msgstr "Uložit fakturační údaje"
+
+msgid "Saving..."
+msgstr "Ukládám..."
+
+msgid "Invoice details saved successfully."
+msgstr "Fakturační údaje byly úspěšně uloženy."
+
+msgid "Street Number"
+msgstr "Číslo popisné"
+
+msgid "Leave empty if not a VAT payer"
+msgstr "Ponechte prázdné, pokud nejste plátce DPH"
