@@ -958,3 +958,35 @@ msgstr "Street Number"
 msgid "Leave empty if not a VAT payer"
 msgstr "Leave empty if not a VAT payer"
 
+msgid "Other Available Lessons"
+msgstr "Other Available Lessons"
+
+msgid "In Basket"
+msgstr "In Basket"
+
+msgid "No lessons available."
+msgstr "No lessons available."
+
+msgid "Tile Image"
+msgstr "Tile Image"
+
+msgid "No image selected"
+msgstr "No image selected"
+
+msgid "Select Image"
+msgstr "Select Image"
+
+msgid "Change Image"
+msgstr "Change Image"
+
+msgid "Remove"
+msgstr "Remove"
+
+msgid "Select Tile Image"
+msgstr "Select Tile Image"
+
+msgid "Use this image"
+msgstr "Use this image"
+
+msgid "This image will be displayed in lesson grids and listings."
+msgstr "This image will be displayed in lesson grids and listings."

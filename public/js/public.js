@@ -56,6 +56,7 @@
             const $btn = $(e.currentTarget);
             const lessonId = $btn.data('lesson-id');
             const originalText = $btn.text();
+            const isGridItem = $btn.hasClass('grid-item--btn');
 
             $btn.prop('disabled', true).text(dl_public.strings.processing);
 
@@ -73,11 +74,20 @@
                         DeveloperLessons.showNotification(response.data.message, 'success');
                         DeveloperLessons.refreshBasketSidebar();
                         
-                        // Change button to view basket
-                        $btn.text(dl_public.strings.view_basket)
-                            .removeClass('dl-add-to-basket-btn')
-                            .addClass('dl-view-basket-btn')
-                            .prop('disabled', false);
+                        // Update button state
+                        if (isGridItem) {
+                            // Grid item button - change to "In Basket"
+                            $btn.text(dl_public.strings.in_basket || 'In Basket')
+                                .removeClass('dl-add-to-basket-btn')
+                                .addClass('dl-btn-secondary dl-view-basket-btn')
+                                .prop('disabled', false);
+                        } else {
+                            // CTA button - change to "View Basket"
+                            $btn.text(dl_public.strings.view_basket)
+                                .removeClass('dl-add-to-basket-btn')
+                                .addClass('dl-view-basket-btn')
+                                .prop('disabled', false);
+                        }
                     } else {
                         DeveloperLessons.showNotification(response.data.message, 'error');
                         $btn.prop('disabled', false).text(originalText);

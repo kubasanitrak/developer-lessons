@@ -957,3 +957,36 @@ msgstr "Číslo popisné"
 
 msgid "Leave empty if not a VAT payer"
 msgstr "Ponechte prázdné, pokud nejste plátce DPH"
+
+msgid "Other Available Lessons"
+msgstr "Další dostupné lekce"
+
+msgid "In Basket"
+msgstr "V košíku"
+
+msgid "No lessons available."
+msgstr "Žádné lekce nejsou k dispozici."
+
+msgid "Tile Image"
+msgstr "Obrázek dlaždice"
+
+msgid "No image selected"
+msgstr "Žádný obrázek nevybrán"
+
+msgid "Select Image"
+msgstr "Vybrat obrázek"
+
+msgid "Change Image"
+msgstr "Změnit obrázek"
+
+msgid "Remove"
+msgstr "Odebrat"
+
+msgid "Select Tile Image"
+msgstr "Vybrat obrázek dlaždice"
+
+msgid "Use this image"
+msgstr "Použít tento obrázek"
+
+msgid "This image will be displayed in lesson grids and listings."
+msgstr "Tento obrázek bude zobrazen v mřížce a výpisech lekcí."

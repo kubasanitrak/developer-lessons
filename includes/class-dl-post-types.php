@@ -15,6 +15,9 @@ class DL_Post_Types {
         add_action('save_post_lesson', array($this, 'save_lesson_meta'), 10, 2);
         add_filter('manage_lesson_posts_columns', array($this, 'add_custom_columns'));
         add_action('manage_lesson_posts_custom_column', array($this, 'render_custom_columns'), 10, 2);
+
+        // Enqueue media for tile image selector
+        add_action('admin_enqueue_scripts', array($this, 'enqueue_media_scripts'));
     }
 
     /**
@@ -70,7 +73,11 @@ class DL_Post_Types {
     /**
      * Add meta boxes
      */
-    public function add_meta_boxes() {
+    public function add_meta_boxes($post_type = '') {
+        if (is_object($post_type)) {
+            $post_type = $post_type->post_type ?? '';
+        }
+        
         add_meta_box(
             'dl_lesson_settings',
             __('Lesson Settings', 'developer-lessons'),
@@ -82,7 +89,7 @@ class DL_Post_Types {
 
         add_meta_box(
             'dl_lesson_teaser',
-            __('Teaser Content', 'developer-lessons'),
+            __('Teaser Content (shown to non-purchasers)', 'developer-lessons'),
             array($this, 'render_teaser_metabox'),
             'lesson',
             'normal',
@@ -97,7 +104,116 @@ class DL_Post_Types {
             'side',
             'default'
         );
+
+        // Only add tile image metabox if ACF is not handling it
+        if (!function_exists('get_field') || !$this->acf_field_exists('lesson_tile_img_id')) {
+            add_meta_box(
+                'dl_lesson_tile_image',
+                __('Tile Image', 'developer-lessons'),
+                array($this, 'render_tile_image_metabox'),
+                'lesson',
+                'side',
+                'default'
+            );
+        }
     }
+
+    /**
+     * Check if ACF field exists
+     */
+    private function acf_field_exists($field_name) {
+        if (!function_exists('acf_get_field')) {
+            return false;
+        }
+        
+        $field = acf_get_field($field_name);
+        return !empty($field);
+    }
+
+    /**
+     * Render tile image metabox
+     */
+    public function render_tile_image_metabox($post) {
+        wp_nonce_field('dl_lesson_tile_image', 'dl_lesson_tile_image_nonce');
+        
+        $image_id = get_post_meta($post->ID, '_dl_tile_image_id', true);
+        $image_url = $image_id ? wp_get_attachment_image_url($image_id, 'thumbnail') : '';
+        ?>
+        <div class="dl-tile-image-metabox">
+            <div class="dl-tile-image-preview" style="margin-bottom: 10px;">
+                <?php if ($image_url): ?>
+                    <img src="<?php echo esc_url($image_url); ?>" style="max-width: 100%; height: auto;">
+                <?php else: ?>
+                    <div class="dl-no-image" style="background: #f0f0f0; padding: 30px; text-align: center; color: #999;">
+                        <?php _e('No image selected', 'developer-lessons'); ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+            
+            <input type="hidden" name="dl_tile_image_id" id="dl_tile_image_id" value="<?php echo esc_attr($image_id); ?>">
+            
+            <p>
+                <button type="button" class="button dl-select-tile-image" id="dl_select_tile_image">
+                    <?php echo $image_id ? __('Change Image', 'developer-lessons') : __('Select Image', 'developer-lessons'); ?>
+                </button>
+                <?php if ($image_id): ?>
+                    <button type="button" class="button dl-remove-tile-image" id="dl_remove_tile_image">
+                        <?php _e('Remove', 'developer-lessons'); ?>
+                    </button>
+                <?php endif; ?>
+            </p>
+            
+            <p class="description">
+                <?php _e('This image will be displayed in lesson grids and listings.', 'developer-lessons'); ?>
+            </p>
+        </div>
+        
+        <script>
+        jQuery(document).ready(function($) {
+            var frame;
+            
+            $('#dl_select_tile_image').on('click', function(e) {
+                e.preventDefault();
+                
+                if (frame) {
+                    frame.open();
+                    return;
+                }
+                
+                frame = wp.media({
+                    title: '<?php _e('Select Tile Image', 'developer-lessons'); ?>',
+                    button: {
+                        text: '<?php _e('Use this image', 'developer-lessons'); ?>'
+                    },
+                    multiple: false
+                });
+                
+                frame.on('select', function() {
+                    var attachment = frame.state().get('selection').first().toJSON();
+                    $('#dl_tile_image_id').val(attachment.id);
+                    $('.dl-tile-image-preview').html('<img src="' + attachment.sizes.thumbnail.url + '" style="max-width: 100%; height: auto;">');
+                    $('#dl_select_tile_image').text('<?php _e('Change Image', 'developer-lessons'); ?>');
+                    
+                    if ($('#dl_remove_tile_image').length === 0) {
+                        $('#dl_select_tile_image').after(' <button type="button" class="button dl-remove-tile-image" id="dl_remove_tile_image"><?php _e('Remove', 'developer-lessons'); ?></button>');
+                    }
+                });
+                
+                frame.open();
+            });
+            
+            $(document).on('click', '#dl_remove_tile_image', function(e) {
+                e.preventDefault();
+                $('#dl_tile_image_id').val('');
+                $('.dl-tile-image-preview').html('<div class="dl-no-image" style="background: #f0f0f0; padding: 30px; text-align: center; color: #999;"><?php _e('No image selected', 'developer-lessons'); ?></div>');
+                $('#dl_select_tile_image').text('<?php _e('Select Image', 'developer-lessons'); ?>');
+                $(this).remove();
+            });
+        });
+        </script>
+        <?php
+    }
+
 
     /**
      * Render settings metabox
@@ -180,38 +296,60 @@ class DL_Post_Types {
         <?php
     }
 
-    /**
+   /**
      * Save lesson meta
      */
     public function save_lesson_meta($post_id, $post) {
-        if (!isset($_POST['dl_lesson_settings_nonce']) || 
-            !wp_verify_nonce($_POST['dl_lesson_settings_nonce'], 'dl_lesson_settings')) {
+        // Check if this is a lesson
+        if ($post->post_type !== 'lesson') {
             return;
         }
 
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-            return;
+        // Check nonce for settings
+        if (isset($_POST['dl_lesson_settings_nonce']) && 
+            wp_verify_nonce($_POST['dl_lesson_settings_nonce'], 'dl_lesson_settings')) {
+            
+            // Check autosave
+            if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+                return;
+            }
+
+            // Check permissions
+            if (!current_user_can('edit_post', $post_id)) {
+                return;
+            }
+
+            // Save access type
+            if (isset($_POST['dl_access_type'])) {
+                update_post_meta($post_id, '_dl_access_type', sanitize_text_field($_POST['dl_access_type']));
+            }
+
+            // Save price
+            if (isset($_POST['dl_price'])) {
+                update_post_meta($post_id, '_dl_price', floatval($_POST['dl_price']));
+            }
+
+            // Save teaser content
+            if (isset($_POST['dl_teaser_content'])) {
+                update_post_meta($post_id, '_dl_teaser_content', wp_kses_post($_POST['dl_teaser_content']));
+            }
         }
 
-        if (!current_user_can('edit_post', $post_id)) {
-            return;
-        }
-
-        // Save access type
-        if (isset($_POST['dl_access_type'])) {
-            update_post_meta($post_id, '_dl_access_type', sanitize_text_field($_POST['dl_access_type']));
-        }
-
-        // Save price
-        if (isset($_POST['dl_price'])) {
-            update_post_meta($post_id, '_dl_price', floatval($_POST['dl_price']));
-        }
-
-        // Save teaser content
-        if (isset($_POST['dl_teaser_content'])) {
-            update_post_meta($post_id, '_dl_teaser_content', wp_kses_post($_POST['dl_teaser_content']));
+        // Check nonce for tile image
+        if (isset($_POST['dl_lesson_tile_image_nonce']) && 
+            wp_verify_nonce($_POST['dl_lesson_tile_image_nonce'], 'dl_lesson_tile_image')) {
+            
+            if (isset($_POST['dl_tile_image_id'])) {
+                $image_id = intval($_POST['dl_tile_image_id']);
+                if ($image_id > 0) {
+                    update_post_meta($post_id, '_dl_tile_image_id', $image_id);
+                } else {
+                    delete_post_meta($post_id, '_dl_tile_image_id');
+                }
+            }
         }
     }
+
 
     /**
      * Add custom columns
@@ -264,6 +402,16 @@ class DL_Post_Types {
                 ));
                 echo intval($sales);
                 break;
+        }
+    }
+    /**
+     * Enqueue media scripts for tile image selector
+     */
+    public function enqueue_media_scripts($hook) {
+        global $post_type;
+        
+        if ($post_type === 'lesson' && in_array($hook, array('post.php', 'post-new.php'))) {
+            wp_enqueue_media();
         }
     }
 }

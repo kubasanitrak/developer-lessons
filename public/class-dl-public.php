@@ -77,6 +77,7 @@ class DL_Public {
                 'bundle_discount' => __('Bundle Discount (%d%%)', 'developer-lessons'),
                 'invoice_required' => __('Please fill in all required invoice fields.', 'developer-lessons'),
                 'saving' => __('Saving...', 'developer-lessons'),
+                'in_basket' => __('In Basket', 'developer-lessons'),
             )
         ));
 

@@ -1246,3 +1246,36 @@ msgstr ""
 
 msgid "Leave empty if not a VAT payer"
 msgstr ""
+
+msgid "Other Available Lessons"
+msgstr ""
+
+msgid "In Basket"
+msgstr ""
+
+msgid "No lessons available."
+msgstr ""
+
+msgid "Tile Image"
+msgstr ""
+
+msgid "No image selected"
+msgstr ""
+
+msgid "Select Image"
+msgstr ""
+
+msgid "Change Image"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Select Tile Image"
+msgstr ""
+
+msgid "Use this image"
+msgstr ""
+
+msgid "This image will be displayed in lesson grids and listings."
+msgstr ""
