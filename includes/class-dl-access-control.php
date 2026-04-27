@@ -280,15 +280,16 @@ class DL_Access_Control {
                                             <span class="dashicons dashicons-welcome-learn-more"></span>
                                         </div>
                                     <?php endif; ?>
+
                                 </div>
                                 
                                 <div class="grid-item--label">
                                     <h4 class="grid-item--title"><?php echo esc_html($post_title); ?></h4>
-                                    <span class="grid-item--price"><?php echo DL_Payments::format_price($price); ?></span>
+                                    <!-- <span class="grid-item--price"><?php #echo DL_Payments::format_price($price); ?></span> -->
                                 </div>
                                 
                                 <a href="<?php the_permalink(); ?>" class="abs-link grid-item--title_link"></a>
-                                
+                                    
                                 <?php if ($in_basket): ?>
                                     <button type="button" 
                                             class="dl-btn dl-btn-secondary dl-view-basket-btn grid-item--btn">
@@ -301,6 +302,7 @@ class DL_Access_Control {
                                         <?php _e('Add to Basket', 'developer-lessons'); ?>
                                     </button>
                                 <?php endif; ?>
+                                
                             </div>
                         <?php endwhile; ?>
                     </div>

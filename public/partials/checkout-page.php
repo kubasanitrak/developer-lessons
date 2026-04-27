@@ -26,7 +26,7 @@ $saved_invoice = array(
 );
 $has_saved_invoice = !empty($saved_invoice['company_name']) && !empty($saved_invoice['ic']);
 ?>
-<div class="dl-checkout">
+<div class="section padded-content dl-checkout">
     <div class="dl-checkout-content">
         <h2><?php _e('Your Order', 'developer-lessons'); ?> <span class="dl-checkout-item-count">(<?php echo count($items); ?>)</span></h2>
         
