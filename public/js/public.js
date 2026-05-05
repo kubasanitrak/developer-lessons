@@ -44,7 +44,7 @@
         initBasket: function() {
             this.updateBasketCount();
         },
-
+        /*/
         addToBasket: function(e) {
             e.preventDefault();
 
@@ -99,6 +99,45 @@
                 }
             });
         },
+        /*/
+        addToBasket: function(e) {
+            e.preventDefault();
+            if (!dl_public.is_logged_in) {
+                alert(dl_public.strings.please_login);
+                return;
+            }
+            const $btn = $(e.currentTarget);
+            const lessonId = $btn.data('lesson-id');
+            const originalText = $btn.text();
+            $btn.prop('disabled', true).text(dl_public.strings.processing);
+            $.ajax({
+                url: dl_public.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'dl_add_to_basket',
+                    lesson_id: lessonId,
+                    nonce: dl_public.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        DeveloperLessons.updateBasketCount(response.data.count);
+                        DeveloperLessons.showNotification(response.data.message, 'success');
+                        DeveloperLessons.refreshBasketSidebar();
+                        
+                        // Update all buttons for this lesson
+                        DeveloperLessons.updateGridItemButton(lessonId, true);
+                    } else {
+                        DeveloperLessons.showNotification(response.data.message, 'error');
+                        $btn.prop('disabled', false).text(originalText);
+                    }
+                },
+                error: function() {
+                    DeveloperLessons.showNotification(dl_public.strings.error, 'error');
+                    $btn.prop('disabled', false).text(originalText);
+                }
+            });
+        },
+        //*/
 
         addAllToBasket: function(e) {
             e.preventDefault();
@@ -150,13 +189,10 @@
 
         removeFromBasket: function(e) {
             e.preventDefault();
-
             const $btn = $(e.currentTarget);
             const lessonId = $btn.data('lesson-id');
             const $item = $btn.closest('.dl-basket-item');
-
             $item.css('opacity', '0.5');
-
             $.ajax({
                 url: dl_public.ajax_url,
                 type: 'POST',
@@ -171,6 +207,9 @@
                             $(this).remove();
                             DeveloperLessons.updateBasketCount(response.data.count);
                             DeveloperLessons.refreshBasketSidebar();
+                            
+                            // Update any grid item buttons for this lesson
+                            DeveloperLessons.updateGridItemButton(lessonId, false);
                         });
                     } else {
                         $item.css('opacity', '1');
@@ -186,14 +225,11 @@
 
         removeFromCheckout: function(e) {
             e.preventDefault();
-
             const $btn = $(e.currentTarget);
             const lessonId = $btn.data('lesson-id');
             const $row = $btn.closest('tr');
-
             $row.css('opacity', '0.5');
             $btn.prop('disabled', true);
-
             $.ajax({
                 url: dl_public.ajax_url,
                 type: 'POST',
@@ -209,6 +245,9 @@
                             DeveloperLessons.updateBasketCount(response.data.count);
                             DeveloperLessons.refreshBasketSidebar();
                             DeveloperLessons.updateCheckoutTotals();
+                            
+                            // Update any grid item buttons for this lesson
+                            DeveloperLessons.updateGridItemButton(lessonId, false);
                         });
                     } else {
                         $row.css('opacity', '1');
@@ -220,6 +259,55 @@
                     $row.css('opacity', '1');
                     $btn.prop('disabled', false);
                     DeveloperLessons.showNotification(dl_public.strings.error, 'error');
+                }
+            });
+        },
+
+        /**
+         * Update grid item button state
+         * @param {int} lessonId - The lesson ID
+         * @param {boolean} inBasket - Whether the item is in the basket
+         */
+        updateGridItemButton: function(lessonId, inBasket) {
+            // Find all buttons for this lesson in grids
+            const $gridBtns = $('.grid-item .dl-add-to-basket-btn[data-lesson-id="' + lessonId + '"], ' +
+                               '.grid-item .dl-view-basket-btn[data-lesson-id="' + lessonId + '"]');
+            
+            $gridBtns.each(function() {
+                const $btn = $(this);
+                
+                if (inBasket) {
+                    // Change to "In Basket" state
+                    $btn.text(dl_public.strings.in_basket || 'In Basket')
+                        .removeClass('dl-add-to-basket-btn')
+                        .addClass('dl-btn-secondary dl-view-basket-btn')
+                        .prop('disabled', false);
+                } else {
+                    // Change back to "Add to Basket" state
+                    $btn.text(dl_public.strings.add_to_basket || 'Add to Basket')
+                        .removeClass('dl-btn-secondary dl-view-basket-btn')
+                        .addClass('dl-add-to-basket-btn')
+                        .prop('disabled', false);
+                }
+            });
+            
+            // Also update CTA box buttons
+            const $ctaBtns = $('.dl-cta-box .dl-add-to-basket-btn[data-lesson-id="' + lessonId + '"], ' +
+                              '.dl-cta-box .dl-view-basket-btn[data-lesson-id="' + lessonId + '"]');
+            
+            $ctaBtns.each(function() {
+                const $btn = $(this);
+                
+                if (inBasket) {
+                    $btn.text(dl_public.strings.view_basket || 'View Basket')
+                        .removeClass('dl-add-to-basket-btn')
+                        .addClass('dl-btn-secondary dl-view-basket-btn')
+                        .prop('disabled', false);
+                } else {
+                    $btn.text(dl_public.strings.add_to_basket || 'Add to Basket')
+                        .removeClass('dl-btn-secondary dl-view-basket-btn')
+                        .addClass('dl-add-to-basket-btn')
+                        .prop('disabled', false);
                 }
             });
         },
