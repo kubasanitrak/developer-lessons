@@ -31,6 +31,11 @@ class DL_Activator {
         
         $orders_table = $wpdb->prefix . 'dl_orders';
         
+        // Check if table exists first
+        if ($wpdb->get_var("SHOW TABLES LIKE '$orders_table'") !== $orders_table) {
+            return;
+        }
+        
         // Check if invoice_data column exists
         $column_exists = $wpdb->get_results("SHOW COLUMNS FROM $orders_table LIKE 'invoice_data'");
         
@@ -38,7 +43,6 @@ class DL_Activator {
             $wpdb->query("ALTER TABLE $orders_table ADD COLUMN invoice_data longtext DEFAULT NULL AFTER transaction_id");
         }
     }
-
 
     /**
      * Create custom database tables

@@ -121,10 +121,19 @@ class DL_Checkout {
 
         // Create order
         $order_id = $this->create_order($payment_method, $invoice_data);
-
+        //*/
         if (!$order_id) {
             wp_send_json_error(array('message' => __('Failed to create order.', 'developer-lessons')));
         }
+        /*/
+        // DEBUG VERSION
+        if (!$order_id) {
+            global $wpdb;
+            error_log('DL Checkout Error: ' . $wpdb->last_error);
+            error_log('DL Checkout Query: ' . $wpdb->last_query);
+            wp_send_json_error(array('message' => __('Failed to create order.', 'developer-lessons')));
+        }
+        //*/
 
         // Process payment
         if ($payment_method === 'comgate') {
@@ -158,55 +167,60 @@ class DL_Checkout {
      */
     private function create_order($payment_method, $invoice_data = null) {
         global $wpdb;
-
         $user_id = get_current_user_id();
         $basket = new DL_Basket();
         $items = $basket->get_items();
-
         if (empty($items)) {
             return false;
         }
-
         $orders_table = $wpdb->prefix . 'dl_orders';
         $order_items_table = $wpdb->prefix . 'dl_order_items';
-
+        // Check if orders table exists
+        if ($wpdb->get_var("SHOW TABLES LIKE '$orders_table'") !== $orders_table) {
+            error_log('DL Error: Orders table does not exist');
+            return false;
+        }
         $subtotal = $basket->get_total();
         $discount = $basket->calculate_discount();
         $total = $basket->get_final_total();
         $currency = get_option('dl_currency_code', 'CZK');
         $order_number = $this->generate_order_number();
         $expiry_hours = get_option('dl_order_expiry_time', 24);
-
-        // Prepare invoice data JSON
-        $invoice_json = $invoice_data ? json_encode($invoice_data) : null;
-
-        // Insert order
-        $wpdb->insert(
-            $orders_table,
-            array(
-                'user_id' => $user_id,
-                'order_number' => $order_number,
-                'status' => 'pending',
-                'payment_method' => $payment_method,
-                'total' => $total,
-                'discount' => $discount['amount'],
-                'currency' => $currency,
-                'invoice_data' => $invoice_json,
-                'created_at' => current_time('mysql'),
-                'expires_at' => date('Y-m-d H:i:s', strtotime("+{$expiry_hours} hours"))
-            ),
-            array('%d', '%s', '%s', '%s', '%f', '%f', '%s', '%s', '%s', '%s')
+        // Check if invoice_data column exists
+        $column_exists = $wpdb->get_results("SHOW COLUMNS FROM $orders_table LIKE 'invoice_data'");
+        $has_invoice_column = !empty($column_exists);
+        // Prepare data array
+        $order_data = array(
+            'user_id' => $user_id,
+            'order_number' => $order_number,
+            'status' => 'pending',
+            'payment_method' => $payment_method,
+            'total' => $total,
+            'discount' => $discount['amount'],
+            'currency' => $currency,
+            'created_at' => current_time('mysql'),
+            'expires_at' => date('Y-m-d H:i:s', strtotime("+{$expiry_hours} hours"))
         );
-
-        $order_id = $wpdb->insert_id;
-
-        if (!$order_id) {
+        $format = array('%d', '%s', '%s', '%s', '%f', '%f', '%s', '%s', '%s');
+        // Add invoice data if column exists
+        if ($has_invoice_column && $invoice_data) {
+            $order_data['invoice_data'] = json_encode($invoice_data);
+            $format[] = '%s';
+        }
+        // Insert order
+        $result = $wpdb->insert($orders_table, $order_data, $format);
+        if ($result === false) {
+            error_log('DL Error: Failed to insert order. DB Error: ' . $wpdb->last_error);
             return false;
         }
-
+        $order_id = $wpdb->insert_id;
+        if (!$order_id) {
+            error_log('DL Error: No insert ID returned');
+            return false;
+        }
         // Insert order items
         foreach ($items as $item) {
-            $wpdb->insert(
+            $item_result = $wpdb->insert(
                 $order_items_table,
                 array(
                     'order_id' => $order_id,
@@ -215,8 +229,10 @@ class DL_Checkout {
                 ),
                 array('%d', '%d', '%f')
             );
+            if ($item_result === false) {
+                error_log('DL Error: Failed to insert order item. DB Error: ' . $wpdb->last_error);
+            }
         }
-
         return $order_id;
     }
 
