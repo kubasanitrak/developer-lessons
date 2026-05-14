@@ -592,7 +592,7 @@
          */
         processStripePayment: function(orderId, $btn, $messages) {
             if (typeof window.DLStripe === 'undefined') {
-                $messages.html('<div class="dl-error">Stripe not initialized</div>');
+                $messages.html('<div class="dl-error">Stripe not initialized in public.js</div>');
                 $btn.prop('disabled', false).text(dl_public.strings.complete_purchase || 'Complete Purchase');
                 return;
             }

@@ -97,8 +97,13 @@
         processPayment: function(orderId, callback) {
             const self = this;
 
-            if (!this.stripe || !this.cardElement) {
-                callback({ error: 'Stripe not initialized' });
+            if (!this.cardElement) {
+                callback({ error: 'Stripe not initialized <= !this.cardElement' });
+                return;
+            }
+
+            if (!this.stripe) {
+                callback({ error: 'Stripe not initialized caused by !this.stripe' });
                 return;
             }
 
