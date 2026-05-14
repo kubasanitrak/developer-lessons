@@ -67,22 +67,28 @@ class DL_Stripe {
             return;
         }
 
-        // Stripe.js
+        // Stripe.js - load in footer with explicit version
         wp_enqueue_script(
             'stripe-js',
             '[js.stripe.com](https://js.stripe.com/v3/)',
             array(),
-            null,
-            true
+            '3.0',
+            array(
+                'in_footer' => true,
+                'strategy' => 'defer'
+            )
         );
 
-        // Our Stripe handler
+        // Our Stripe handler - depends on stripe-js AND jQuery
         wp_enqueue_script(
             'dl-stripe',
             DL_PLUGIN_URL . 'public/js/stripe.js',
-            array('jquery', 'stripe-js'),
+            array('jquery', 'stripe-js'),  // stripe-js as dependency
             DL_VERSION,
-            true
+            array(
+                'in_footer' => true,
+                'strategy' => 'defer'
+            )
         );
 
         wp_localize_script('dl-stripe', 'dl_stripe', array(
@@ -96,6 +102,7 @@ class DL_Stripe {
             )
         ));
     }
+
 
     /**
      * Create Stripe Checkout Session
