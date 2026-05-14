@@ -103,7 +103,7 @@
                 this.elements = this.stripe.elements({
                     fonts: [
                         {
-                            cssSrc: '[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap)',
+                            cssSrc: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap',
                         }
                     ]
                 });
