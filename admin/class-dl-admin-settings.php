@@ -16,11 +16,13 @@ class DL_Admin_Settings {
         $this->tabs = array(
             'general' => __('General', 'developer-lessons'),
             'pricing' => __('Pricing', 'developer-lessons'),
+            'stripe' => __('Stripe', 'developer-lessons'),  // Add this
             'comgate' => __('Comgate', 'developer-lessons'),
             'bank_transfer' => __('Bank Transfer', 'developer-lessons'),
             'emails' => __('Emails', 'developer-lessons'),
             'advanced' => __('Advanced', 'developer-lessons')
         );
+
 
         add_action('admin_init', array($this, 'register_settings'));
     }
@@ -39,6 +41,15 @@ class DL_Admin_Settings {
         // Pricing settings
         register_setting('dl_pricing_settings', 'dl_bundle_5_discount');
         register_setting('dl_pricing_settings', 'dl_bundle_10_discount');
+
+        // Stripe settings
+        register_setting('dl_stripe_settings', 'dl_stripe_enabled');
+        register_setting('dl_stripe_settings', 'dl_stripe_test_mode');
+        register_setting('dl_stripe_settings', 'dl_stripe_test_publishable_key');
+        register_setting('dl_stripe_settings', 'dl_stripe_test_secret_key');
+        register_setting('dl_stripe_settings', 'dl_stripe_live_publishable_key');
+        register_setting('dl_stripe_settings', 'dl_stripe_live_secret_key');
+        register_setting('dl_stripe_settings', 'dl_stripe_webhook_secret');
 
         // Comgate settings
         register_setting('dl_comgate_settings', 'dl_comgate_enabled');
@@ -90,6 +101,9 @@ class DL_Admin_Settings {
                 break;
             case 'comgate':
                 $this->render_comgate_tab();
+                break;
+            case 'stripe':
+                $this->render_stripe_tab();
                 break;
             case 'bank_transfer':
                 $this->render_bank_transfer_tab();
@@ -269,6 +283,122 @@ class DL_Admin_Settings {
         </form>
         <?php
     }
+    /**
+     * Render Stripe tab
+     */
+    private function render_stripe_tab() {
+        $webhook_url = rest_url('developer-lessons/v1/stripe-webhook');
+        ?>
+        <form method="post" action="options.php">
+            <?php settings_fields('dl_stripe_settings'); ?>
+            
+            <h2><?php _e('Stripe Payment Gateway', 'developer-lessons'); ?></h2>
+            
+            <table class="form-table">
+                <tr>
+                    <th><label for="dl_stripe_enabled"><?php _e('Enable Stripe', 'developer-lessons'); ?></label></th>
+                    <td>
+                        <label>
+                            <input type="checkbox" name="dl_stripe_enabled" id="dl_stripe_enabled" 
+                                   value="1" <?php checked(get_option('dl_stripe_enabled'), 1); ?>>
+                            <?php _e('Enable Stripe payment gateway', 'developer-lessons'); ?>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="dl_stripe_test_mode"><?php _e('Test Mode', 'developer-lessons'); ?></label></th>
+                    <td>
+                        <label>
+                            <input type="checkbox" name="dl_stripe_test_mode" id="dl_stripe_test_mode" 
+                                   value="1" <?php checked(get_option('dl_stripe_test_mode', 1), 1); ?>>
+                            <?php _e('Enable test mode (use test API keys)', 'developer-lessons'); ?>
+                        </label>
+                    </td>
+                </tr>
+            </table>
+
+            <h3><?php _e('Test API Keys', 'developer-lessons'); ?></h3>
+            <p class="description"><?php _e('Get your test keys from Stripe Dashboard → Developers → API keys', 'developer-lessons'); ?></p>
+            
+            <table class="form-table">
+                <tr>
+                    <th><label for="dl_stripe_test_publishable_key"><?php _e('Test Publishable Key', 'developer-lessons'); ?></label></th>
+                    <td>
+                        <input type="text" name="dl_stripe_test_publishable_key" id="dl_stripe_test_publishable_key" 
+                               value="<?php echo esc_attr(get_option('dl_stripe_test_publishable_key')); ?>" 
+                               class="regular-text" placeholder="pk_test_...">
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="dl_stripe_test_secret_key"><?php _e('Test Secret Key', 'developer-lessons'); ?></label></th>
+                    <td>
+                        <input type="password" name="dl_stripe_test_secret_key" id="dl_stripe_test_secret_key" 
+                               value="<?php echo esc_attr(get_option('dl_stripe_test_secret_key')); ?>" 
+                               class="regular-text" placeholder="sk_test_...">
+                    </td>
+                </tr>
+            </table>
+
+            <h3><?php _e('Live API Keys', 'developer-lessons'); ?></h3>
+            <p class="description"><?php _e('Use these keys for production payments.', 'developer-lessons'); ?></p>
+            
+            <table class="form-table">
+                <tr>
+                    <th><label for="dl_stripe_live_publishable_key"><?php _e('Live Publishable Key', 'developer-lessons'); ?></label></th>
+                    <td>
+                        <input type="text" name="dl_stripe_live_publishable_key" id="dl_stripe_live_publishable_key" 
+                               value="<?php echo esc_attr(get_option('dl_stripe_live_publishable_key')); ?>" 
+                               class="regular-text" placeholder="pk_live_...">
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="dl_stripe_live_secret_key"><?php _e('Live Secret Key', 'developer-lessons'); ?></label></th>
+                    <td>
+                        <input type="password" name="dl_stripe_live_secret_key" id="dl_stripe_live_secret_key" 
+                               value="<?php echo esc_attr(get_option('dl_stripe_live_secret_key')); ?>" 
+                               class="regular-text" placeholder="sk_live_...">
+                    </td>
+                </tr>
+            </table>
+
+            <h3><?php _e('Webhook Configuration', 'developer-lessons'); ?></h3>
+            
+            <table class="form-table">
+                <tr>
+                    <th><?php _e('Webhook URL', 'developer-lessons'); ?></th>
+                    <td>
+                        <code><?php echo esc_html($webhook_url); ?></code>
+                        <p class="description">
+                            <?php _e('Add this URL to your Stripe Dashboard → Developers → Webhooks', 'developer-lessons'); ?>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="dl_stripe_webhook_secret"><?php _e('Webhook Secret', 'developer-lessons'); ?></label></th>
+                    <td>
+                        <input type="password" name="dl_stripe_webhook_secret" id="dl_stripe_webhook_secret" 
+                               value="<?php echo esc_attr(get_option('dl_stripe_webhook_secret')); ?>" 
+                               class="regular-text" placeholder="whsec_...">
+                        <p class="description">
+                            <?php _e('Found in Stripe Dashboard after creating the webhook endpoint.', 'developer-lessons'); ?>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+
+            <h3><?php _e('Required Webhook Events', 'developer-lessons'); ?></h3>
+            <p class="description"><?php _e('Enable these events when creating your webhook:', 'developer-lessons'); ?></p>
+            <ul style="list-style: disc; margin-left: 20px;">
+                <li><code>checkout.session.completed</code></li>
+                <li><code>payment_intent.succeeded</code></li>
+                <li><code>payment_intent.payment_failed</code></li>
+            </ul>
+
+            <?php submit_button(); ?>
+        </form>
+        <?php
+    }
+
 
     /**
      * Render Bank Transfer tab

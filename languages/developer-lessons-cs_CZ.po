@@ -990,3 +990,69 @@ msgstr "Použít tento obrázek"
 
 msgid "This image will be displayed in lesson grids and listings."
 msgstr "Tento obrázek bude zobrazen v mřížce a výpisech lekcí."
+
+msgid "Stripe Payment Gateway"
+msgstr "Platební brána Stripe"
+
+msgid "Enable Stripe"
+msgstr "Povolit Stripe"
+
+msgid "Enable Stripe payment gateway"
+msgstr "Povolit platební bránu Stripe"
+
+msgid "Enable test mode (use test API keys)"
+msgstr "Povolit testovací režim (použít testovací API klíče)"
+
+msgid "Test API Keys"
+msgstr "Testovací API klíče"
+
+msgid "Get your test keys from Stripe Dashboard → Developers → API keys"
+msgstr "Získejte testovací klíče ze Stripe Dashboard → Developers → API keys"
+
+msgid "Test Publishable Key"
+msgstr "Testovací veřejný klíč"
+
+msgid "Test Secret Key"
+msgstr "Testovací tajný klíč"
+
+msgid "Live API Keys"
+msgstr "Produkční API klíče"
+
+msgid "Use these keys for production payments."
+msgstr "Použijte tyto klíče pro skutečné platby."
+
+msgid "Live Publishable Key"
+msgstr "Produkční veřejný klíč"
+
+msgid "Live Secret Key"
+msgstr "Produkční tajný klíč"
+
+msgid "Webhook Configuration"
+msgstr "Konfigurace webhooku"
+
+msgid "Webhook URL"
+msgstr "URL webhooku"
+
+msgid "Add this URL to your Stripe Dashboard → Developers → Webhooks"
+msgstr "Přidejte tuto URL do Stripe Dashboard → Developers → Webhooks"
+
+msgid "Webhook Secret"
+msgstr "Tajný klíč webhooku"
+
+msgid "Found in Stripe Dashboard after creating the webhook endpoint."
+msgstr "Najdete ve Stripe Dashboard po vytvoření webhooku."
+
+msgid "Secure payment via Stripe"
+msgstr "Bezpečná platba přes Stripe"
+
+msgid "Pay by Card (Comgate)"
+msgstr "Zaplatit kartou (Comgate)"
+
+msgid "Stripe payments are not available."
+msgstr "Platby přes Stripe nejsou k dispozici."
+
+msgid "Processing payment..."
+msgstr "Zpracovávám platbu..."
+
+msgid "Payment failed. Please try again."
+msgstr "Platba selhala. Zkuste to prosím znovu."

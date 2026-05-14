@@ -165,16 +165,36 @@ $has_saved_invoice = !empty($saved_invoice['company_name']) && !empty($saved_inv
                 </div>
             </div>
 
+            <?php
+            $stripe = new DL_Stripe();
+            $stripe_enabled = $stripe->is_enabled();
+            ?>
+
             <!-- Payment Method Section -->
             <div class="dl-checkout-section">
                 <h3><?php _e('Payment Method', 'developer-lessons'); ?></h3>
                 
                 <div class="dl-payment-methods">
-                    <?php if ($comgate_enabled): ?>
+                    <?php if ($stripe_enabled): ?>
                         <label class="dl-payment-method">
-                            <input type="radio" name="payment_method" value="comgate" checked>
+                            <input type="radio" name="payment_method" value="stripe" checked>
                             <span class="dl-payment-method-label">
                                 <strong><?php _e('Pay by Card', 'developer-lessons'); ?></strong>
+                                <span><?php _e('Secure payment via Stripe', 'developer-lessons'); ?></span>
+                            </span>
+                        </label>
+                        
+                        <div class="dl-stripe-card-element" style="display: block;">
+                            <div id="dl-stripe-card-element"></div>
+                            <div id="dl-stripe-card-errors" class="dl-stripe-errors" style="display: none;"></div>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($comgate_enabled): ?>
+                        <label class="dl-payment-method">
+                            <input type="radio" name="payment_method" value="comgate" <?php echo !$stripe_enabled ? 'checked' : ''; ?>>
+                            <span class="dl-payment-method-label">
+                                <strong><?php _e('Pay by Card (Comgate)', 'developer-lessons'); ?></strong>
                                 <span><?php _e('Secure payment via Comgate', 'developer-lessons'); ?></span>
                             </span>
                         </label>
@@ -182,7 +202,7 @@ $has_saved_invoice = !empty($saved_invoice['company_name']) && !empty($saved_inv
 
                     <?php if ($bank_transfer_enabled): ?>
                         <label class="dl-payment-method">
-                            <input type="radio" name="payment_method" value="bank_transfer" <?php echo !$comgate_enabled ? 'checked' : ''; ?>>
+                            <input type="radio" name="payment_method" value="bank_transfer" <?php echo (!$stripe_enabled && !$comgate_enabled) ? 'checked' : ''; ?>>
                             <span class="dl-payment-method-label">
                                 <strong><?php _e('Bank Transfer', 'developer-lessons'); ?></strong>
                                 <span><?php _e('Pay via bank transfer with QR code', 'developer-lessons'); ?></span>

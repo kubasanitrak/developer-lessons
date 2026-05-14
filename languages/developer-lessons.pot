@@ -1279,3 +1279,81 @@ msgstr ""
 
 msgid "This image will be displayed in lesson grids and listings."
 msgstr ""
+
+msgid "Stripe Payment Gateway"
+msgstr ""
+
+msgid "Enable Stripe"
+msgstr ""
+
+msgid "Enable Stripe payment gateway"
+msgstr ""
+
+msgid "Enable test mode (use test API keys)"
+msgstr ""
+
+msgid "Test API Keys"
+msgstr ""
+
+msgid "Get your test keys from Stripe Dashboard → Developers → API keys"
+msgstr ""
+
+msgid "Test Publishable Key"
+msgstr ""
+
+msgid "Test Secret Key"
+msgstr ""
+
+msgid "Live API Keys"
+msgstr ""
+
+msgid "Use these keys for production payments."
+msgstr ""
+
+msgid "Live Publishable Key"
+msgstr ""
+
+msgid "Live Secret Key"
+msgstr ""
+
+msgid "Webhook Configuration"
+msgstr ""
+
+msgid "Webhook URL"
+msgstr ""
+
+msgid "Add this URL to your Stripe Dashboard → Developers → Webhooks"
+msgstr ""
+
+msgid "Webhook Secret"
+msgstr ""
+
+msgid "Found in Stripe Dashboard after creating the webhook endpoint."
+msgstr ""
+
+msgid "Required Webhook Events"
+msgstr ""
+
+msgid "Enable these events when creating your webhook:"
+msgstr ""
+
+msgid "Secure payment via Stripe"
+msgstr ""
+
+msgid "Pay by Card (Comgate)"
+msgstr ""
+
+msgid "Stripe payments are not available."
+msgstr ""
+
+msgid "Processing payment..."
+msgstr ""
+
+msgid "Payment failed. Please try again."
+msgstr ""
+
+msgid "Failed to create payment session."
+msgstr ""
+
+msgid "Bundle Discount"
+msgstr ""

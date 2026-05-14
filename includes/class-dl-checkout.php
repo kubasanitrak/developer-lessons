@@ -68,8 +68,15 @@ class DL_Checkout {
         $want_invoice = isset($_POST['want_invoice']) ? (bool)$_POST['want_invoice'] : false;
 
         // Validate payment method
-        if (!in_array($payment_method, array('comgate', 'bank_transfer'))) {
+        if (!in_array($payment_method, array('stripe', 'comgate', 'bank_transfer'))) {
             wp_send_json_error(array('message' => __('Invalid payment method.', 'developer-lessons')));
+        }
+        // Check if payment method is enabled
+        if ($payment_method === 'stripe') {
+            $stripe = new DL_Stripe();
+            if (!$stripe->is_enabled()) {
+                wp_send_json_error(array('message' => __('Stripe payments are not available.', 'developer-lessons')));
+            }
         }
 
         // Check if payment method is enabled
@@ -135,8 +142,15 @@ class DL_Checkout {
         }
         //*/
 
-        // Process payment
-        if ($payment_method === 'comgate') {
+        // Process payment based on method
+        if ($payment_method === 'stripe') {
+            // For Stripe with embedded card element, return order_id for JS to process
+            wp_send_json_success(array(
+                'payment_method' => 'stripe',
+                'order_id' => $order_id,
+                'process_payment' => true
+            ));
+        } elseif ($payment_method === 'comgate') {
             $comgate = new DL_Comgate();
             $result = $comgate->create_payment($order_id);
 

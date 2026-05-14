@@ -990,3 +990,81 @@ msgstr "Use this image"
 
 msgid "This image will be displayed in lesson grids and listings."
 msgstr "This image will be displayed in lesson grids and listings."
+
+msgid "Stripe Payment Gateway"
+msgstr "Stripe Payment Gateway"
+
+msgid "Enable Stripe"
+msgstr "Enable Stripe"
+
+msgid "Enable Stripe payment gateway"
+msgstr "Enable Stripe payment gateway"
+
+msgid "Enable test mode (use test API keys)"
+msgstr "Enable test mode (use test API keys)"
+
+msgid "Test API Keys"
+msgstr "Test API Keys"
+
+msgid "Get your test keys from Stripe Dashboard → Developers → API keys"
+msgstr "Get your test keys from Stripe Dashboard → Developers → API keys"
+
+msgid "Test Publishable Key"
+msgstr "Test Publishable Key"
+
+msgid "Test Secret Key"
+msgstr "Test Secret Key"
+
+msgid "Live API Keys"
+msgstr "Live API Keys"
+
+msgid "Use these keys for production payments."
+msgstr "Use these keys for production payments."
+
+msgid "Live Publishable Key"
+msgstr "Live Publishable Key"
+
+msgid "Live Secret Key"
+msgstr "Live Secret Key"
+
+msgid "Webhook Configuration"
+msgstr "Webhook Configuration"
+
+msgid "Webhook URL"
+msgstr "Webhook URL"
+
+msgid "Add this URL to your Stripe Dashboard → Developers → Webhooks"
+msgstr "Add this URL to your Stripe Dashboard → Developers → Webhooks"
+
+msgid "Webhook Secret"
+msgstr "Webhook Secret"
+
+msgid "Found in Stripe Dashboard after creating the webhook endpoint."
+msgstr "Found in Stripe Dashboard after creating the webhook endpoint."
+
+msgid "Required Webhook Events"
+msgstr "Required Webhook Events"
+
+msgid "Enable these events when creating your webhook:"
+msgstr "Enable these events when creating your webhook:"
+
+msgid "Secure payment via Stripe"
+msgstr "Secure payment via Stripe"
+
+msgid "Pay by Card (Comgate)"
+msgstr "Pay by Card (Comgate)"
+
+msgid "Stripe payments are not available."
+msgstr "Stripe payments are not available."
+
+msgid "Processing payment..."
+msgstr "Processing payment..."
+
+msgid "Payment failed. Please try again."
+msgstr "Payment failed. Please try again."
+
+msgid "Failed to create payment session."
+msgstr "Failed to create payment session."
+
+msgid "Bundle Discount"
+msgstr "Bundle Discount"
