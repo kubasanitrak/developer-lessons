@@ -70,7 +70,7 @@ class DL_Stripe {
         // Stripe.js
         wp_enqueue_script(
             'stripe-js',
-            '[js.stripe.com](https://js.stripe.com/v3/)',
+            'https://js.stripe.com/v3/',
             array(),
             null,
             true
