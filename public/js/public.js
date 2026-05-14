@@ -520,7 +520,7 @@
                 return;
             }
 
-            // Validate invoice fields if invoice is requested
+            // Validate invoice fields if requested
             if (wantInvoice) {
                 const companyName = $form.find('#dl_invoice_company_name').val().trim();
                 const street = $form.find('#dl_invoice_street').val().trim();
@@ -564,8 +564,15 @@
                 type: 'POST',
                 data: formData,
                 success: function(response) {
-                    if (response.success && response.data.redirect) {
-                        window.location.href = response.data.redirect;
+                    if (response.success) {
+                        // Handle Stripe payment
+                        if (response.data.payment_method === 'stripe' && response.data.process_payment) {
+                            DeveloperLessons.processStripePayment(response.data.order_id, $btn, $messages);
+                        } 
+                        // Handle redirect (Comgate, Bank Transfer)
+                        else if (response.data.redirect) {
+                            window.location.href = response.data.redirect;
+                        }
                     } else {
                         $messages.html('<div class="dl-error">' + (response.data.message || dl_public.strings.error) + '</div>');
                         $btn.prop('disabled', false).text(dl_public.strings.complete_purchase || 'Complete Purchase');
@@ -579,6 +586,31 @@
                 }
             });
         },
+
+        /**
+         * Process Stripe payment after order is created
+         */
+        processStripePayment: function(orderId, $btn, $messages) {
+            if (typeof window.DLStripe === 'undefined') {
+                $messages.html('<div class="dl-error">Stripe not initialized</div>');
+                $btn.prop('disabled', false).text(dl_public.strings.complete_purchase || 'Complete Purchase');
+                return;
+            }
+
+            $btn.text(dl_public.strings.processing_payment || 'Processing payment...');
+
+            window.DLStripe.processPayment(orderId, function(result) {
+                if (result.success) {
+                    // Payment succeeded, redirect to success page
+                    window.location.href = dl_public.checkout_url.replace('/checkout/', '/payment-success/') + '?order=' + orderId;
+                } else {
+                    $messages.html('<div class="dl-error">' + (result.error || dl_public.strings.error) + '</div>');
+                    $btn.prop('disabled', false).text(dl_public.strings.complete_purchase || 'Complete Purchase');
+                    DeveloperLessons.scrollToElement($messages);
+                }
+            });
+        },
+
 
         scrollToElement: function($element) {
             if ($element.length) {
