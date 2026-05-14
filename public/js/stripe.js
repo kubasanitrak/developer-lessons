@@ -10,11 +10,25 @@
         elements: null,
         cardElement: null,
         initialized: false,
+        initAttempts: 0,
+        maxAttempts: 20,
 
         init: function() {
+            const self = this;
+            
+            // Wait for Stripe to be available
             if (typeof Stripe === 'undefined') {
-                console.log('DL Stripe: Stripe.js not loaded');
-                return;
+                this.initAttempts++;
+                if (this.initAttempts < this.maxAttempts) {
+                    console.log('DL Stripe: Waiting for Stripe.js... attempt ' + this.initAttempts);
+                    setTimeout(function() {
+                        self.init();
+                    }, 250);
+                    return;
+                } else {
+                    console.log('DL Stripe: Stripe.js failed to load after ' + this.maxAttempts + ' attempts');
+                    return;
+                }
             }
             
             if (typeof dl_stripe === 'undefined') {
@@ -27,10 +41,10 @@
                 return;
             }
 
+            console.log('DL Stripe: Initializing with key ' + dl_stripe.publishable_key.substring(0, 12) + '...');
+            
             this.stripe = Stripe(dl_stripe.publishable_key);
             this.bindEvents();
-            
-            // Initialize card element if Stripe payment method exists and is selected
             this.initOnLoad();
         },
 
