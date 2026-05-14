@@ -175,6 +175,7 @@ $has_saved_invoice = !empty($saved_invoice['company_name']) && !empty($saved_inv
                 <h3><?php _e('Payment Method', 'developer-lessons'); ?></h3>
                 
                 <div class="dl-payment-methods">
+
                     <?php if ($stripe_enabled): ?>
                         <label class="dl-payment-method">
                             <input type="radio" name="payment_method" value="stripe" checked>
