@@ -418,7 +418,7 @@ class DL_Stripe {
      * Make API request to Stripe
      */
     private function api_request($endpoint, $data = array(), $method = 'POST') {
-        $url = '[api.stripe.com](https://api.stripe.com/v1/)' . $endpoint;
+        $url = 'https://api.stripe.com/v1/' . $endpoint;
 
         $args = array(
             'method' => $method,
