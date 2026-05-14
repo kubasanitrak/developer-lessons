@@ -2,17 +2,32 @@
 /**
  * Checkout page template
  */
-
 if (!defined('ABSPATH')) {
     exit;
 }
-
 // Check if bank transfer info should be shown
 if (isset($_GET['order']) && isset($_GET['method']) && $_GET['method'] === 'bank_transfer') {
     echo DL_Bank_Transfer::render_transfer_info(intval($_GET['order']));
     return;
 }
-
+// Get Stripe instance and check if enabled
+$stripe = new DL_Stripe();
+$stripe_enabled = $stripe->is_enabled();
+// Load Stripe.js directly if Stripe is enabled
+if ($stripe_enabled): ?>
+<script src="[js.stripe.com](https://js.stripe.com/v3/)"></script>
+<script>
+    var dl_stripe = {
+        publishable_key: '<?php echo esc_js($stripe->get_publishable_key()); ?>',
+        ajax_url: '<?php echo esc_js(admin_url('admin-ajax.php')); ?>',
+        nonce: '<?php echo esc_js(wp_create_nonce('dl_stripe_nonce')); ?>',
+        strings: {
+            processing: '<?php echo esc_js(__('Processing payment...', 'developer-lessons')); ?>',
+            error: '<?php echo esc_js(__('Payment failed. Please try again.', 'developer-lessons')); ?>'
+        }
+    };
+</script>
+<?php endif;
 // Get user's saved invoice data
 $user_id = get_current_user_id();
 $saved_invoice = array(

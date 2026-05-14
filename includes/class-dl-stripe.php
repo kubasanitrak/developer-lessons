@@ -67,42 +67,15 @@ class DL_Stripe {
             return;
         }
 
-        // Stripe.js - load in footer with explicit version
-        wp_enqueue_script(
-            'stripe-js',
-            '[js.stripe.com](https://js.stripe.com/v3/)',
-            array(),
-            '3.0',
-            array(
-                'in_footer' => true,
-                'strategy' => 'defer'
-            )
-        );
-
-        // Our Stripe handler - depends on stripe-js AND jQuery
+        // Only enqueue our handler - Stripe.js is loaded in the template
         wp_enqueue_script(
             'dl-stripe',
             DL_PLUGIN_URL . 'public/js/stripe.js',
-            array('jquery', 'stripe-js'),  // stripe-js as dependency
+            array('jquery'),
             DL_VERSION,
-            array(
-                'in_footer' => true,
-                'strategy' => 'defer'
-            )
+            true
         );
-
-        wp_localize_script('dl-stripe', 'dl_stripe', array(
-            'publishable_key' => $this->publishable_key,
-            'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('dl_stripe_nonce'),
-            'return_url' => $this->get_return_url(),
-            'strings' => array(
-                'processing' => __('Processing payment...', 'developer-lessons'),
-                'error' => __('Payment failed. Please try again.', 'developer-lessons'),
-            )
-        ));
     }
-
 
     /**
      * Create Stripe Checkout Session
