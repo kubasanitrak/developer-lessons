@@ -12,6 +12,40 @@ class DL_Payments {
     public function __construct() {
         add_shortcode('dl_payment_success', array($this, 'render_payment_success'));
         add_shortcode('dl_payment_failed', array($this, 'render_payment_failed'));
+        
+        // Handle Stripe return (when user comes back from payment)
+        add_action('template_redirect', array($this, 'handle_payment_return'));
+    }
+
+    /**
+     * Handle return from payment gateway
+     */
+    public function handle_payment_return() {
+        $page_ids = get_option('dl_page_ids', array());
+        $success_page_id = isset($page_ids['payment_success']) ? $page_ids['payment_success'] : 0;
+        
+        if (!is_page($success_page_id)) {
+            return;
+        }
+
+        $order_id = isset($_GET['order']) ? intval($_GET['order']) : 0;
+        
+        if (!$order_id) {
+            return;
+        }
+
+        $order = DL_Checkout::get_order($order_id);
+        
+        if (!$order || $order->user_id != get_current_user_id()) {
+            return;
+        }
+
+        // If order is still processing (Stripe), check and complete it
+        if ($order->status === 'processing' && $order->payment_method === 'stripe') {
+            // The payment was successful if user reached success page
+            // Stripe redirects here only on success
+            self::complete_payment($order_id, $order->transaction_id);
+        }
     }
 
     /**
@@ -22,8 +56,15 @@ class DL_Payments {
 
         $order = DL_Checkout::get_order($order_id);
 
-        if (!$order || $order->status === 'completed') {
+        if (!$order) {
+            error_log('DL Payments: Order not found - ' . $order_id);
             return false;
+        }
+
+        // Prevent double completion
+        if ($order->status === 'completed') {
+            error_log('DL Payments: Order already completed - ' . $order_id);
+            return true;
         }
 
         // Update order status
@@ -33,17 +74,26 @@ class DL_Payments {
         $purchases_table = $wpdb->prefix . 'dl_purchases';
 
         foreach ($order->items as $item) {
-            $wpdb->insert(
-                $purchases_table,
-                array(
-                    'user_id' => $order->user_id,
-                    'lesson_id' => $item->lesson_id,
-                    'order_id' => $order_id,
-                    'price' => $item->price,
-                    'purchased_at' => current_time('mysql')
-                ),
-                array('%d', '%d', '%d', '%f', '%s')
-            );
+            // Check if purchase already exists (prevent duplicates)
+            $exists = $wpdb->get_var($wpdb->prepare(
+                "SELECT id FROM $purchases_table WHERE user_id = %d AND lesson_id = %d",
+                $order->user_id,
+                $item->lesson_id
+            ));
+
+            if (!$exists) {
+                $wpdb->insert(
+                    $purchases_table,
+                    array(
+                        'user_id' => $order->user_id,
+                        'lesson_id' => $item->lesson_id,
+                        'order_id' => $order_id,
+                        'price' => $item->price,
+                        'purchased_at' => current_time('mysql')
+                    ),
+                    array('%d', '%d', '%d', '%f', '%s')
+                );
+            }
         }
 
         // Clear basket
@@ -62,7 +112,8 @@ class DL_Payments {
         self::log('payment_completed', "Order #{$order->order_number} completed", array(
             'order_id' => $order_id,
             'user_id' => $order->user_id,
-            'total' => $order->total
+            'total' => $order->total,
+            'payment_method' => $order->payment_method
         ));
 
         return true;
@@ -127,6 +178,11 @@ class DL_Payments {
         global $wpdb;
 
         $logs_table = $wpdb->prefix . 'dl_logs';
+        
+        // Check if table exists
+        if ($wpdb->get_var("SHOW TABLES LIKE '$logs_table'") !== $logs_table) {
+            return;
+        }
 
         $wpdb->insert(
             $logs_table,

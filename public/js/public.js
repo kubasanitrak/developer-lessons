@@ -592,7 +592,7 @@
          */
         processStripePayment: function(orderId, $btn, $messages) {
             if (typeof window.DLStripe === 'undefined') {
-                $messages.html('<div class="dl-error">Stripe not initialized in public.js</div>');
+                $messages.html('<div class="dl-error">Stripe not initialized. Please refresh the page.</div>');
                 $btn.prop('disabled', false).text(dl_public.strings.complete_purchase || 'Complete Purchase');
                 return;
             }
@@ -602,7 +602,8 @@
             window.DLStripe.processPayment(orderId, function(result) {
                 if (result.success) {
                     // Payment succeeded, redirect to success page
-                    window.location.href = dl_public.checkout_url.replace('/checkout/', '/payment-success/') + '?order=' + orderId;
+                    const successUrl = dl_public.success_url || dl_public.checkout_url.replace('/checkout/', '/payment-success/');
+                    window.location.href = successUrl + '?order=' + orderId;
                 } else {
                     $messages.html('<div class="dl-error">' + (result.error || dl_public.strings.error) + '</div>');
                     $btn.prop('disabled', false).text(dl_public.strings.complete_purchase || 'Complete Purchase');
