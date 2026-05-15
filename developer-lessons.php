@@ -3,7 +3,7 @@
  * Plugin Name: Developer Lessons
  * Plugin URI: https://example.com/developer-lessons
  * Description: Pay-per-post functionality for lesson content with Comgate and Bank Transfer payments.
- * Version: 1.1.5
+ * Version: 1.1.6
  * Author: Developer
  * Author URI: https://example.com
  * License: GPL-2.0+
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Plugin constants
-define('DL_VERSION', '1.1.5');
+define('DL_VERSION', '1.1.6');
 define('DL_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('DL_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('DL_PLUGIN_BASENAME', plugin_basename(__FILE__));
