@@ -28,6 +28,9 @@ class DL_Activator {
      */
     public static function run_migrations() {
         global $wpdb;
+
+        require_once DL_PLUGIN_DIR . 'includes/class-dl-seller.php';
+        require_once DL_PLUGIN_DIR . 'includes/class-dl-invoices.php';
         
         $orders_table = $wpdb->prefix . 'dl_orders';
         
@@ -42,6 +45,25 @@ class DL_Activator {
         if (empty($column_exists)) {
             $wpdb->query("ALTER TABLE $orders_table ADD COLUMN invoice_data longtext DEFAULT NULL AFTER transaction_id");
         }
+
+        $invoice_columns = array(
+            'proforma_number' => "varchar(32) DEFAULT NULL AFTER invoice_data",
+            'invoice_number' => "varchar(32) DEFAULT NULL AFTER proforma_number",
+            'proforma_pdf' => "varchar(255) DEFAULT NULL AFTER invoice_number",
+            'invoice_pdf' => "varchar(255) DEFAULT NULL AFTER proforma_pdf",
+            'order_placed_email_sent_at' => "datetime DEFAULT NULL AFTER invoice_pdf",
+            'payment_confirmed_email_sent_at' => "datetime DEFAULT NULL AFTER order_placed_email_sent_at",
+        );
+
+        foreach ($invoice_columns as $column => $definition) {
+            $exists = $wpdb->get_results("SHOW COLUMNS FROM $orders_table LIKE '$column'");
+            if (empty($exists)) {
+                $wpdb->query("ALTER TABLE $orders_table ADD COLUMN $column $definition");
+            }
+        }
+
+        DL_Seller::maybe_migrate_legacy_bank_options();
+        DL_Invoices::ensure_storage_dir();
     }
 
     /**
@@ -66,6 +88,12 @@ class DL_Activator {
             currency varchar(3) NOT NULL DEFAULT 'CZK',
             transaction_id varchar(100) DEFAULT NULL,
             invoice_data longtext DEFAULT NULL,
+            proforma_number varchar(32) DEFAULT NULL,
+            invoice_number varchar(32) DEFAULT NULL,
+            proforma_pdf varchar(255) DEFAULT NULL,
+            invoice_pdf varchar(255) DEFAULT NULL,
+            order_placed_email_sent_at datetime DEFAULT NULL,
+            payment_confirmed_email_sent_at datetime DEFAULT NULL,
             created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             expires_at datetime DEFAULT NULL,
@@ -225,6 +253,20 @@ class DL_Activator {
             'dl_email_template_type' => 'html',
             'dl_admin_notification_enabled' => 1,
             'dl_admin_notification_email' => get_option('admin_email'),
+
+            // Seller / invoices
+            'dl_seller_name' => '',
+            'dl_seller_street' => '',
+            'dl_seller_city' => '',
+            'dl_seller_zip' => '',
+            'dl_seller_country' => '',
+            'dl_seller_ic' => '',
+            'dl_seller_dic' => '',
+            'dl_seller_account_number' => '',
+            'dl_seller_bank_code' => '',
+            'dl_seller_iban' => '',
+            'dl_seller_bic' => '',
+            'dl_invoice_sequence_start' => 1,
             
             // Advanced
             'dl_order_expiry_time' => 24,

@@ -88,16 +88,29 @@ if (!defined('ABSPATH')) {
         </div>
         
         <div class="content">
-            <h2><?php _e('Thank you for your purchase!', 'developer-lessons'); ?></h2>
-            
+            <?php
+            $email_phase = isset($email_phase) ? $email_phase : 'payment_confirmed';
+            if ($email_phase === 'order_placed') :
+            ?>
+            <h2><?php _e('Order received - awaiting payment', 'developer-lessons'); ?></h2>
             <p><?php printf(__('Hello %s,', 'developer-lessons'), esc_html($user->display_name)); ?></p>
-            
-            <p><?php _e('Your payment has been processed successfully. You now have full access to the lessons you purchased.', 'developer-lessons'); ?></p>
+            <p><?php _e('Thank you for your order. Please complete payment to receive access to your lessons. A pro-forma invoice is attached to this email.', 'developer-lessons'); ?></p>
+            <?php if (!empty($payment_instructions)) : ?>
+                <div><?php echo $payment_instructions; ?></div>
+            <?php endif; ?>
+            <?php else : ?>
+            <h2><?php _e('Thank you for your purchase!', 'developer-lessons'); ?></h2>
+            <p><?php printf(__('Hello %s,', 'developer-lessons'), esc_html($user->display_name)); ?></p>
+            <p><?php _e('Your payment has been processed successfully. You now have full access to the lessons you purchased. Your pro-forma invoice and tax invoice are attached to this email.', 'developer-lessons'); ?></p>
+            <?php endif; ?>
             
             <div class="order-details">
                 <h3><?php _e('Order Details', 'developer-lessons'); ?></h3>
                 <p><strong><?php _e('Order Number:', 'developer-lessons'); ?></strong> <?php echo esc_html($order->order_number); ?></p>
-                <p><strong><?php _e('Date:', 'developer-lessons'); ?></strong> <?php echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($order->paid_at)); ?></p>
+                <?php
+                $order_date = !empty($order->paid_at) ? $order->paid_at : $order->created_at;
+                ?>
+                <p><strong><?php _e('Date:', 'developer-lessons'); ?></strong> <?php echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($order_date)); ?></p>
                 
                 <table>
                     <thead>
@@ -127,11 +140,19 @@ if (!defined('ABSPATH')) {
                 </table>
             </div>
             
+            <?php if ($email_phase !== 'order_placed') : ?>
             <p style="text-align: center;">
                 <a href="<?php echo esc_url($dashboard_url); ?>" class="btn">
                     <?php _e('Access Your Lessons', 'developer-lessons'); ?>
                 </a>
             </p>
+            <?php elseif (!empty($checkout_url)) : ?>
+            <p style="text-align: center;">
+                <a href="<?php echo esc_url($checkout_url); ?>" class="btn">
+                    <?php _e('Complete Payment', 'developer-lessons'); ?>
+                </a>
+            </p>
+            <?php endif; ?>
         </div>
         
         <div class="footer">

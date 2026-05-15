@@ -18,6 +18,7 @@ class DL_Admin_Settings {
             'pricing' => __('Pricing', 'developer-lessons'),
             'stripe' => __('Stripe', 'developer-lessons'),  // Add this
             'comgate' => __('Comgate', 'developer-lessons'),
+            'seller' => __('Company / Seller', 'developer-lessons'),
             'bank_transfer' => __('Bank Transfer', 'developer-lessons'),
             'emails' => __('Emails', 'developer-lessons'),
             'advanced' => __('Advanced', 'developer-lessons')
@@ -57,13 +58,22 @@ class DL_Admin_Settings {
         register_setting('dl_comgate_settings', 'dl_comgate_secret_key');
         register_setting('dl_comgate_settings', 'dl_comgate_test_mode');
 
+        // Seller / company settings
+        register_setting('dl_seller_settings', 'dl_seller_name');
+        register_setting('dl_seller_settings', 'dl_seller_street');
+        register_setting('dl_seller_settings', 'dl_seller_city');
+        register_setting('dl_seller_settings', 'dl_seller_zip');
+        register_setting('dl_seller_settings', 'dl_seller_country');
+        register_setting('dl_seller_settings', 'dl_seller_ic');
+        register_setting('dl_seller_settings', 'dl_seller_dic');
+        register_setting('dl_seller_settings', 'dl_seller_account_number');
+        register_setting('dl_seller_settings', 'dl_seller_bank_code');
+        register_setting('dl_seller_settings', 'dl_seller_iban');
+        register_setting('dl_seller_settings', 'dl_seller_bic');
+        register_setting('dl_seller_settings', 'dl_invoice_sequence_start');
+
         // Bank Transfer settings
         register_setting('dl_bank_transfer_settings', 'dl_bank_transfer_enabled');
-        register_setting('dl_bank_transfer_settings', 'dl_bank_account_name');
-        register_setting('dl_bank_transfer_settings', 'dl_bank_account_number');
-        register_setting('dl_bank_transfer_settings', 'dl_bank_code');
-        register_setting('dl_bank_transfer_settings', 'dl_bank_iban');
-        register_setting('dl_bank_transfer_settings', 'dl_bank_bic');
 
         // Email settings
         register_setting('dl_email_settings', 'dl_email_sender_name');
@@ -104,6 +114,9 @@ class DL_Admin_Settings {
                 break;
             case 'stripe':
                 $this->render_stripe_tab();
+                break;
+            case 'seller':
+                $this->render_seller_tab();
                 break;
             case 'bank_transfer':
                 $this->render_bank_transfer_tab();
@@ -401,67 +414,137 @@ class DL_Admin_Settings {
 
 
     /**
+     * Render Company / Seller tab
+     */
+    private function render_seller_tab() {
+        $bank = DL_Seller::get_bank();
+        ?>
+        <form method="post" action="options.php">
+            <?php settings_fields('dl_seller_settings'); ?>
+
+            <h2><?php _e('Company / Seller Details', 'developer-lessons'); ?></h2>
+            <p class="description"><?php _e('Used on invoices, pro-formas, and bank transfer payment instructions.', 'developer-lessons'); ?></p>
+
+            <table class="form-table">
+                <tr>
+                    <th><label for="dl_seller_name"><?php _e('Company Name', 'developer-lessons'); ?></label></th>
+                    <td><input type="text" name="dl_seller_name" id="dl_seller_name" value="<?php echo esc_attr(get_option('dl_seller_name')); ?>" class="regular-text"></td>
+                </tr>
+                <tr>
+                    <th><label for="dl_seller_street"><?php _e('Street', 'developer-lessons'); ?></label></th>
+                    <td><input type="text" name="dl_seller_street" id="dl_seller_street" value="<?php echo esc_attr(get_option('dl_seller_street')); ?>" class="regular-text"></td>
+                </tr>
+                <tr>
+                    <th><label for="dl_seller_zip"><?php _e('ZIP Code', 'developer-lessons'); ?></label></th>
+                    <td><input type="text" name="dl_seller_zip" id="dl_seller_zip" value="<?php echo esc_attr(get_option('dl_seller_zip')); ?>" class="small-text"></td>
+                </tr>
+                <tr>
+                    <th><label for="dl_seller_city"><?php _e('City', 'developer-lessons'); ?></label></th>
+                    <td><input type="text" name="dl_seller_city" id="dl_seller_city" value="<?php echo esc_attr(get_option('dl_seller_city')); ?>" class="regular-text"></td>
+                </tr>
+                <tr>
+                    <th><label for="dl_seller_country"><?php _e('Country', 'developer-lessons'); ?></label></th>
+                    <td><input type="text" name="dl_seller_country" id="dl_seller_country" value="<?php echo esc_attr(get_option('dl_seller_country')); ?>" class="regular-text"></td>
+                </tr>
+                <tr>
+                    <th><label for="dl_seller_ic"><?php _e('Company ID (IČ)', 'developer-lessons'); ?></label></th>
+                    <td><input type="text" name="dl_seller_ic" id="dl_seller_ic" value="<?php echo esc_attr(get_option('dl_seller_ic')); ?>" class="regular-text"></td>
+                </tr>
+                <tr>
+                    <th><label for="dl_seller_dic"><?php _e('VAT ID (DIČ)', 'developer-lessons'); ?></label></th>
+                    <td><input type="text" name="dl_seller_dic" id="dl_seller_dic" value="<?php echo esc_attr(get_option('dl_seller_dic')); ?>" class="regular-text"></td>
+                </tr>
+            </table>
+
+            <h2><?php _e('Bank Account', 'developer-lessons'); ?></h2>
+            <table class="form-table">
+                <tr>
+                    <th><label for="dl_seller_account_number"><?php _e('Account Number', 'developer-lessons'); ?></label></th>
+                    <td>
+                        <input type="text" name="dl_seller_account_number" id="dl_seller_account_number"
+                               value="<?php echo esc_attr($bank['account_number']); ?>" class="regular-text">
+                        <p class="description"><?php _e('Without bank code', 'developer-lessons'); ?></p>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="dl_seller_bank_code"><?php _e('Bank Code', 'developer-lessons'); ?></label></th>
+                    <td><input type="text" name="dl_seller_bank_code" id="dl_seller_bank_code" value="<?php echo esc_attr($bank['bank_code']); ?>" class="small-text"></td>
+                </tr>
+                <tr>
+                    <th><label for="dl_seller_iban"><?php _e('IBAN', 'developer-lessons'); ?></label></th>
+                    <td><input type="text" name="dl_seller_iban" id="dl_seller_iban" value="<?php echo esc_attr($bank['iban']); ?>" class="regular-text"></td>
+                </tr>
+                <tr>
+                    <th><label for="dl_seller_bic"><?php _e('BIC/SWIFT', 'developer-lessons'); ?></label></th>
+                    <td><input type="text" name="dl_seller_bic" id="dl_seller_bic" value="<?php echo esc_attr($bank['bic']); ?>" class="regular-text"></td>
+                </tr>
+            </table>
+
+            <h2><?php _e('Invoice Numbering', 'developer-lessons'); ?></h2>
+            <table class="form-table">
+                <tr>
+                    <th><label for="dl_invoice_sequence_start"><?php _e('Invoice sequence starts with', 'developer-lessons'); ?></label></th>
+                    <td>
+                        <input type="number" name="dl_invoice_sequence_start" id="dl_invoice_sequence_start" min="1"
+                               value="<?php echo esc_attr(get_option('dl_invoice_sequence_start', 1)); ?>" class="small-text">
+                        <p class="description"><?php _e('Document numbers use format YY-##### (e.g. 26-00001). This is the next sequence number for new pro-formas and invoices.', 'developer-lessons'); ?></p>
+                        <?php
+                        $current = get_option('dl_invoice_sequence_current');
+                        if ($current) {
+                            echo '<p class="description">' . esc_html(sprintf(__('Current sequence counter: %d', 'developer-lessons'), (int) $current)) . '</p>';
+                        }
+                        ?>
+                    </td>
+                </tr>
+            </table>
+
+            <?php submit_button(); ?>
+        </form>
+        <?php
+    }
+
+    /**
      * Render Bank Transfer tab
      */
     private function render_bank_transfer_tab() {
+        $bank = DL_Seller::get_bank();
+        $seller_url = admin_url('admin.php?page=dl-settings&tab=seller');
         ?>
         <form method="post" action="options.php">
             <?php settings_fields('dl_bank_transfer_settings'); ?>
-            
+
             <h2><?php _e('Bank Transfer Settings', 'developer-lessons'); ?></h2>
-            
+
             <table class="form-table">
                 <tr>
                     <th><label for="dl_bank_transfer_enabled"><?php _e('Enable Bank Transfer', 'developer-lessons'); ?></label></th>
                     <td>
                         <label>
-                            <input type="checkbox" name="dl_bank_transfer_enabled" id="dl_bank_transfer_enabled" 
+                            <input type="checkbox" name="dl_bank_transfer_enabled" id="dl_bank_transfer_enabled"
                                    value="1" <?php checked(get_option('dl_bank_transfer_enabled'), 1); ?>>
                             <?php _e('Enable bank transfer payments', 'developer-lessons'); ?>
                         </label>
                     </td>
                 </tr>
-                <tr>
-                    <th><label for="dl_bank_account_name"><?php _e('Account Name', 'developer-lessons'); ?></label></th>
-                    <td>
-                        <input type="text" name="dl_bank_account_name" id="dl_bank_account_name" 
-                               value="<?php echo esc_attr(get_option('dl_bank_account_name')); ?>" 
-                               class="regular-text">
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="dl_bank_account_number"><?php _e('Account Number', 'developer-lessons'); ?></label></th>
-                    <td>
-                        <input type="text" name="dl_bank_account_number" id="dl_bank_account_number" 
-                               value="<?php echo esc_attr(get_option('dl_bank_account_number')); ?>" 
-                               class="regular-text">
-                        <p class="description"><?php _e('Without bank code', 'developer-lessons'); ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="dl_bank_code"><?php _e('Bank Code', 'developer-lessons'); ?></label></th>
-                    <td>
-                        <input type="text" name="dl_bank_code" id="dl_bank_code" 
-                               value="<?php echo esc_attr(get_option('dl_bank_code')); ?>" 
-                               class="small-text">
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="dl_bank_iban"><?php _e('IBAN', 'developer-lessons'); ?></label></th>
-                    <td>
-                        <input type="text" name="dl_bank_iban" id="dl_bank_iban" 
-                               value="<?php echo esc_attr(get_option('dl_bank_iban')); ?>" 
-                               class="regular-text">
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="dl_bank_bic"><?php _e('BIC/SWIFT', 'developer-lessons'); ?></label></th>
-                    <td>
-                        <input type="text" name="dl_bank_bic" id="dl_bank_bic" 
-                               value="<?php echo esc_attr(get_option('dl_bank_bic')); ?>" 
-                               class="regular-text">
-                    </td>
-                </tr>
+            </table>
+
+            <h2><?php _e('Bank Account Details', 'developer-lessons'); ?></h2>
+            <p class="description">
+                <?php
+                printf(
+                    __('Account details are configured on the <a href="%s">Company / Seller</a> tab and used here automatically.', 'developer-lessons'),
+                    esc_url($seller_url)
+                );
+                ?>
+            </p>
+            <table class="widefat striped" style="max-width:600px;">
+                <tbody>
+                    <tr><th><?php _e('Account Name', 'developer-lessons'); ?></th><td><?php echo esc_html($bank['account_name'] ?: '—'); ?></td></tr>
+                    <tr><th><?php _e('Account Number', 'developer-lessons'); ?></th><td><?php echo esc_html($bank['account_number'] ?: '—'); ?></td></tr>
+                    <tr><th><?php _e('Bank Code', 'developer-lessons'); ?></th><td><?php echo esc_html($bank['bank_code'] ?: '—'); ?></td></tr>
+                    <tr><th><?php _e('IBAN', 'developer-lessons'); ?></th><td><?php echo esc_html($bank['iban'] ?: '—'); ?></td></tr>
+                    <tr><th><?php _e('BIC/SWIFT', 'developer-lessons'); ?></th><td><?php echo esc_html($bank['bic'] ?: '—'); ?></td></tr>
+                </tbody>
             </table>
 
             <?php submit_button(); ?>
@@ -547,6 +630,16 @@ class DL_Admin_Settings {
                 </thead>
                 <tbody>
                     <tr>
+                        <td><?php _e('Order received (customer)', 'developer-lessons'); ?></td>
+                        <td><?php _e('Customer', 'developer-lessons'); ?></td>
+                        <td><?php _e('Order placed', 'developer-lessons'); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php _e('Order received (admin)', 'developer-lessons'); ?></td>
+                        <td><?php _e('Admin', 'developer-lessons'); ?></td>
+                        <td><?php _e('Order placed (if notifications enabled)', 'developer-lessons'); ?></td>
+                    </tr>
+                    <tr>
                         <td><?php _e('Purchase Confirmation', 'developer-lessons'); ?></td>
                         <td><?php _e('Customer', 'developer-lessons'); ?></td>
                         <td><?php _e('Payment Completed', 'developer-lessons'); ?></td>
@@ -554,7 +647,7 @@ class DL_Admin_Settings {
                     <tr>
                         <td><?php _e('Admin Notification', 'developer-lessons'); ?></td>
                         <td><?php _e('Admin', 'developer-lessons'); ?></td>
-                        <td><?php _e('New Purchase', 'developer-lessons'); ?></td>
+                        <td><?php _e('Payment Completed (if notifications enabled)', 'developer-lessons'); ?></td>
                     </tr>
                     <tr>
                         <td><?php _e('Order Expiry Warning', 'developer-lessons'); ?></td>

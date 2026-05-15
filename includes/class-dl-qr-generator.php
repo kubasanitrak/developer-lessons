@@ -27,8 +27,9 @@ class DL_QR_Generator {
      */
     public function generate_payment_qr($amount, $currency = 'CZK', $variable_symbol = '', $message = '', $size = 200) {
         // Get bank account details from settings
-        $account_number = get_option('dl_bank_account_number', '');
-        $bank_code = get_option('dl_bank_code', '');
+        $bank = DL_Seller::get_bank();
+        $account_number = $bank['account_number'];
+        $bank_code = $bank['bank_code'];
 
         // Validate required fields
         if (empty($account_number) || empty($bank_code)) {
@@ -103,17 +104,16 @@ class DL_QR_Generator {
             }
 
             // Temporarily override settings for this call
-            $orig_account = get_option('dl_bank_account_number');
-            $orig_bank = get_option('dl_bank_code');
-            
-            update_option('dl_bank_account_number', $account_number);
-            update_option('dl_bank_code', $bank_code);
-            
+            $orig_account = get_option('dl_seller_account_number');
+            $orig_bank = get_option('dl_seller_bank_code');
+
+            update_option('dl_seller_account_number', $account_number);
+            update_option('dl_seller_bank_code', $bank_code);
+
             $result = $this->generate_payment_qr($amount, $currency, $variable_symbol, '', $size);
-            
-            // Restore original settings
-            update_option('dl_bank_account_number', $orig_account);
-            update_option('dl_bank_code', $orig_bank);
+
+            update_option('dl_seller_account_number', $orig_account);
+            update_option('dl_seller_bank_code', $orig_bank);
             
             return $result;
         }

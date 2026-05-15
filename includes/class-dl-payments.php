@@ -100,13 +100,8 @@ class DL_Payments {
         $basket = new DL_Basket();
         $basket->clear($order->user_id);
 
-        // Send confirmation emails
         $emails = new DL_Emails();
-        $emails->send_purchase_confirmation($order_id);
-        
-        if (get_option('dl_admin_notification_enabled')) {
-            $emails->send_admin_notification($order_id);
-        }
+        $emails->send_payment_confirmed_notifications($order_id);
 
         // Log
         self::log('payment_completed', "Order #{$order->order_number} completed", array(

@@ -14,9 +14,14 @@ if (!defined('ABSPATH')) {
     <title><?php _e('New Purchase Notification', 'developer-lessons'); ?></title>
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <?php $email_phase = isset($email_phase) ? $email_phase : 'payment_confirmed'; ?>
+    <?php if ($email_phase === 'order_placed') : ?>
+    <h2><?php _e('New order awaiting payment', 'developer-lessons'); ?></h2>
+    <p><?php _e('A new order has been placed and is awaiting payment. A pro-forma invoice is attached.', 'developer-lessons'); ?></p>
+    <?php else : ?>
     <h2><?php _e('New Purchase Received', 'developer-lessons'); ?></h2>
-    
-    <p><?php _e('A new purchase has been completed on your site.', 'developer-lessons'); ?></p>
+    <p><?php _e('A new purchase has been completed on your site. Pro-forma and tax invoice PDFs are attached.', 'developer-lessons'); ?></p>
+    <?php endif; ?>
     
     <h3><?php _e('Order Details', 'developer-lessons'); ?></h3>
     <ul>
@@ -26,6 +31,10 @@ if (!defined('ABSPATH')) {
         <li><strong><?php _e('Payment Method:', 'developer-lessons'); ?></strong> <?php echo esc_html($order->payment_method); ?></li>
     </ul>
     
+    <?php if ($email_phase === 'order_placed' && !empty($payment_instructions)) : ?>
+        <?php echo $payment_instructions; ?>
+    <?php endif; ?>
+
     <h3><?php _e('Lessons Purchased', 'developer-lessons'); ?></h3>
     <ul>
         <?php foreach ($order->items as $item): ?>

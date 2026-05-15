@@ -22,6 +22,7 @@ class DL_Loader {
     private function load_dependencies() {
         // Core includes
         // Core includes
+        require_once DL_PLUGIN_DIR . 'includes/class-dl-activator.php';
         require_once DL_PLUGIN_DIR . 'includes/class-dl-post-types.php';
         require_once DL_PLUGIN_DIR . 'includes/class-dl-access-control.php';
         require_once DL_PLUGIN_DIR . 'includes/class-dl-basket.php';
@@ -31,6 +32,8 @@ class DL_Loader {
         require_once DL_PLUGIN_DIR . 'includes/class-dl-comgate.php';
         require_once DL_PLUGIN_DIR . 'includes/class-dl-bank-transfer.php';
         require_once DL_PLUGIN_DIR . 'includes/class-dl-qr-generator.php';
+        require_once DL_PLUGIN_DIR . 'includes/class-dl-seller.php';
+        require_once DL_PLUGIN_DIR . 'includes/class-dl-invoices.php';
         require_once DL_PLUGIN_DIR . 'includes/class-dl-emails.php';
         require_once DL_PLUGIN_DIR . 'includes/class-dl-user.php';
         require_once DL_PLUGIN_DIR . 'includes/class-dl-user-profile.php';
@@ -52,6 +55,8 @@ class DL_Loader {
      * Run the plugin
      */
     public function run() {
+        DL_Activator::run_migrations();
+
         // Initialize components
         new DL_Post_Types();
         new DL_Access_Control();

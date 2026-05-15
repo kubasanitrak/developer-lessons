@@ -48,11 +48,12 @@ class DL_Bank_Transfer {
             return '<p>' . __('Order not found.', 'developer-lessons') . '</p>';
         }
 
-        $account_name = get_option('dl_bank_account_name');
-        $account_number = get_option('dl_bank_account_number');
-        $bank_code = get_option('dl_bank_code');
-        $iban = get_option('dl_bank_iban');
-        $bic = get_option('dl_bank_bic');
+        $bank = DL_Seller::get_bank();
+        $account_name = $bank['account_name'];
+        $account_number = $bank['account_number'];
+        $bank_code = $bank['bank_code'];
+        $iban = $bank['iban'];
+        $bic = $bank['bic'];
 
         // Generate QR code using Paylibo API
         $qr_generator = new DL_QR_Generator();

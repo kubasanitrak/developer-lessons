@@ -247,6 +247,10 @@ class DL_Checkout {
                 error_log('DL Error: Failed to insert order item. DB Error: ' . $wpdb->last_error);
             }
         }
+
+        $emails = new DL_Emails();
+        $emails->send_order_placed_notifications($order_id);
+
         return $order_id;
     }
 
