@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.1.8] - 2026-05-16
+
+### Added
+
+- unused mPDF fonts MB removed.
+
 ## [1.1.7] - 2026-05-16
 
 ### Added

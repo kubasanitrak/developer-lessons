@@ -204,6 +204,16 @@ class DL_Invoices {
                 'margin_right' => 15,
                 'margin_top' => 16,
                 'margin_bottom' => 16,
+                'fontDir' => array(DL_PLUGIN_DIR . 'vendor/mpdf/mpdf/ttfonts'),
+                'fontdata' => array(
+                    'dejavusans' => array(
+                        'R' => 'DejaVuSans.ttf',
+                        'B' => 'DejaVuSans-Bold.ttf',
+                    ),
+                ),
+                'default_font' => 'dejavusans',
+                'backupSubsFont' => array(),
+                'backupSIPFont' => '',
             ));
             $mpdf->WriteHTML($html);
             $mpdf->Output($absolute, \Mpdf\Output\Destination::FILE);
