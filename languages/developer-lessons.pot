@@ -1357,3 +1357,167 @@ msgstr ""
 
 msgid "Bundle Discount"
 msgstr ""
+
+#: includes/class-dl-emails.php
+#, php-format
+msgid "Order received - awaiting payment (%s)"
+msgstr ""
+
+#: includes/class-dl-emails.php
+#, php-format
+msgid "New order awaiting payment - %s"
+msgstr ""
+
+#: includes/class-dl-emails.php
+msgid "Payment instructions"
+msgstr ""
+
+#: includes/class-dl-emails.php
+msgid "Please pay by bank transfer using the details below. Use your order number as the payment reference."
+msgstr ""
+
+#: includes/class-dl-emails.php
+msgid "Reference:"
+msgstr ""
+
+#: includes/class-dl-emails.php
+msgid "Account name:"
+msgstr ""
+
+#: includes/class-dl-emails.php
+msgid "Account:"
+msgstr ""
+
+#: includes/class-dl-emails.php
+msgid "Your card payment is being processed. If you have not completed payment yet, return to checkout to finish."
+msgstr ""
+
+#: includes/class-dl-emails.php
+msgid "Return to checkout"
+msgstr ""
+
+#: includes/class-dl-invoices.php
+msgid "Pro-forma invoice"
+msgstr ""
+
+#: includes/class-dl-invoices.php
+msgid "Invoice"
+msgstr ""
+
+#: includes/class-dl-seller.php
+#: templates/invoices/document.php
+#, php-format
+msgid "Company ID: %s"
+msgstr ""
+
+#: includes/class-dl-seller.php
+#: templates/invoices/document.php
+#, php-format
+msgid "VAT ID: %s"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Company / Seller"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Company / Seller Details"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Used on invoices, pro-formas, and bank transfer payment instructions."
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Country"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Bank Account"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Invoice Numbering"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Invoice sequence starts with"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Document numbers use format YY-##### (e.g. 26-00001). This is the next sequence number for new pro-formas and invoices."
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+#, php-format
+msgid "Current sequence counter: %d"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+#, php-format
+msgid "Account details are configured on the <a href=\"%s\">Company / Seller</a> tab and used here automatically."
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Order received (customer)"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Order placed"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Order received (admin)"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Order placed (if notifications enabled)"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Payment Completed (if notifications enabled)"
+msgstr ""
+
+#: templates/emails/purchase-confirmation.php
+msgid "Order received - awaiting payment"
+msgstr ""
+
+#: templates/emails/purchase-confirmation.php
+msgid "Thank you for your order. Please complete payment to receive access to your lessons. A pro-forma invoice is attached to this email."
+msgstr ""
+
+#: templates/emails/purchase-confirmation.php
+msgid "Your payment has been processed successfully. You now have full access to the lessons you purchased. Your pro-forma invoice and tax invoice are attached to this email."
+msgstr ""
+
+#: templates/emails/admin-notification.php
+msgid "New order awaiting payment"
+msgstr ""
+
+#: templates/emails/admin-notification.php
+msgid "A new order has been placed and is awaiting payment. A pro-forma invoice is attached."
+msgstr ""
+
+#: templates/emails/admin-notification.php
+msgid "A new purchase has been completed on your site. Pro-forma and tax invoice PDFs are attached."
+msgstr ""
+
+#: templates/invoices/document.php
+msgid "Document number:"
+msgstr ""
+
+#: templates/invoices/document.php
+msgid "Order:"
+msgstr ""
+
+#: templates/invoices/document.php
+msgid "Supplier"
+msgstr ""
+
+#: templates/invoices/document.php
+msgid "Description"
+msgstr ""
+
+#: templates/invoices/document.php
+msgid "Payment details"
+msgstr ""

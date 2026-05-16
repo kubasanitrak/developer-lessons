@@ -620,7 +620,7 @@ msgid "Amount:"
 msgstr "Částka:"
 
 msgid "Bank Account Details"
-msgstr "Údaje o bankovním účtu"
+msgstr "Údaje bankovního účtu"
 
 msgid "Account Name:"
 msgstr "Název účtu:"
@@ -1056,3 +1056,167 @@ msgstr "Zpracovávám platbu..."
 
 msgid "Payment failed. Please try again."
 msgstr "Platba selhala. Zkuste to prosím znovu."
+
+#: includes/class-dl-emails.php
+#, php-format
+msgid "Order received - awaiting payment (%s)"
+msgstr "Objednávka přijata – čeká na platbu (%s)"
+
+#: includes/class-dl-emails.php
+#, php-format
+msgid "New order awaiting payment - %s"
+msgstr "Nová objednávka čeká na platbu – %s"
+
+#: includes/class-dl-emails.php
+msgid "Payment instructions"
+msgstr "Platební instrukce"
+
+#: includes/class-dl-emails.php
+msgid "Please pay by bank transfer using the details below. Use your order number as the payment reference."
+msgstr "Uhraďte prosím platbu bankovním převodem podle níže uvedených údajů. Jako variabilní symbol uveďte číslo objednávky."
+
+#: includes/class-dl-emails.php
+msgid "Reference:"
+msgstr "Variabilní symbol:"
+
+#: includes/class-dl-emails.php
+msgid "Account name:"
+msgstr "Název účtu:"
+
+#: includes/class-dl-emails.php
+msgid "Account:"
+msgstr "Účet:"
+
+#: includes/class-dl-emails.php
+msgid "Your card payment is being processed. If you have not completed payment yet, return to checkout to finish."
+msgstr "Vaše platba kartou se zpracovává. Pokud jste platbu ještě nedokončili, vraťte se k pokladně."
+
+#: includes/class-dl-emails.php
+msgid "Return to checkout"
+msgstr "Zpět k pokladně"
+
+#: includes/class-dl-invoices.php
+msgid "Pro-forma invoice"
+msgstr "Proforma faktura"
+
+#: includes/class-dl-invoices.php
+msgid "Invoice"
+msgstr "Faktura"
+
+#: includes/class-dl-seller.php
+#: templates/invoices/document.php
+#, php-format
+msgid "Company ID: %s"
+msgstr "IČ: %s"
+
+#: includes/class-dl-seller.php
+#: templates/invoices/document.php
+#, php-format
+msgid "VAT ID: %s"
+msgstr "DIČ: %s"
+
+#: admin/class-dl-admin-settings.php
+msgid "Company / Seller"
+msgstr "Společnost / Prodejce"
+
+#: admin/class-dl-admin-settings.php
+msgid "Company / Seller Details"
+msgstr "Údaje společnosti / prodejce"
+
+#: admin/class-dl-admin-settings.php
+msgid "Used on invoices, pro-formas, and bank transfer payment instructions."
+msgstr "Používá se na fakturách, proformách a v platebních instrukcích pro bankovní převod."
+
+#: admin/class-dl-admin-settings.php
+msgid "Country"
+msgstr "Země"
+
+#: admin/class-dl-admin-settings.php
+msgid "Bank Account"
+msgstr "Bankovní účet"
+
+#: admin/class-dl-admin-settings.php
+msgid "Invoice Numbering"
+msgstr "Číslování faktur"
+
+#: admin/class-dl-admin-settings.php
+msgid "Invoice sequence starts with"
+msgstr "Číslování faktur začíná od"
+
+#: admin/class-dl-admin-settings.php
+msgid "Document numbers use format YY-##### (e.g. 26-00001). This is the next sequence number for new pro-formas and invoices."
+msgstr "Čísla dokladů mají formát RR-##### (např. 26-00001). Toto je další pořadové číslo pro nové proformy a faktury."
+
+#: admin/class-dl-admin-settings.php
+#, php-format
+msgid "Current sequence counter: %d"
+msgstr "Aktuální čítač pořadí: %d"
+
+#: admin/class-dl-admin-settings.php
+#, php-format
+msgid "Account details are configured on the <a href=\"%s\">Company / Seller</a> tab and used here automatically."
+msgstr "Údaje účtu nastavíte na záložce <a href=\"%s\">Společnost / Prodejce</a> a zde se použijí automaticky."
+
+#: admin/class-dl-admin-settings.php
+msgid "Order received (customer)"
+msgstr "Objednávka přijata (zákazník)"
+
+#: admin/class-dl-admin-settings.php
+msgid "Order placed"
+msgstr "Objednávka vytvořena"
+
+#: admin/class-dl-admin-settings.php
+msgid "Order received (admin)"
+msgstr "Objednávka přijata (admin)"
+
+#: admin/class-dl-admin-settings.php
+msgid "Order placed (if notifications enabled)"
+msgstr "Objednávka vytvořena (pokud jsou zapnutá upozornění)"
+
+#: admin/class-dl-admin-settings.php
+msgid "Payment Completed (if notifications enabled)"
+msgstr "Platba dokončena (pokud jsou zapnutá upozornění)"
+
+#: templates/emails/purchase-confirmation.php
+msgid "Order received - awaiting payment"
+msgstr "Objednávka přijata – čeká na platbu"
+
+#: templates/emails/purchase-confirmation.php
+msgid "Thank you for your order. Please complete payment to receive access to your lessons. A pro-forma invoice is attached to this email."
+msgstr "Děkujeme za objednávku. Pro přístup k lekcím dokončete platbu. K tomuto e-mailu je přiložena proforma faktura."
+
+#: templates/emails/purchase-confirmation.php
+msgid "Your payment has been processed successfully. You now have full access to the lessons you purchased. Your pro-forma invoice and tax invoice are attached to this email."
+msgstr "Vaše platba byla úspěšně zpracována. Máte plný přístup k zakoupeným lekcím. K e-mailu jsou přiloženy proforma faktura a daňová faktura."
+
+#: templates/emails/admin-notification.php
+msgid "New order awaiting payment"
+msgstr "Nová objednávka čeká na platbu"
+
+#: templates/emails/admin-notification.php
+msgid "A new order has been placed and is awaiting payment. A pro-forma invoice is attached."
+msgstr "Byla vytvořena nová objednávka a čeká na platbu. Je přiložena proforma faktura."
+
+#: templates/emails/admin-notification.php
+msgid "A new purchase has been completed on your site. Pro-forma and tax invoice PDFs are attached."
+msgstr "Na webu byla dokončena nová objednávka. Jsou přiloženy PDF proforma faktury a daňové faktury."
+
+#: templates/invoices/document.php
+msgid "Document number:"
+msgstr "Číslo dokladu:"
+
+#: templates/invoices/document.php
+msgid "Order:"
+msgstr "Objednávka:"
+
+#: templates/invoices/document.php
+msgid "Supplier"
+msgstr "Dodavatel"
+
+#: templates/invoices/document.php
+msgid "Description"
+msgstr "Popis"
+
+#: templates/invoices/document.php
+msgid "Payment details"
+msgstr "Platební údaje"
