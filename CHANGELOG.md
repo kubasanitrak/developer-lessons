@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.1.9] - 2026-05-16
+
+### Added
+
+- html markup ref invoice added.
+
 ## [1.1.8] - 2026-05-16
 
 ### Added
