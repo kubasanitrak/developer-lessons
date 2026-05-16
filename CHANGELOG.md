@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.1.6] - 2026-05-16
+
+### Added
+
+- First GitHub-powered WordPress admin update release.
+
 ## [1.1.5] - 2026-05-16
 
 ### Added
