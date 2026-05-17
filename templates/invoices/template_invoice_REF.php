@@ -150,7 +150,7 @@ if (!defined('ABSPATH')) {
             /* INVOICE */
             $invoiceMPDF = new \Mpdf\Mpdf([
                 'fontDir' => array_merge($fontDirs, [
-                    __DIR__ . 'public/fonts',
+                    DL_PLUGIN_DIR . 'assets/fonts',
                 ]),
                 'fontdata' => $fontData + [ // lowercase letters only in font key
                     'inter' => [
