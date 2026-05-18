@@ -68,8 +68,8 @@
             #outlook a {
                 padding: 0;
             }
-            [style*=\'Inter\'] {
-                font-family: \'Inter\', Arial, sans-serif !important;
+            [style*='Inter'] {
+                font-family: 'Inter', Arial, sans-serif !important;
             }
         </style>
         <style type="text/css">
@@ -1301,7 +1301,7 @@
                 </table>
             </div>
             <!--[if mso | IE]> </td></tr></table> <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:600px;" width="600"><tr><td style="line-height:0;font-size:0;mso-line-height-rule:exactly;"> <!
-            [endif]-->';
+            [endif]-->
 
             <!-- START QR -->
             <!--[if mso | IE]> <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:600px;" width="600"><tr><td style="line-height:0;font-size:0;mso-line-height-rule:exactly;"> <![endif]-->

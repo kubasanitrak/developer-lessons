@@ -64,7 +64,7 @@ class DL_Invoices {
             $order = DL_Checkout::get_order($order_id);
         }
 
-        $relative = 'proforma-' . sanitize_file_name($order->order_number) . '.pdf';
+        $relative = self::document_filename($order, 'proforma');
         $path = self::generate_pdf($order, 'proforma', $relative);
 
         if ($path) {
@@ -97,7 +97,7 @@ class DL_Invoices {
             $order = DL_Checkout::get_order($order_id);
         }
 
-        $relative = 'invoice-' . sanitize_file_name($order->order_number) . '.pdf';
+        $relative = self::document_filename($order, 'invoice');
         $path = self::generate_pdf($order, 'invoice', $relative);
 
         if ($path) {
@@ -197,21 +197,30 @@ class DL_Invoices {
         $html = self::render_template($type, $order);
 
         try {
+            $default_config = (new \Mpdf\Config\ConfigVariables())->getDefaults();
+            $font_dirs = $default_config['fontDir'];
+            $default_font_config = (new \Mpdf\Config\FontVariables())->getDefaults();
+            $font_data = $default_font_config['fontdata'];
+
             $mpdf = new \Mpdf\Mpdf(array(
                 'mode' => 'utf-8',
                 'format' => 'A4',
-                'margin_left' => 15,
-                'margin_right' => 15,
-                'margin_top' => 16,
-                'margin_bottom' => 16,
-                'fontDir' => array(DL_PLUGIN_DIR . 'vendor/mpdf/mpdf/ttfonts'),
-                'fontdata' => array(
-                    'dejavusans' => array(
-                        'R' => 'DejaVuSans.ttf',
-                        'B' => 'DejaVuSans-Bold.ttf',
+                'margin_left' => 10,
+                'margin_right' => 10,
+                'margin_top' => 10,
+                'margin_bottom' => 10,
+                'fontDir' => array_merge($font_dirs, array(
+                    DL_PLUGIN_DIR . 'assets/fonts',
+                )),
+                'fontdata' => $font_data + array(
+                    'inter' => array(
+                        'R' => 'Inter-roman.ttf',
+                    ),
+                    'suisseworks' => array(
+                        'R' => 'SuisseWorks-Regular-WebS.ttf',
                     ),
                 ),
-                'default_font' => 'dejavusans',
+                'default_font' => 'inter',
                 'backupSubsFont' => array(),
                 'backupSIPFont' => '',
             ));
@@ -223,6 +232,26 @@ class DL_Invoices {
         }
 
         return file_exists($absolute) ? $absolute : false;
+    }
+
+    private static function document_filename($order, $type) {
+        $company = DL_Seller::get_company();
+        $issuer = isset($company['name']) ? trim((string) $company['name']) : '';
+        $issuer = preg_replace('/\s+s\.?\s*r\.?\s*o\.?$/iu', '', $issuer);
+        $issuer = $issuer !== '' ? $issuer : __('issuer', 'developer-lessons');
+
+        $document_number = $type === 'proforma' ? $order->proforma_number : $order->invoice_number;
+        $label = $type === 'proforma' ? 'proforma' : 'faktura';
+
+        $parts = array(
+            $label,
+            sanitize_title($issuer),
+            sanitize_title($document_number),
+            'order',
+            sanitize_title($order->order_number),
+        );
+
+        return sanitize_file_name(implode('-', array_filter($parts))) . '.pdf';
     }
 
     private static function render_template($type, $order) {

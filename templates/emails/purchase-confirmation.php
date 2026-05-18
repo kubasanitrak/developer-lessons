@@ -6,158 +6,63 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+
+$partials_dir = DL_PLUGIN_DIR . 'templates/emails/partials/';
+$email_phase = isset($email_phase) ? $email_phase : 'payment_confirmed';
+$customer_name = $user->display_name ? $user->display_name : $user->user_login;
+
+if ($email_phase === 'order_placed') {
+    $email_title = __('Objednávka přijata', 'developer-lessons');
+    $email_preview = __('Vaši objednávku evidujeme. Údaje k platbě a proforma fakturu najdete v e-mailu.', 'developer-lessons');
+    $hero_title = __('Děkujeme za objednávku, počítáme s vámi.', 'developer-lessons');
+    $intro_copy = __('Vaši objednávku evidujeme. Údaje k platbě najdete níže a proforma fakturu posíláme v příloze tohoto e-mailu.', 'developer-lessons');
+} else {
+    $email_title = __('Platba potvrzena', 'developer-lessons');
+    $email_preview = __('Platba dorazila, děkujeme. Přístup k lekcím je aktivní.', 'developer-lessons');
+    $hero_title = __('Platba dorazila, děkujeme.', 'developer-lessons');
+    $intro_copy = __('Váš přístup k zakoupeným lekcím je aktivní. Proforma fakturu i daňový doklad posíláme v příloze tohoto e-mailu.', 'developer-lessons');
+}
+
+include $partials_dir . 'head.php';
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php _e('Purchase Confirmation', 'developer-lessons'); ?></title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: #fff;
-        }
-        .header {
-            background: #0073aa;
-            color: #fff;
-            padding: 30px;
-            text-align: center;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-        .content {
-            padding: 30px;
-        }
-        .order-details {
-            background: #f9f9f9;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 4px;
-        }
-        .order-details table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .order-details th,
-        .order-details td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        .order-details th {
-            background: #eee;
-        }
-        .total-row {
-            font-weight: bold;
-            font-size: 18px;
-        }
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background: #0073aa;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-            margin-top: 20px;
-        }
-        .footer {
-            background: #f4f4f4;
-            padding: 20px;
-            text-align: center;
-            font-size: 13px;
-            color: #666;
-        }
-    </style>
-</head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1><?php echo esc_html($site_name); ?></h1>
-        </div>
-        
-        <div class="content">
-            <?php
-            $email_phase = isset($email_phase) ? $email_phase : 'payment_confirmed';
-            if ($email_phase === 'order_placed') :
-            ?>
-            <h2><?php _e('Order received - awaiting payment', 'developer-lessons'); ?></h2>
-            <p><?php printf(__('Hello %s,', 'developer-lessons'), esc_html($user->display_name)); ?></p>
-            <p><?php _e('Thank you for your order. Please complete payment to receive access to your lessons. A pro-forma invoice is attached to this email.', 'developer-lessons'); ?></p>
-            <?php if (!empty($payment_instructions)) : ?>
-                <div><?php echo $payment_instructions; ?></div>
-            <?php endif; ?>
-            <?php else : ?>
-            <h2><?php _e('Thank you for your purchase!', 'developer-lessons'); ?></h2>
-            <p><?php printf(__('Hello %s,', 'developer-lessons'), esc_html($user->display_name)); ?></p>
-            <p><?php _e('Your payment has been processed successfully. You now have full access to the lessons you purchased. Your pro-forma invoice and tax invoice are attached to this email.', 'developer-lessons'); ?></p>
-            <?php endif; ?>
-            
-            <div class="order-details">
-                <h3><?php _e('Order Details', 'developer-lessons'); ?></h3>
-                <p><strong><?php _e('Order Number:', 'developer-lessons'); ?></strong> <?php echo esc_html($order->order_number); ?></p>
-                <?php
-                $order_date = !empty($order->paid_at) ? $order->paid_at : $order->created_at;
-                ?>
-                <p><strong><?php _e('Date:', 'developer-lessons'); ?></strong> <?php echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($order_date)); ?></p>
-                
-                <table>
-                    <thead>
-                        <tr>
-                            <th><?php _e('Lesson', 'developer-lessons'); ?></th>
-                            <th style="text-align:right;"><?php _e('Price', 'developer-lessons'); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($order->items as $item): ?>
-                            <tr>
-                                <td><?php echo esc_html($item->lesson_title); ?></td>
-                                <td style="text-align:right;"><?php echo DL_Payments::format_price($item->price); ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                        <?php if ($order->discount > 0): ?>
-                            <tr>
-                                <td><?php _e('Discount', 'developer-lessons'); ?></td>
-                                <td style="text-align:right;">-<?php echo DL_Payments::format_price($order->discount); ?></td>
-                            </tr>
-                        <?php endif; ?>
-                        <tr class="total-row">
-                            <td><?php _e('Total', 'developer-lessons'); ?></td>
-                            <td style="text-align:right;"><?php echo DL_Payments::format_price($order->total); ?></td>
-                        </tr>
-                    </tbody>
+    <?php if ($email_preview) : ?>
+        <div style="display:none;font-size:1px;color:#eee7d6;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;"><?php echo esc_html($email_preview); ?></div>
+    <?php endif; ?>
+    <table class="email-shell" role="presentation" width="100%">
+        <tr>
+            <td>
+                <table class="email-container" role="presentation" align="center" width="600">
+                    <?php include $partials_dir . 'header.php'; ?>
+                    <tr>
+                        <td class="section" style="padding-top:0;padding-bottom:50px;">
+                            <p class="brand-title"><?php echo esc_html($hero_title); ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="section" style="padding-top:0;">
+                            <p class="body-copy" style="padding-bottom:12px;"><?php printf(esc_html__('Dobrý den, %s,', 'developer-lessons'), esc_html($customer_name)); ?></p>
+                            <p class="body-copy"><?php echo esc_html($intro_copy); ?></p>
+                        </td>
+                    </tr>
+                    <?php include $partials_dir . 'order-summary.php'; ?>
+                    <?php if ($email_phase === 'order_placed') : ?>
+                        <?php include $partials_dir . 'payment-instructions.php'; ?>
+                    <?php endif; ?>
+                    <?php
+                    if ($email_phase !== 'order_placed') {
+                        $cta_url = $dashboard_url;
+                        $cta_label = __('Otevřít moje lekce', 'developer-lessons');
+                    } else {
+                        $cta_url = $checkout_url;
+                        $cta_label = __('Dokončit platbu', 'developer-lessons');
+                    }
+                    include $partials_dir . 'cta.php';
+                    ?>
+                    <?php include $partials_dir . 'footer.php'; ?>
                 </table>
-            </div>
-            
-            <?php if ($email_phase !== 'order_placed') : ?>
-            <p style="text-align: center;">
-                <a href="<?php echo esc_url($dashboard_url); ?>" class="btn">
-                    <?php _e('Access Your Lessons', 'developer-lessons'); ?>
-                </a>
-            </p>
-            <?php elseif (!empty($checkout_url)) : ?>
-            <p style="text-align: center;">
-                <a href="<?php echo esc_url($checkout_url); ?>" class="btn">
-                    <?php _e('Complete Payment', 'developer-lessons'); ?>
-                </a>
-            </p>
-            <?php endif; ?>
-        </div>
-        
-        <div class="footer">
-            <p>&copy; <?php echo date('Y'); ?> <?php echo esc_html($site_name); ?>. <?php _e('All rights reserved.', 'developer-lessons'); ?></p>
-        </div>
-    </div>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
