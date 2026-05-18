@@ -145,7 +145,9 @@
             <tbody>
                 <tr style="padding-bottom: 1rem">
                     <td style="vertical-align: top; padding: 1em 0 2.5em; width: 50%" width="50%" valign="top">
-                        <div class="column" style="margin: 0"></div>
+                        <div class="column" style="margin: 0">
+                            <!-- items -->
+                        </div>
                     </td>
                     <td style="vertical-align: top; padding: 1em 0 2.5em; width: 50%" width="50%" valign="top">
                         <div class="column" style="margin: 0">
