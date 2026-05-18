@@ -10,17 +10,25 @@ if (!defined('ABSPATH')) {
 $partials_dir = DL_PLUGIN_DIR . 'templates/emails/partials/';
 $email_phase = isset($email_phase) ? $email_phase : 'payment_confirmed';
 $customer_name = $user->display_name ? $user->display_name : $user->user_login;
+$should_send_proforma = isset($should_send_proforma) ? (bool) $should_send_proforma : $order->payment_method === 'bank_transfer';
 
 if ($email_phase === 'order_placed') {
     $email_title = __('Objednávka přijata', 'developer-lessons');
-    $email_preview = __('Vaši objednávku evidujeme. Údaje k platbě a proforma fakturu najdete v e-mailu.', 'developer-lessons');
     $hero_title = __('Děkujeme za objednávku, počítáme s vámi.', 'developer-lessons');
-    $intro_copy = __('Vaši objednávku evidujeme. Údaje k platbě najdete níže a proforma fakturu posíláme v příloze tohoto e-mailu.', 'developer-lessons');
+    if ($should_send_proforma) {
+        $email_preview = __('Vaši objednávku evidujeme. Údaje k platbě a proforma fakturu najdete v e-mailu.', 'developer-lessons');
+        $intro_copy = __('Vaši objednávku evidujeme. Údaje k platbě najdete níže a proforma fakturu posíláme v příloze tohoto e-mailu.', 'developer-lessons');
+    } else {
+        $email_preview = __('Vaši objednávku evidujeme. Platbu dokončíte přes odkaz v e-mailu.', 'developer-lessons');
+        $intro_copy = __('Vaši objednávku evidujeme. Pokud platba ještě nebyla dokončena, můžete se k ní vrátit přes tlačítko níže.', 'developer-lessons');
+    }
 } else {
     $email_title = __('Platba potvrzena', 'developer-lessons');
     $email_preview = __('Platba dorazila, děkujeme. Přístup k lekcím je aktivní.', 'developer-lessons');
     $hero_title = __('Platba dorazila, děkujeme.', 'developer-lessons');
-    $intro_copy = __('Váš přístup k zakoupeným lekcím je aktivní. Proforma fakturu i daňový doklad posíláme v příloze tohoto e-mailu.', 'developer-lessons');
+    $intro_copy = $should_send_proforma
+        ? __('Váš přístup k zakoupeným lekcím je aktivní. Proforma fakturu i daňový doklad posíláme v příloze tohoto e-mailu.', 'developer-lessons')
+        : __('Váš přístup k zakoupeným lekcím je aktivní. Daňový doklad posíláme v příloze tohoto e-mailu.', 'developer-lessons');
 }
 
 include $partials_dir . 'head.php';
@@ -46,7 +54,7 @@ include $partials_dir . 'head.php';
                         </td>
                     </tr>
                     <?php include $partials_dir . 'order-summary.php'; ?>
-                    <?php if ($email_phase === 'order_placed') : ?>
+                    <?php if ($email_phase === 'order_placed' && $should_send_proforma) : ?>
                         <?php include $partials_dir . 'payment-instructions.php'; ?>
                     <?php endif; ?>
                     <?php

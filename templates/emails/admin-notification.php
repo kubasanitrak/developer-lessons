@@ -10,6 +10,7 @@ if (!defined('ABSPATH')) {
 $partials_dir = DL_PLUGIN_DIR . 'templates/emails/partials/';
 $email_phase = isset($email_phase) ? $email_phase : 'payment_confirmed';
 $customer_name = $user->display_name ? $user->display_name : $user->user_login;
+$should_send_proforma = isset($should_send_proforma) ? (bool) $should_send_proforma : $order->payment_method === 'bank_transfer';
 $email_title = $email_phase === 'order_placed'
     ? __('Nová objednávka čeká na platbu', 'developer-lessons')
     : __('Nová zaplacená objednávka', 'developer-lessons');
@@ -31,9 +32,17 @@ include $partials_dir . 'head.php';
                     <tr>
                         <td class="section" style="padding-top:0;">
                             <?php if ($email_phase === 'order_placed') : ?>
-                                <p class="body-copy"><?php esc_html_e('Byla vytvořena nová objednávka a čeká na platbu. Proforma faktura je přiložená.', 'developer-lessons'); ?></p>
+                                <?php if ($should_send_proforma) : ?>
+                                    <p class="body-copy"><?php esc_html_e('Byla vytvořena nová objednávka a čeká na platbu. Proforma faktura je přiložená.', 'developer-lessons'); ?></p>
+                                <?php else : ?>
+                                    <p class="body-copy"><?php esc_html_e('Byla vytvořena nová objednávka a čeká na dokončení online platby. Proforma faktura se pro tuto platební metodu nevystavuje.', 'developer-lessons'); ?></p>
+                                <?php endif; ?>
                             <?php else : ?>
-                                <p class="body-copy"><?php esc_html_e('Objednávka byla zaplacena. Proforma faktura i daňový doklad jsou přiložené.', 'developer-lessons'); ?></p>
+                                <?php if ($should_send_proforma) : ?>
+                                    <p class="body-copy"><?php esc_html_e('Objednávka byla zaplacena. Proforma faktura i daňový doklad jsou přiložené.', 'developer-lessons'); ?></p>
+                                <?php else : ?>
+                                    <p class="body-copy"><?php esc_html_e('Objednávka byla zaplacena. Daňový doklad je přiložený.', 'developer-lessons'); ?></p>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </td>
                     </tr>

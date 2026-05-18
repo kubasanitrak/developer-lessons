@@ -55,6 +55,10 @@ class DL_Invoices {
             return false;
         }
 
+        if ($order->payment_method !== 'bank_transfer') {
+            return false;
+        }
+
         if (!empty($order->proforma_pdf) && file_exists(self::absolute_path($order->proforma_pdf))) {
             return self::absolute_path($order->proforma_pdf);
         }

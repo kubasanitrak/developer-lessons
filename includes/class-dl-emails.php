@@ -29,7 +29,7 @@ class DL_Emails {
             return false;
         }
 
-        $proforma = DL_Invoices::ensure_proforma($order_id);
+        $proforma = $this->should_send_proforma($order) ? DL_Invoices::ensure_proforma($order_id) : false;
         $attachments = $proforma ? array($proforma) : array();
 
         $user = get_user_by('id', $order->user_id);
@@ -70,7 +70,7 @@ class DL_Emails {
             return false;
         }
 
-        $proforma = DL_Invoices::ensure_proforma($order_id);
+        $proforma = $this->should_send_proforma($order) ? DL_Invoices::ensure_proforma($order_id) : false;
         $invoice = DL_Invoices::ensure_invoice($order_id);
         $attachments = array_filter(array($proforma, $invoice));
 
@@ -121,7 +121,7 @@ class DL_Emails {
         if (!$order) {
             return false;
         }
-        $proforma = DL_Invoices::ensure_proforma($order_id);
+        $proforma = $this->should_send_proforma($order) ? DL_Invoices::ensure_proforma($order_id) : false;
         $invoice = DL_Invoices::ensure_invoice($order_id);
         return $this->send_admin_email(
             $order_id,
@@ -129,6 +129,10 @@ class DL_Emails {
             sprintf(__('New Purchase - Order %s', 'developer-lessons'), $order->order_number),
             array_filter(array($proforma, $invoice))
         );
+    }
+
+    private function should_send_proforma($order) {
+        return $order && $order->payment_method === 'bank_transfer';
     }
 
     /**
@@ -198,6 +202,7 @@ class DL_Emails {
             'email_phase' => $email_phase,
             'payment_instructions' => $this->get_payment_instructions_html($order, $email_phase),
             'checkout_url' => $this->get_order_checkout_url($order),
+            'should_send_proforma' => $this->should_send_proforma($order),
         );
     }
 
