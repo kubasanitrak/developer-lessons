@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.1.9.1] - 2026-05-18
+
+### Added
+
+- pdf and email polish, pro-forma only for bank-transfer payments.
+
 ## [1.1.9] - 2026-05-16
 
 ### Added
