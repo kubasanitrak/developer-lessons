@@ -105,8 +105,9 @@ if (!defined('ABSPATH')) {
     <?php
     $is_proforma = strpos((string) $doc_label, 'Pro-forma') !== false;
     $document_heading = $is_proforma ? __('PROFORMA FAKTURA', 'developer-lessons') : __('FAKTURA - DAŇOVÝ DOKLAD', 'developer-lessons');
-    $issue_date = date_i18n('d. m. Y', strtotime($date_field));
-    $due_date = date_i18n('d. m. Y', strtotime($date_field . ' +3 days'));
+    $issue_timestamp = mysql2date('U', $date_field);
+    $issue_date = date_i18n('d. m. Y', $issue_timestamp);
+    $due_date = date_i18n('d. m. Y', strtotime('+3 days', $issue_timestamp));
     $variable_symbol = preg_replace('/\D+/', '', (string) $doc_number);
     $seller_city_line = trim($seller_company['zip'] . ' ' . $seller_company['city']);
     ?>

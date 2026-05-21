@@ -83,7 +83,7 @@ $statuses = array(
                                 <?php echo isset($statuses[$order->status]) ? esc_html($statuses[$order->status]) : esc_html($order->status); ?>
                             </span>
                         </td>
-                        <td><?php echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($order->created_at)); ?></td>
+                        <td><?php echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), mysql2date('U', $order->created_at)); ?></td>
                         <td>
                             <?php if (in_array($order->status, array('pending', 'awaiting_payment'))): ?>
                                 <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=dl-orders&dl_action=confirm_payment&order_id=' . $order->id), 'dl_admin_action'); ?>" 

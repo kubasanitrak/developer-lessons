@@ -27,7 +27,7 @@ if (!defined('ABSPATH')) {
                 <td class="section-tight" style="padding-left:0;padding-right:0;">
                     <?php $order_date = !empty($order->paid_at) ? $order->paid_at : $order->created_at; ?>
                     <p class="label"><?php esc_html_e('Datum', 'developer-lessons'); ?></p>
-                    <p class="value"><?php echo esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($order_date))); ?></p>
+                    <p class="value"><?php echo esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), mysql2date('U', $order_date))); ?></p>
                 </td>
             </tr>
             <tr>

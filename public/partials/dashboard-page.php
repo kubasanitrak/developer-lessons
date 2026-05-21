@@ -31,7 +31,7 @@ if (!defined('ABSPATH')) {
                                     <?php echo esc_html(ucfirst(str_replace('_', ' ', $order->status))); ?>
                                 </span>
                             </td>
-                            <td><?php echo date_i18n(get_option('date_format'), strtotime($order->created_at)); ?></td>
+                            <td><?php echo date_i18n(get_option('date_format'), mysql2date('U', $order->created_at)); ?></td>
                             <td>
                                 <?php if ($order->payment_method === 'bank_transfer' && $order->status === 'awaiting_payment'): ?>
                                     <?php 
@@ -83,7 +83,7 @@ if (!defined('ABSPATH')) {
                                 <p class="dl-lesson-date">
                                     <?php printf(
                                         __('Purchased on %s', 'developer-lessons'),
-                                        date_i18n(get_option('date_format'), strtotime($purchase->purchased_at))
+                                        date_i18n(get_option('date_format'), mysql2date('U', $purchase->purchased_at))
                                     ); ?>
                                 </p>
                                 <a href="<?php echo get_permalink($lesson); ?>" class="dl-btn dl-btn-small">

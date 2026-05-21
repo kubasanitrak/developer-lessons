@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.1.9.2] - 2026-05-21
+
+### Added
+
+- timezone matching current place fix.
+
 ## [1.1.9.1] - 2026-05-18
 
 ### Added

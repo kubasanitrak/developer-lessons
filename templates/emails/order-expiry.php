@@ -57,7 +57,7 @@ include $partials_dir . 'head.php';
                                 <tr>
                                     <td class="section-tight" style="padding-left:0;padding-right:0;">
                                         <p class="label"><?php esc_html_e('Platnost do', 'developer-lessons'); ?></p>
-                                        <p class="value"><?php echo esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($order->expires_at))); ?></p>
+                                        <p class="value"><?php echo esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), mysql2date('U', $order->expires_at))); ?></p>
                                     </td>
                                 </tr>
                             </table>

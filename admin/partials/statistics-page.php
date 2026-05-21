@@ -148,7 +148,7 @@ $currency_symbol = get_option('dl_currency_symbol', 'Kč');
                     <?php else: ?>
                         <?php foreach ($time_stats as $stat): ?>
                             <tr>
-                                <td><?php echo esc_html(date_i18n(get_option('date_format'), strtotime($stat->date))); ?></td>
+                                <td><?php echo esc_html(date_i18n(get_option('date_format'), mysql2date('U', $stat->date))); ?></td>
                                 <td><?php echo intval($stat->sales); ?></td>
                                 <td><?php echo number_format((float)$stat->revenue, 2); ?> <?php echo esc_html($currency_symbol); ?></td>
                             </tr>

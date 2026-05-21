@@ -60,7 +60,7 @@ $currency_symbol = get_option('dl_currency_symbol', 'Kč');
                                     <?php echo esc_html(ucfirst(str_replace('_', ' ', $order->status))); ?>
                                 </span>
                             </td>
-                            <td><?php echo date_i18n(get_option('date_format'), strtotime($order->created_at)); ?></td>
+                            <td><?php echo date_i18n(get_option('date_format'), mysql2date('U', $order->created_at)); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
