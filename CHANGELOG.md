@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.1.9.3] - 2026-05-21
+
+### Added
+
+- invoice table admin overview added.
+
 ## [1.1.9.2] - 2026-05-21
 
 ### Added
