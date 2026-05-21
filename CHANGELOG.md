@@ -6,7 +6,7 @@ All notable changes to Developer Lessons are documented here.
 
 ### Added
 
-- timezone matching current place fix.
+- timezone matching current place fix, version num raised.
 
 ## [1.1.9.1] - 2026-05-18
 
