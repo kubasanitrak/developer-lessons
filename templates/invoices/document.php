@@ -79,6 +79,9 @@ if (!defined('ABSPATH')) {
             text-align: right;
             width: 34%;
         }
+        .total-row {
+            padding-bottom: 5mm;
+        }
         .total-row td {
             border-top: 1px solid #555;
             padding-top: 5mm;
@@ -87,6 +90,9 @@ if (!defined('ABSPATH')) {
             font-size: 18pt;
             font-weight: bold;
             line-height: 1.15;
+        }
+        .notes {
+            padding-top: 5mm;
         }
         .notes td,
         .issuer td {

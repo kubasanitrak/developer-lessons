@@ -15,7 +15,7 @@ if (empty($cta_url) || empty($cta_label)) {
 }
 ?>
 <tr>
-    <td class="section" style="padding-top:10px;padding-bottom:38px;">
+    <td class="section" style="padding-top:24px;padding-bottom:38px;">
         <a class="button" href="<?php echo esc_url($cta_url); ?>" target="_blank"><?php echo esc_html($cta_label); ?></a>
     </td>
 </tr>
