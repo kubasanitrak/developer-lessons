@@ -3,7 +3,7 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Developer Lessons 1.1.5\n"
+"Project-Id-Version: Developer Lessons 1.1.9.4\n"
 "Report-Msgid-Bugs-To: [github.com](https://github.com/kubasanitrak/developer-lessons/issues\n)"
 "POT-Creation-Date: 2024-01-15 12:00:00+00:00\n"
 "PO-Revision-Date: 2024-01-15 12:00:00+00:00\n"
@@ -46,6 +46,9 @@ msgstr "Přehled"
 
 msgid "Orders"
 msgstr "Objednávky"
+
+msgid "Invoices"
+msgstr "Faktury"
 
 msgid "Statistics"
 msgstr "Statistiky"
@@ -1220,3 +1223,91 @@ msgstr "Popis"
 #: templates/invoices/document.php
 msgid "Payment details"
 msgstr "Platební údaje"
+
+#: admin/partials/invoices-page.php
+msgid "No invoice files were selected for download."
+msgstr "Nebyly vybrány žádné soubory faktur ke stažení."
+
+#: admin/partials/invoices-page.php
+msgid "Invoices directory not found. PDF files will appear here after orders generate pro-formas or invoices."
+msgstr "Adresář faktur nebyl nalezen. PDF se zobrazí po vygenerování proforem nebo faktur u objednávek."
+
+#: admin/partials/invoices-page.php
+msgid "Date from"
+msgstr "Datum od"
+
+#: admin/partials/invoices-page.php
+msgid "Date to"
+msgstr "Datum do"
+
+#: admin/partials/invoices-page.php
+msgid "Sort by date"
+msgstr "Řadit podle data"
+
+#: admin/partials/invoices-page.php
+msgid "Newest first"
+msgstr "Nejnovější nahoře"
+
+#: admin/partials/invoices-page.php
+msgid "Oldest first"
+msgstr "Nejstarší nahoře"
+
+#: admin/partials/invoices-page.php
+msgid "Filter"
+msgstr "Filtrovat"
+
+#: admin/partials/invoices-page.php
+msgid "Clear"
+msgstr "Vymazat"
+
+#: admin/partials/invoices-page.php
+msgid "Date created"
+msgstr "Datum vytvoření"
+
+#: admin/partials/invoices-page.php
+msgid "Filename"
+msgstr "Název souboru"
+
+#: admin/partials/invoices-page.php
+msgid "File size"
+msgstr "Velikost souboru"
+
+#: admin/partials/invoices-page.php
+msgid "View"
+msgstr "Zobrazit"
+
+#: admin/partials/invoices-page.php
+msgid "No invoice PDF files found."
+msgstr "Nebyly nalezeny žádné PDF faktury."
+
+#: admin/partials/invoices-page.php
+msgid "Open PDF"
+msgstr "Otevřít PDF"
+
+#: admin/partials/invoices-page.php
+msgid "ZIP download requires the PHP Zip extension (ZipArchive)."
+msgstr "Stažení ZIP vyžaduje PHP rozšíření Zip (ZipArchive)."
+
+#: admin/partials/invoices-page.php
+msgid "Download selected as ZIP"
+msgstr "Stáhnout vybrané jako ZIP"
+
+#: admin/class-dl-admin.php
+msgid "Please select at least one invoice."
+msgstr "Vyberte alespoň jednu fakturu."
+
+#: admin/class-dl-admin-invoices.php
+msgid "Invalid security token."
+msgstr "Neplatný bezpečnostní token."
+
+#: admin/class-dl-admin-invoices.php
+msgid "File not found."
+msgstr "Soubor nebyl nalezen."
+
+#: admin/class-dl-admin-invoices.php
+msgid "ZIP extension is not available on this server."
+msgstr "Rozšíření ZIP na tomto serveru není dostupné."
+
+#: admin/class-dl-admin-invoices.php
+msgid "Could not create ZIP archive."
+msgstr "Nepodařilo se vytvořit ZIP archiv."

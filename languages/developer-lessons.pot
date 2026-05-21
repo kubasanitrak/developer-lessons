@@ -2,7 +2,7 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Developer Lessons 1.1.5\n"
+"Project-Id-Version: Developer Lessons 1.1.9.4\n"
 "Report-Msgid-Bugs-To: [github.com](https://github.com/kubasanitrak/developer-lessons/issues\n)"
 "POT-Creation-Date: 2024-01-15 12:00:00+00:00\n"
 "MIME-Version: 1.0\n"
@@ -50,6 +50,10 @@ msgstr ""
 
 #: admin/class-dl-admin.php
 msgid "Orders"
+msgstr ""
+
+#: admin/class-dl-admin.php
+msgid "Invoices"
 msgstr ""
 
 #: admin/class-dl-admin.php
@@ -1520,4 +1524,92 @@ msgstr ""
 
 #: templates/invoices/document.php
 msgid "Payment details"
+msgstr ""
+
+#: admin/partials/invoices-page.php
+msgid "No invoice files were selected for download."
+msgstr ""
+
+#: admin/partials/invoices-page.php
+msgid "Invoices directory not found. PDF files will appear here after orders generate pro-formas or invoices."
+msgstr ""
+
+#: admin/partials/invoices-page.php
+msgid "Date from"
+msgstr ""
+
+#: admin/partials/invoices-page.php
+msgid "Date to"
+msgstr ""
+
+#: admin/partials/invoices-page.php
+msgid "Sort by date"
+msgstr ""
+
+#: admin/partials/invoices-page.php
+msgid "Newest first"
+msgstr ""
+
+#: admin/partials/invoices-page.php
+msgid "Oldest first"
+msgstr ""
+
+#: admin/partials/invoices-page.php
+msgid "Filter"
+msgstr ""
+
+#: admin/partials/invoices-page.php
+msgid "Clear"
+msgstr ""
+
+#: admin/partials/invoices-page.php
+msgid "Date created"
+msgstr ""
+
+#: admin/partials/invoices-page.php
+msgid "Filename"
+msgstr ""
+
+#: admin/partials/invoices-page.php
+msgid "File size"
+msgstr ""
+
+#: admin/partials/invoices-page.php
+msgid "View"
+msgstr ""
+
+#: admin/partials/invoices-page.php
+msgid "No invoice PDF files found."
+msgstr ""
+
+#: admin/partials/invoices-page.php
+msgid "Open PDF"
+msgstr ""
+
+#: admin/partials/invoices-page.php
+msgid "ZIP download requires the PHP Zip extension (ZipArchive)."
+msgstr ""
+
+#: admin/partials/invoices-page.php
+msgid "Download selected as ZIP"
+msgstr ""
+
+#: admin/class-dl-admin.php
+msgid "Please select at least one invoice."
+msgstr ""
+
+#: admin/class-dl-admin-invoices.php
+msgid "Invalid security token."
+msgstr ""
+
+#: admin/class-dl-admin-invoices.php
+msgid "File not found."
+msgstr ""
+
+#: admin/class-dl-admin-invoices.php
+msgid "ZIP extension is not available on this server."
+msgstr ""
+
+#: admin/class-dl-admin-invoices.php
+msgid "Could not create ZIP archive."
 msgstr ""

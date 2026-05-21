@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.1.9.4] - 2026-05-21
+
+### Added
+
+- multilang invoice overview added.
+
 ## [1.1.9.3] - 2026-05-21
 
 ### Added
