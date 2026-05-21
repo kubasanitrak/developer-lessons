@@ -16,6 +16,11 @@
             
             // Cancel order button
             $(document).on('click', '.dl-cancel-order', this.cancelOrder);
+
+            // Invoices: select all
+            $(document).on('change', '#dl-invoices-select-all', this.toggleInvoiceSelectAll);
+            $(document).on('change', '.dl-invoice-file-checkbox', this.syncInvoiceSelectAll);
+            $(document).on('submit', '#dl-invoices-download-form', this.validateInvoiceDownload);
         },
 
         confirmPayment: function(e) {
@@ -56,6 +61,30 @@
         cancelOrder: function(e) {
             if (!confirm(dl_admin.strings.confirm_action)) {
                 e.preventDefault();
+            }
+        },
+
+        toggleInvoiceSelectAll: function() {
+            const checked = $(this).prop('checked');
+            $('.dl-invoice-file-checkbox').prop('checked', checked);
+        },
+
+        syncInvoiceSelectAll: function() {
+            const $boxes = $('.dl-invoice-file-checkbox');
+            const $all = $('#dl-invoices-select-all');
+            if (!$all.length || !$boxes.length) {
+                return;
+            }
+            const total = $boxes.length;
+            const checked = $boxes.filter(':checked').length;
+            $all.prop('checked', total > 0 && checked === total);
+            $all.prop('indeterminate', checked > 0 && checked < total);
+        },
+
+        validateInvoiceDownload: function(e) {
+            if ($('.dl-invoice-file-checkbox:checked').length === 0) {
+                e.preventDefault();
+                alert(dl_admin.strings.no_invoices_selected || 'Please select at least one invoice.');
             }
         }
     };

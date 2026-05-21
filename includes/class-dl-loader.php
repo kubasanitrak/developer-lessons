@@ -45,6 +45,7 @@ class DL_Loader {
             require_once DL_PLUGIN_DIR . 'admin/class-dl-admin.php';
             require_once DL_PLUGIN_DIR . 'admin/class-dl-admin-settings.php';
             require_once DL_PLUGIN_DIR . 'admin/class-dl-admin-statistics.php';
+            require_once DL_PLUGIN_DIR . 'admin/class-dl-admin-invoices.php';
         }
 
         // Public
@@ -77,6 +78,7 @@ class DL_Loader {
             new DL_Admin();
             new DL_Admin_Settings();
             new DL_Admin_Statistics();
+            new DL_Admin_Invoices();
         }
 
         // Initialize public

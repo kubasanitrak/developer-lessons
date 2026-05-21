@@ -138,6 +138,24 @@
   min-width: 150px;
 }
 
+.dl-invoices-filter {
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+}
+.dl-invoices-filter label {
+  font-weight: 500;
+}
+.dl-invoices-download-actions {
+  margin-top: 16px;
+}
+.dl-invoices-table code {
+  font-size: 12px;
+  word-break: break-all;
+}
+
 .dl-status-active {
   color: #46b450;
   font-weight: 500;

@@ -91,6 +91,16 @@ class DL_Admin {
             array($this, 'render_orders')
         );
 
+        // Invoices
+        add_submenu_page(
+            'dl-main-menu',
+            __('Invoices', 'developer-lessons'),
+            '── ' . __('Invoices', 'developer-lessons'),
+            'manage_options',
+            'dl-invoices',
+            array($this, 'render_invoices')
+        );
+
         // Statistics
         add_submenu_page(
             'dl-main-menu',
@@ -140,7 +150,7 @@ class DL_Admin {
     public function enqueue_scripts($hook) {
         global $post_type;
         
-        $plugin_pages = array('dl-main-menu', 'dl-dashboard', 'dl-orders', 'dl-statistics', 'dl-settings');
+        $plugin_pages = array('dl-main-menu', 'dl-dashboard', 'dl-orders', 'dl-invoices', 'dl-statistics', 'dl-settings');
         $current_page = isset($_GET['page']) ? $_GET['page'] : '';
         
         $is_plugin_page = in_array($current_page, $plugin_pages);
@@ -172,7 +182,8 @@ class DL_Admin {
                 'confirm_action' => __('Are you sure?', 'developer-lessons'),
                 'processing' => __('Processing...', 'developer-lessons'),
                 'success' => __('Success!', 'developer-lessons'),
-                'error' => __('An error occurred.', 'developer-lessons')
+                'error' => __('An error occurred.', 'developer-lessons'),
+                'no_invoices_selected' => __('Please select at least one invoice.', 'developer-lessons')
             )
         ));
     }
@@ -287,6 +298,13 @@ class DL_Admin {
         );
 
         include DL_PLUGIN_DIR . 'admin/partials/orders-page.php';
+    }
+
+    /**
+     * Render invoices overview page
+     */
+    public function render_invoices() {
+        DL_Admin_Invoices::render_page();
     }
 
     /**
