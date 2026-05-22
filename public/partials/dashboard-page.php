@@ -10,7 +10,9 @@ if (!defined('ABSPATH')) {
 <div class="dl-dashboard">
     <?php if (!empty($pending_orders)): ?>
         <div class="dl-dashboard-section dl-pending-orders">
-            <h2><?php _e('Pending Orders', 'developer-lessons'); ?></h2>
+            <div class="dl-dashboard--section_header divider">
+                <p class="dl-dashboard--section_headline strong"><?php _e('Pending Orders', 'developer-lessons'); ?></p>
+            </div>
             <table class="dl-dashboard-table">
                 <thead>
                     <tr>
@@ -54,7 +56,9 @@ if (!defined('ABSPATH')) {
     <?php endif; ?>
 
     <div class="dl-dashboard-section dl-my-lessons">
-        <h2><?php _e('My Lessons', 'developer-lessons'); ?></h2>
+        <div class="dl-dashboard--section_header divider">
+            <p class="dl-dashboard--section_headline strong"><?php _e('My Lessons', 'developer-lessons'); ?></p>
+        </div>
         
         <?php if (empty($purchased_lessons)): ?>
             <p class="dl-no-lessons"><?php _e('You have not purchased any lessons yet.', 'developer-lessons'); ?></p>

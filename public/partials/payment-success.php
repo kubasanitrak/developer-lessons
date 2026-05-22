@@ -15,19 +15,22 @@ $dashboard_url = get_permalink($page_ids['dashboard']);
         <span class="dashicons dashicons-yes-alt"></span>
     </div>
     
-    <div class="dl-order-details--header taL">
+    <div class="dl-order-details--header taL ">
         <h1 class="taL mar-B-05 maxi"><?php _e('Payment Successful!', 'developer-lessons'); ?></h1>
-        
         <p class="plain"><?php _e('Thank you for your purchase. You now have access to your lessons.', 'developer-lessons'); ?></p>
     </div>
     
     <?php if ($order): ?>
         <div class="dl-order-details">
-            <h3 class="mar-B-05"><?php _e('Order Details', 'developer-lessons'); ?></h3>
+            <div class="dl-order-details--header divider">
+                <p class="mar-B-05 strong"><?php _e('Order Details', 'developer-lessons'); ?></p>
+            </div>
             <p class="plain"><strong><?php _e('Order Number:', 'developer-lessons'); ?></strong> <?php echo esc_html($order->order_number); ?></p>
             <p class="plain"><strong><?php _e('Total:', 'developer-lessons'); ?></strong> <?php echo DL_Payments::format_price($order->total); ?></p>
             
-            <h3 class="mar-B-05"><?php _e('Purchased Lessons:', 'developer-lessons'); ?></h3>
+            <div class="dl-order-details--header divider">
+                <p class="mar-B-05 strong"><?php _e('Purchased Lessons:', 'developer-lessons'); ?></p>
+            </div>
             <ul>
                 <?php foreach ($order->items as $item): ?>
                     <li class="plain">

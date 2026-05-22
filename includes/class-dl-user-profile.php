@@ -33,8 +33,11 @@ class DL_User_Profile {
             return;
         }
         ?>
-        <h2><?php _e('Invoice Details', 'developer-lessons'); ?></h2>
-        <p class="description"><?php _e('These details will be used for invoices when purchasing lessons.', 'developer-lessons'); ?></p>
+        
+        <div class="dl-dashboard--section_header divider">
+            <p class="dl-dashboard--section_headline strong"><?php _e('Invoice Details', 'developer-lessons'); ?></p>
+            <p class="description"><?php _e('These details will be used for invoices when purchasing lessons.', 'developer-lessons'); ?></p>
+        </div>
         
         <table class="form-table" role="presentation">
             <tr>
@@ -148,8 +151,10 @@ class DL_User_Profile {
         ob_start();
         ?>
         <div class="dl-invoice-profile-form">
-            <h3><?php _e('Invoice Details', 'developer-lessons'); ?></h3>
-            <p class="dl-form-description"><?php _e('These details will be used when you request an invoice during checkout.', 'developer-lessons'); ?></p>
+            <div class="dl-dashboard--section_header divider">
+                <p class="dl-dashboard--section_headline strong"><?php _e('Invoice Details', 'developer-lessons'); ?></p>
+                <p class="dl-form-description"><?php _e('These details will be used when you request an invoice during checkout.', 'developer-lessons'); ?></p>
+            </div>
             
             <form id="dl-invoice-profile-form" class="dl-form">
                 <div class="dl-form-row">
