@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.1.9.7] - 2026-05-22
+
+### Added
+
+- markup and css polish.
+
 ## [1.1.9.6] - 2026-05-22
 
 ### Added
