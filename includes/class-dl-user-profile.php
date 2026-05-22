@@ -36,8 +36,9 @@ class DL_User_Profile {
         
         <div class="dl-dashboard--section_header divider">
             <p class="dl-dashboard--section_headline strong"><?php _e('Invoice Details', 'developer-lessons'); ?></p>
-            <p class="description"><?php _e('These details will be used for invoices when purchasing lessons.', 'developer-lessons'); ?></p>
         </div>
+        
+        <p class="description"><?php _e('These details will be used for invoices when purchasing lessons.', 'developer-lessons'); ?></p>
         
         <table class="form-table" role="presentation">
             <tr>
@@ -150,12 +151,12 @@ class DL_User_Profile {
 
         ob_start();
         ?>
+        <div class="dl-dashboard--section_header divider">
+            <p class="dl-dashboard--section_headline strong"><?php _e('Invoice Details', 'developer-lessons'); ?></p>
+        </div>
+        <p class="dl-form-description"><?php _e('These details will be used when you request an invoice during checkout.', 'developer-lessons'); ?></p>
+        
         <div class="dl-invoice-profile-form">
-            <div class="dl-dashboard--section_header divider">
-                <p class="dl-dashboard--section_headline strong"><?php _e('Invoice Details', 'developer-lessons'); ?></p>
-                <p class="dl-form-description"><?php _e('These details will be used when you request an invoice during checkout.', 'developer-lessons'); ?></p>
-            </div>
-            
             <form id="dl-invoice-profile-form" class="dl-form">
                 <div class="dl-form-row">
                     <label for="dl_profile_company_name"><?php _e('Company Name', 'developer-lessons'); ?></label>
@@ -206,9 +207,11 @@ class DL_User_Profile {
                 </div>
 
                 <div class="dl-form-actions">
-                    <button type="submit" class="dl-btn dl-btn-primary" id="dl-save-invoice-profile">
-                        <?php _e('Save Invoice Details', 'developer-lessons'); ?>
-                    </button>
+                    <div class="wp-block-button is-style-filled button">
+                        <button type="submit" class="dl-btn dl-btn-primary button wp-block-button__link wp-element-button" id="dl-save-invoice-profile">
+                            <?php _e('Save Invoice Details', 'developer-lessons'); ?>
+                        </button>
+                    </div>
                     <span class="dl-form-message" id="dl-invoice-message"></span>
                 </div>
             </form>
