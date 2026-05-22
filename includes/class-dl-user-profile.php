@@ -130,7 +130,7 @@ class DL_User_Profile {
      */
     public function render_invoice_form_shortcode($atts) {
         if (!is_user_logged_in()) {
-            return '<p>' . __('Please log in to manage your invoice details.', 'developer-lessons') . '</p>';
+            return '<p class="plain mar-block-S_2 mar-block-E_4">' . __('Please log in to manage your invoice details.', 'developer-lessons') . '</p>';
         }
 
         $user_id = get_current_user_id();

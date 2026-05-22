@@ -3,7 +3,7 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Developer Lessons 1.1.9.4\n"
+"Project-Id-Version: Developer Lessons 1.1.9.5\n"
 "Report-Msgid-Bugs-To: [github.com](https://github.com/kubasanitrak/developer-lessons/issues\n)"
 "POT-Creation-Date: 2024-01-15 12:00:00+00:00\n"
 "PO-Revision-Date: 2024-01-15 12:00:00+00:00\n"
@@ -1311,3 +1311,6 @@ msgstr "Rozšíření ZIP na tomto serveru není dostupné."
 #: admin/class-dl-admin-invoices.php
 msgid "Could not create ZIP archive."
 msgstr "Nepodařilo se vytvořit ZIP archiv."
+
+msgid "Please log in to view your lessons."
+msgstr "Pro zobrazení svých lekcí se prosím přihlaste."

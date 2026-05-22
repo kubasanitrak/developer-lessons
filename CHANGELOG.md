@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.1.9.5] - 2026-05-22
+
+### Added
+
+- translation login prompt, css polish.
+
 ## [1.1.9.4] - 2026-05-21
 
 ### Added

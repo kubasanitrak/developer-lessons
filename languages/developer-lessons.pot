@@ -1613,3 +1613,6 @@ msgstr ""
 #: admin/class-dl-admin-invoices.php
 msgid "Could not create ZIP archive."
 msgstr ""
+
+msgid "Please log in to view your lessons."
+msgstr ""

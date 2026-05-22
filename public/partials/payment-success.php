@@ -15,21 +15,23 @@ $dashboard_url = get_permalink($page_ids['dashboard']);
         <span class="dashicons dashicons-yes-alt"></span>
     </div>
     
-    <h2><?php _e('Payment Successful!', 'developer-lessons'); ?></h2>
-    
-    <p><?php _e('Thank you for your purchase. You now have access to your lessons.', 'developer-lessons'); ?></p>
+    <div class="dl-order-details--header taL">
+        <h1 class="taL mar-B-05 maxi"><?php _e('Payment Successful!', 'developer-lessons'); ?></h1>
+        
+        <p class="plain"><?php _e('Thank you for your purchase. You now have access to your lessons.', 'developer-lessons'); ?></p>
+    </div>
     
     <?php if ($order): ?>
         <div class="dl-order-details">
-            <h3><?php _e('Order Details', 'developer-lessons'); ?></h3>
-            <p><strong><?php _e('Order Number:', 'developer-lessons'); ?></strong> <?php echo esc_html($order->order_number); ?></p>
-            <p><strong><?php _e('Total:', 'developer-lessons'); ?></strong> <?php echo DL_Payments::format_price($order->total); ?></p>
+            <h3 class="mar-B-05"><?php _e('Order Details', 'developer-lessons'); ?></h3>
+            <p class="plain"><strong><?php _e('Order Number:', 'developer-lessons'); ?></strong> <?php echo esc_html($order->order_number); ?></p>
+            <p class="plain"><strong><?php _e('Total:', 'developer-lessons'); ?></strong> <?php echo DL_Payments::format_price($order->total); ?></p>
             
-            <h4><?php _e('Purchased Lessons:', 'developer-lessons'); ?></h4>
+            <h3 class="mar-B-05"><?php _e('Purchased Lessons:', 'developer-lessons'); ?></h3>
             <ul>
                 <?php foreach ($order->items as $item): ?>
-                    <li>
-                        <a href="<?php echo get_permalink($item->lesson_id); ?>">
+                    <li class="plain">
+                        <a class="" href="<?php echo get_permalink($item->lesson_id); ?>">
                             <?php echo esc_html($item->lesson_title); ?>
                         </a>
                     </li>

@@ -18,7 +18,7 @@ class DL_User {
      */
     public function render_dashboard() {
         if (!is_user_logged_in()) {
-            return '<p>' . __('Please log in to view your lessons.', 'developer-lessons') . '</p>';
+            return '<p class="plain mar-block-E_2">' . __('Please log in to view your lessons.', 'developer-lessons') . '</p>';
         }
 
         $user_id = get_current_user_id();
