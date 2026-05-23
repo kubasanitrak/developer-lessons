@@ -8,6 +8,9 @@ if (!defined('ABSPATH')) {
 }
 
 $currency_symbol = get_option('dl_currency_symbol', 'Kč');
+if (!isset($actionable_statuses)) {
+    $actionable_statuses = DL_Admin::actionable_order_statuses();
+}
 $statuses = array(
     '' => __('All', 'developer-lessons'),
     'pending' => __('Pending', 'developer-lessons'),
@@ -85,7 +88,7 @@ $statuses = array(
                         </td>
                         <td><?php echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), mysql2date('U', $order->created_at)); ?></td>
                         <td>
-                            <?php if (in_array($order->status, array('pending', 'awaiting_payment'))): ?>
+                            <?php if (in_array($order->status, $actionable_statuses, true)): ?>
                                 <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=dl-orders&dl_action=confirm_payment&order_id=' . $order->id), 'dl_admin_action'); ?>" 
                                    class="button button-small button-primary" 
                                    onclick="return confirm('<?php _e('Confirm payment?', 'developer-lessons'); ?>')">

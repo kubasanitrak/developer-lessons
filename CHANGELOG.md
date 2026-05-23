@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.3] - 2026-05-23
+
+### Fixed
+
+- Show Confirm/Cancel order actions for processing and failed orders on the admin Orders page.
+
 ## [1.2.0.2] - 2026-05-23
 
 ### Added

@@ -9,6 +9,13 @@ if (!defined('ABSPATH')) {
 
 class DL_Admin {
 
+    /**
+     * Order statuses that admins can confirm or cancel from the orders list.
+     */
+    public static function actionable_order_statuses() {
+        return array('pending', 'awaiting_payment', 'processing', 'failed');
+    }
+
     public function __construct() {
         add_action('admin_menu', array($this, 'add_admin_menu'), 5);
         add_action('admin_menu', array($this, 'reorder_submenu'), 999);
@@ -203,22 +210,25 @@ class DL_Admin {
         $action = sanitize_text_field($_GET['dl_action']);
         $order_id = isset($_GET['order_id']) ? intval($_GET['order_id']) : 0;
 
+        if (!current_user_can('manage_options') || !$order_id) {
+            return;
+        }
+
+        $order = DL_Checkout::get_order($order_id);
+        if (!$order || !in_array($order->status, self::actionable_order_statuses(), true)) {
+            return;
+        }
+
         switch ($action) {
             case 'confirm_payment':
-                if ($order_id && current_user_can('manage_options')) {
-                    DL_Payments::complete_payment($order_id, 'manual_confirmation');
-                    wp_redirect(add_query_arg('message', 'payment_confirmed', admin_url('admin.php?page=dl-orders')));
-                    exit;
-                }
-                break;
+                DL_Payments::complete_payment($order_id, 'manual_confirmation');
+                wp_redirect(add_query_arg('message', 'payment_confirmed', admin_url('admin.php?page=dl-orders')));
+                exit;
 
             case 'cancel_order':
-                if ($order_id && current_user_can('manage_options')) {
-                    DL_Checkout::update_order_status($order_id, 'cancelled');
-                    wp_redirect(add_query_arg('message', 'order_cancelled', admin_url('admin.php?page=dl-orders')));
-                    exit;
-                }
-                break;
+                DL_Checkout::update_order_status($order_id, 'cancelled');
+                wp_redirect(add_query_arg('message', 'order_cancelled', admin_url('admin.php?page=dl-orders')));
+                exit;
         }
     }
 
@@ -296,6 +306,8 @@ class DL_Admin {
              ORDER BY o.created_at DESC 
              LIMIT $offset, $per_page"
         );
+
+        $actionable_statuses = self::actionable_order_statuses();
 
         include DL_PLUGIN_DIR . 'admin/partials/orders-page.php';
     }
