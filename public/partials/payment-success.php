@@ -22,16 +22,16 @@ $dashboard_url = get_permalink($page_ids['dashboard']);
     
     <?php if ($order): ?>
         <div class="dl-order-details">
-            <div class="dl-order-details--header divider">
-                <p class="mar-B-05 strong"><?php _e('Order Details', 'developer-lessons'); ?></p>
+            <div class="dl-order-details--header mar-B-05">
+                <p class="strong divider"><?php _e('Order Details', 'developer-lessons'); ?></p>
             </div>
             <p class="plain"><strong><?php _e('Order Number:', 'developer-lessons'); ?></strong> <?php echo esc_html($order->order_number); ?></p>
             <p class="plain"><strong><?php _e('Total:', 'developer-lessons'); ?></strong> <?php echo DL_Payments::format_price($order->total); ?></p>
             
-            <div class="dl-order-details--header divider">
-                <p class="mar-B-05 strong"><?php _e('Purchased Lessons:', 'developer-lessons'); ?></p>
+            <div class="dl-order-details--header mar-T mar-B-05">
+                <p class=" divider strong"><?php _e('Purchased Lessons:', 'developer-lessons'); ?></p>
             </div>
-            <ul>
+            <ul class="dl-order-details--list list-none">
                 <?php foreach ($order->items as $item): ?>
                     <li class="plain">
                         <a class="" href="<?php echo get_permalink($item->lesson_id); ?>">

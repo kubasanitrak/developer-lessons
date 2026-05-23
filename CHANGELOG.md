@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.0] - 2026-05-23
+
+### Added
+
+- payment success page css polish, more like this buttons fix.
+
 ## [1.1.9.9] - 2026-05-23
 
 ### Added

@@ -220,7 +220,7 @@ class DL_Access_Control {
         $output .= $this->render_lesson_grid_section(
             __('You might also like', 'developer-lessons'),
             $this->get_unpurchased_paid_lessons_query_args($lesson_id, 12, $user_id),
-            array('show_basket_buttons' => false)
+            array('show_basket_buttons' => true)
         );
 
         return $output;
@@ -480,7 +480,7 @@ class DL_Access_Control {
      * Shortcode: Lessons grid
      * Usage: [dl_lessons_grid]
      *        [dl_lessons_grid mode="purchased" title="My other lessons" show_basket="false"]
-     *        [dl_lessons_grid mode="unpurchased" title="You might also like" show_basket="false"]
+     *        [dl_lessons_grid mode="unpurchased" title="You might also like"]
      *        [dl_lessons_grid layout="section" title="Other Available Lessons"]
      */
     public function render_lessons_grid_shortcode($atts) {
