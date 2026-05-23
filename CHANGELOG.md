@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.2] - 2026-05-23
+
+### Added
+
+- public css and scss update.
+
 ## [1.2.0.1] - 2026-05-23
 
 ### Added
