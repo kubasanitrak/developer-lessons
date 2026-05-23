@@ -54,7 +54,7 @@ class DL_Access_Control {
 
         // Check if user has access
         if ($this->user_has_access($post->ID)) {
-            return $content;
+            return $content . $this->render_post_access_lesson_grids($post->ID);
         }
 
         // Return teaser content with CTA and lessons grid
@@ -199,119 +199,207 @@ class DL_Access_Control {
     }
 
     /**
-     * Render grid of other available lessons
+     * Grids below full lesson content (logged-in users with access).
      */
-    public function render_other_lessons_grid($current_lesson_id = 0) {
+    public function render_post_access_lesson_grids($lesson_id) {
         $user_id = get_current_user_id();
-        
-        // Get purchased lessons to exclude
-        $purchased_lessons = self::get_user_purchased_lessons($user_id);
-        
-        // Build exclude array
-        $exclude_ids = $purchased_lessons;
-        if ($current_lesson_id) {
-            $exclude_ids[] = $current_lesson_id;
+        $output = '';
+
+        $other_purchased_ids = $this->get_purchased_paid_lesson_ids($lesson_id, $user_id);
+        if (!empty($other_purchased_ids)) {
+            $output .= $this->render_lesson_grid_section(
+                __('My other lessons', 'developer-lessons'),
+                $this->get_paid_lessons_query_args(array(
+                    'posts_per_page' => 12,
+                    'post__in' => $other_purchased_ids,
+                )),
+                array('show_basket_buttons' => false)
+            );
         }
 
-        // Query other paid lessons
+        $output .= $this->render_lesson_grid_section(
+            __('You might also like', 'developer-lessons'),
+            $this->get_unpurchased_paid_lessons_query_args($lesson_id, 12, $user_id),
+            array('show_basket_buttons' => false)
+        );
+
+        return $output;
+    }
+
+    /**
+     * Render grid of other available lessons (teaser / no access view).
+     */
+    public function render_other_lessons_grid($current_lesson_id = 0) {
+        return $this->render_lesson_grid_section(
+            __('Other Available Lessons', 'developer-lessons'),
+            $this->get_unpurchased_paid_lessons_query_args($current_lesson_id, 12, get_current_user_id()),
+            array('show_basket_buttons' => true)
+        );
+    }
+
+    /**
+     * Base WP_Query args for published paid lessons.
+     */
+    private function get_paid_lessons_query_args($overrides = array()) {
         $args = array(
             'post_type' => 'lesson',
             'post_status' => 'publish',
             'posts_per_page' => 12,
-            'post__not_in' => $exclude_ids,
             'meta_query' => array(
                 'relation' => 'AND',
                 array(
                     'key' => '_dl_access_type',
                     'value' => 'paid',
-                    'compare' => '='
+                    'compare' => '=',
                 ),
                 array(
                     'key' => '_dl_price',
                     'value' => 0,
                     'compare' => '>',
-                    'type' => 'NUMERIC'
-                )
+                    'type' => 'NUMERIC',
+                ),
             ),
             'orderby' => 'date',
-            'order' => 'DESC'
+            'order' => 'DESC',
         );
 
-        $lessons = new WP_Query($args);
+        return array_merge($args, $overrides);
+    }
+
+    /**
+     * Query args for paid lessons the user has not purchased.
+     */
+    private function get_unpurchased_paid_lessons_query_args($exclude_lesson_id = 0, $count = 12, $user_id = null) {
+        $exclude_ids = array();
+
+        if ($exclude_lesson_id) {
+            $exclude_ids[] = (int) $exclude_lesson_id;
+        }
+
+        if ($user_id) {
+            $purchased = self::get_user_purchased_lessons($user_id);
+            $exclude_ids = array_merge($exclude_ids, array_map('intval', $purchased));
+        }
+
+        $exclude_ids = array_values(array_unique(array_filter($exclude_ids)));
+
+        $overrides = array('posts_per_page' => $count);
+
+        if (!empty($exclude_ids)) {
+            $overrides['post__not_in'] = $exclude_ids;
+        }
+
+        return $this->get_paid_lessons_query_args($overrides);
+    }
+
+    /**
+     * Published paid lesson IDs the user has purchased, optionally excluding one lesson.
+     */
+    public function get_purchased_paid_lesson_ids($exclude_lesson_id = 0, $user_id = null) {
+        if (!$user_id) {
+            $user_id = get_current_user_id();
+        }
+
+        if (!$user_id) {
+            return array();
+        }
+
+        $purchased_ids = array_map('intval', self::get_user_purchased_lessons($user_id));
+
+        if ($exclude_lesson_id) {
+            $purchased_ids = array_values(array_diff($purchased_ids, array((int) $exclude_lesson_id)));
+        }
+
+        if (empty($purchased_ids)) {
+            return array();
+        }
+
+        return get_posts($this->get_paid_lessons_query_args(array(
+            'posts_per_page' => -1,
+            'post__in' => $purchased_ids,
+            'fields' => 'ids',
+        )));
+    }
+
+    /**
+     * Section wrapper + lesson grid (shared markup).
+     */
+    public function render_lesson_grid_section($title, $query_args, $options = array()) {
+        $defaults = array(
+            'show_basket_buttons' => true,
+        );
+        $options = wp_parse_args($options, $defaults);
+
+        $lessons = new WP_Query($query_args);
 
         if (!$lessons->have_posts()) {
+            wp_reset_postdata();
             return '';
         }
 
-        $basket = new DL_Basket();
+        $show_basket = (bool) $options['show_basket_buttons'];
+        $basket = $show_basket ? new DL_Basket() : null;
 
         ob_start();
         ?>
-        <!-- <div class="lesson-content--container mar-T"> -->
-            <div class="section section-lesson_grid full-bleed scroll-trigger scroll-trigger--grid">
-                <div class="section-lesson_grid--title">
-                    <h1 class="dl-other-lessons-title"><?php _e('Other Available Lessons', 'developer-lessons'); ?></h1>
-                </div>
-                <div class="dl-other-lessons list-grid list-grid--lessons">
-                        <?php while ($lessons->have_posts()): $lessons->the_post(); 
-                            $post_id = get_the_ID();
-                            $post_title = get_the_title();
-                            $price = get_post_meta($post_id, '_dl_price', true);
-                            $in_basket = $basket->is_in_basket($post_id);
-                            
-                            // Get image - try ACF first, then fallback to custom meta, then featured image
-                            $img_id = $this->get_lesson_image_id($post_id);
-                        ?>
-                            <div class="grid-item">
-                                <div class="grid-item--img_container">
-                                    <?php if ($img_id): 
-                                        $img_src = wp_get_attachment_image_url($img_id, 'medium');
-                                        $img_srcset = wp_get_attachment_image_srcset($img_id, 'full');
-                                    ?>
-                                        <img class="grid-item--img lazyload" 
-                                             data-srcset="<?php echo esc_attr($img_srcset); ?>" 
-                                             data-src="<?php echo esc_url($img_src); ?>" 
-                                             src="<?php echo esc_url($img_src); ?>"
-                                             data-sizes="auto" 
-                                             alt="<?php echo esc_attr($post_title); ?>" 
-                                             title="<?php echo esc_attr($post_title); ?>">
-                                    <?php else: ?>
-                                        <div class="grid-item--img grid-item--img-placeholder">
-                                            <span class="dashicons dashicons-welcome-learn-more"></span>
-                                        </div>
-                                    <?php endif; ?>
+        <div class="section section-lesson_grid full-bleed scroll-trigger scroll-trigger--grid">
+            <div class="section-lesson_grid--title">
+                <h1 class="dl-other-lessons-title"><?php echo esc_html($title); ?></h1>
+            </div>
+            <div class="dl-other-lessons list-grid list-grid--lessons">
+                <?php while ($lessons->have_posts()) : $lessons->the_post();
+                    $post_id = get_the_ID();
+                    $post_title = get_the_title();
+                    $in_basket = $show_basket && is_user_logged_in() ? $basket->is_in_basket($post_id) : false;
+                    $img_id = $this->get_lesson_image_id($post_id);
+                    ?>
+                    <div class="grid-item">
+                        <div class="grid-item--img_container">
+                            <?php if ($img_id) :
+                                $img_src = wp_get_attachment_image_url($img_id, 'medium');
+                                $img_srcset = wp_get_attachment_image_srcset($img_id, 'full');
+                                ?>
+                                <img class="grid-item--img lazyload"
+                                     data-srcset="<?php echo esc_attr($img_srcset); ?>"
+                                     data-src="<?php echo esc_url($img_src); ?>"
+                                     src="<?php echo esc_url($img_src); ?>"
+                                     data-sizes="auto"
+                                     alt="<?php echo esc_attr($post_title); ?>"
+                                     title="<?php echo esc_attr($post_title); ?>">
+                            <?php else : ?>
+                                <div class="grid-item--img grid-item--img-placeholder">
+                                    <span class="dashicons dashicons-welcome-learn-more"></span>
+                                </div>
+                            <?php endif; ?>
+                        </div>
 
-                                </div>
-                                
-                                <div class="grid-item--label">
-                                    <h4 class="grid-item--title"><?php echo esc_html($post_title); ?></h4>
-                                    <!-- <span class="grid-item--price"><?php #echo DL_Payments::format_price($price); ?></span> -->
-                                </div>
-                                
-                                <a href="<?php the_permalink(); ?>" class="abs-link grid-item--title_link"></a>
-                                    
-                                <?php if ($in_basket): ?>
-                                    <button type="button" 
-                                            class="dl-btn dl-btn-secondary dl-view-basket-btn grid-item--btn">
-                                        <?php _e('In Basket', 'developer-lessons'); ?>
-                                    </button>
-                                <?php else: ?>
-                                    <button type="button" 
-                                            class="dl-add-to-basket-btn grid-item--btn" 
-                                            data-lesson-id="<?php echo esc_attr($post_id); ?>">
-                                        <?php _e('Add to Basket', 'developer-lessons'); ?>
-                                    </button>
-                                <?php endif; ?>
-                                
-                            </div>
-                        <?php endwhile; ?>
+                        <div class="grid-item--label">
+                            <h4 class="grid-item--title"><?php echo esc_html($post_title); ?></h4>
+                        </div>
+
+                        <a href="<?php the_permalink(); ?>" class="abs-link grid-item--title_link"></a>
+
+                        <?php if ($show_basket) : ?>
+                            <?php if ($in_basket) : ?>
+                                <button type="button"
+                                        class="dl-btn dl-btn-secondary dl-view-basket-btn grid-item--btn">
+                                    <?php _e('In Basket', 'developer-lessons'); ?>
+                                </button>
+                            <?php else : ?>
+                                <button type="button"
+                                        class="dl-add-to-basket-btn grid-item--btn"
+                                        data-lesson-id="<?php echo esc_attr($post_id); ?>">
+                                    <?php _e('Add to Basket', 'developer-lessons'); ?>
+                                </button>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </div>
-                </div>
-            <!-- </div> -->
-        <!-- </div> -->
+                <?php endwhile; ?>
+            </div>
+        </div>
         <?php
         wp_reset_postdata();
-        
+
         return ob_get_clean();
     }
 
@@ -390,72 +478,110 @@ class DL_Access_Control {
 
     /**
      * Shortcode: Lessons grid
-     * Usage: [dl_lessons_grid] or [dl_lessons_grid exclude_current="true" count="8"]
+     * Usage: [dl_lessons_grid]
+     *        [dl_lessons_grid mode="purchased" title="My other lessons" show_basket="false"]
+     *        [dl_lessons_grid mode="unpurchased" title="You might also like" show_basket="false"]
+     *        [dl_lessons_grid layout="section" title="Other Available Lessons"]
      */
     public function render_lessons_grid_shortcode($atts) {
         $atts = shortcode_atts(array(
             'exclude_current' => 'true',
             'count' => 12,
             'exclude_purchased' => 'true',
-        ), $atts);
+            'mode' => 'unpurchased',
+            'show_basket' => '',
+            'title' => '',
+            'layout' => '',
+        ), $atts, 'dl_lessons_grid');
 
+        $count = intval($atts['count']);
         $current_id = filter_var($atts['exclude_current'], FILTER_VALIDATE_BOOLEAN) ? get_the_ID() : 0;
-        
-        return $this->render_lessons_grid($current_id, intval($atts['count']), filter_var($atts['exclude_purchased'], FILTER_VALIDATE_BOOLEAN));
+        $user_id = get_current_user_id();
+        $mode = in_array($atts['mode'], array('unpurchased', 'purchased'), true) ? $atts['mode'] : 'unpurchased';
+
+        if ($mode === 'purchased') {
+            $lesson_ids = $this->get_purchased_paid_lesson_ids($current_id, $user_id);
+            if (empty($lesson_ids)) {
+                return '';
+            }
+            $query_args = $this->get_paid_lessons_query_args(array(
+                'posts_per_page' => $count,
+                'post__in' => $lesson_ids,
+            ));
+            $default_show_basket = false;
+            $default_title = __('My other lessons', 'developer-lessons');
+        } else {
+            $exclude_purchased = filter_var($atts['exclude_purchased'], FILTER_VALIDATE_BOOLEAN);
+            if (!$exclude_purchased) {
+                $overrides = array('posts_per_page' => $count);
+                if ($current_id) {
+                    $overrides['post__not_in'] = array((int) $current_id);
+                }
+                $query_args = $this->get_paid_lessons_query_args($overrides);
+            } else {
+                $query_args = $this->get_unpurchased_paid_lessons_query_args($current_id, $count, $user_id);
+            }
+            $default_show_basket = true;
+            $default_title = __('Other Available Lessons', 'developer-lessons');
+        }
+
+        $show_basket = $atts['show_basket'] !== ''
+            ? filter_var($atts['show_basket'], FILTER_VALIDATE_BOOLEAN)
+            : $default_show_basket;
+
+        $title = $atts['title'] !== '' ? $atts['title'] : '';
+        $layout = $atts['layout'];
+
+        if ($layout === 'section' || $layout === 'simple') {
+            $use_section = ($layout === 'section');
+        } else {
+            $use_section = ($title !== '');
+        }
+
+        if ($use_section) {
+            $section_title = $title !== '' ? $title : $default_title;
+            return $this->render_lesson_grid_section(
+                $section_title,
+                $query_args,
+                array('show_basket_buttons' => $show_basket)
+            );
+        }
+
+        return $this->render_lessons_grid_from_query($query_args, $show_basket);
     }
 
     /**
-     * Render lessons grid (reusable)
+     * Render lessons grid (simple list markup, backward compatible).
      */
     public function render_lessons_grid($exclude_id = 0, $count = 12, $exclude_purchased = true) {
         $user_id = get_current_user_id();
-        
-        // Build exclude array
-        $exclude_ids = array();
-        
-        if ($exclude_id) {
-            $exclude_ids[] = $exclude_id;
-        }
-        
-        if ($exclude_purchased && $user_id) {
-            $purchased_lessons = self::get_user_purchased_lessons($user_id);
-            $exclude_ids = array_merge($exclude_ids, $purchased_lessons);
+
+        if ($exclude_purchased) {
+            $query_args = $this->get_unpurchased_paid_lessons_query_args($exclude_id, $count, $user_id);
+        } else {
+            $overrides = array('posts_per_page' => $count);
+            if ($exclude_id) {
+                $overrides['post__not_in'] = array((int) $exclude_id);
+            }
+            $query_args = $this->get_paid_lessons_query_args($overrides);
         }
 
-        // Query lessons
-        $args = array(
-            'post_type' => 'lesson',
-            'post_status' => 'publish',
-            'posts_per_page' => $count,
-            'meta_query' => array(
-                'relation' => 'AND',
-                array(
-                    'key' => '_dl_access_type',
-                    'value' => 'paid',
-                    'compare' => '='
-                ),
-                array(
-                    'key' => '_dl_price',
-                    'value' => 0,
-                    'compare' => '>',
-                    'type' => 'NUMERIC'
-                )
-            ),
-            'orderby' => 'date',
-            'order' => 'DESC'
-        );
+        return $this->render_lessons_grid_from_query($query_args, true);
+    }
 
-        if (!empty($exclude_ids)) {
-            $args['post__not_in'] = $exclude_ids;
-        }
-
-        $lessons = new WP_Query($args);
+    /**
+     * Simple list-grid output (no section wrapper).
+     */
+    private function render_lessons_grid_from_query($query_args, $show_basket_buttons = true) {
+        $lessons = new WP_Query($query_args);
 
         if (!$lessons->have_posts()) {
+            wp_reset_postdata();
             return '<p class="dl-no-lessons">' . __('No lessons available.', 'developer-lessons') . '</p>';
         }
 
-        $basket = new DL_Basket();
+        $show_basket = (bool) $show_basket_buttons;
+        $basket = $show_basket ? new DL_Basket() : null;
 
         ob_start();
         ?>
@@ -464,7 +590,7 @@ class DL_Access_Control {
                 $post_id = get_the_ID();
                 $post_title = get_the_title();
                 $price = get_post_meta($post_id, '_dl_price', true);
-                $in_basket = is_user_logged_in() ? $basket->is_in_basket($post_id) : false;
+                $in_basket = $show_basket && is_user_logged_in() ? $basket->is_in_basket($post_id) : false;
                 
                 // Get image
                 $img_id = $this->get_lesson_image_id($post_id);
@@ -496,17 +622,19 @@ class DL_Access_Control {
                     
                     <a href="<?php the_permalink(); ?>" class="abs-link grid-item--title_link"></a>
                     
-                    <?php if ($in_basket): ?>
-                        <button type="button" 
-                                class="dl-btn dl-btn-secondary dl-view-basket-btn grid-item--btn">
-                            <?php _e('In Basket', 'developer-lessons'); ?>
-                        </button>
-                    <?php else: ?>
-                        <button type="button" 
-                                class="dl-add-to-basket-btn grid-item--btn" 
-                                data-lesson-id="<?php echo esc_attr($post_id); ?>">
-                            <?php _e('Add to Basket', 'developer-lessons'); ?>
-                        </button>
+                    <?php if ($show_basket) : ?>
+                        <?php if ($in_basket) : ?>
+                            <button type="button" 
+                                    class="dl-btn dl-btn-secondary dl-view-basket-btn grid-item--btn">
+                                <?php _e('In Basket', 'developer-lessons'); ?>
+                            </button>
+                        <?php else : ?>
+                            <button type="button" 
+                                    class="dl-add-to-basket-btn grid-item--btn" 
+                                    data-lesson-id="<?php echo esc_attr($post_id); ?>">
+                                <?php _e('Add to Basket', 'developer-lessons'); ?>
+                            </button>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
             <?php endwhile; ?>

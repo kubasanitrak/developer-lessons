@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.1.9.9] - 2026-05-23
+
+### Added
+
+- offer for my-lessons and other-available added.
+
 ## [1.1.9.8] - 2026-05-22
 
 ### Added
