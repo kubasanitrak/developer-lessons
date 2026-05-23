@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
 $page_ids = get_option('dl_page_ids');
 $dashboard_url = get_permalink($page_ids['dashboard']);
 ?>
-<div class="dl-payment-result dl-payment-success">
+<div class="dl-payment-result dl-payment-success padded-content">
     <div class="dl-result-icon">
         <span class="dashicons dashicons-yes-alt"></span>
     </div>

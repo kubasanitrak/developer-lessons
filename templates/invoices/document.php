@@ -73,7 +73,7 @@ if (!defined('ABSPATH')) {
             padding-bottom: 3mm;
         }
         .items-row td {
-            padding: 4mm 0 10mm;
+            padding: 3mm 0 3mm;
         }
         .price-cell {
             text-align: right;
@@ -84,7 +84,8 @@ if (!defined('ABSPATH')) {
         }
         .total-row td {
             border-top: 1px solid #555;
-            padding-top: 5mm;
+            padding-top: 3mm;
+            padding-bottom: 3mm;
         }
         .total {
             font-size: 18pt;
@@ -92,12 +93,12 @@ if (!defined('ABSPATH')) {
             line-height: 1.15;
         }
         .notes {
-            padding-top: 5mm;
+            padding-top: 3mm;
         }
-        .notes td,
+        .section.notes td,
         .issuer td {
             border-top: 1px solid #555;
-            padding-top: 5mm;
+            padding-top: 3mm;
         }
     </style>
 </head>
