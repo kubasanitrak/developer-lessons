@@ -19,15 +19,21 @@ $btn-radius: 0;
 // Buttons
 .dl-btn {
     display: inline-block;
-    padding: 10px 20px;
+    // padding: 10px 20px;
     background: hsla(var(--LKBA-green-hsl), 0.88);
-    color: #fff;
+    color: var(--LKBA-cream);
     text-decoration: none;
     border: none;
-    border-radius: 7px;
+    border-radius: $border-radius;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
+    // font-size: 14px;
+    // font-weight: 500;
+
+    padding: calc(var(--pad-T)*0.3);
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+
     transition: background 0.2s ease;
 
     &:hover {

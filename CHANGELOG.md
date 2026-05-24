@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.4] - 2026-05-23
+
+### Added
+
+- Public button styles aligned with theme tokens (padding, colors, border radius).
+
 ## [1.2.0.3] - 2026-05-23
 
 ### Fixed
