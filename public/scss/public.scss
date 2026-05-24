@@ -330,8 +330,10 @@ $btn-radius: 0;
     .dl-action-col {
         width: 40px;
         text-align: center;
-        width: 0;
-        display: none;
+    }
+    th.dl-action-col {
+        // width: 0;
+        // display: none;
     }
 
     tfoot {

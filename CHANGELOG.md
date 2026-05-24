@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.6] - 2026-05-23
+
+### Fixed
+
+- Restore checkout table action column header visibility.
+
 ## [1.2.0.5] - 2026-05-23
 
 ### Added
