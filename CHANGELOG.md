@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.5] - 2026-05-23
+
+### Added
+
+- Checkout layout spacing polish (table padding, terms block, invoice sections).
+
 ## [1.2.0.4] - 2026-05-23
 
 ### Added
