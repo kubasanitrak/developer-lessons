@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.7] - 2026-05-26
+
+### Fixed
+
+- Czech invoice-details wording in the checkout flow.
+
 ## [1.2.0.6] - 2026-05-23
 
 ### Fixed
