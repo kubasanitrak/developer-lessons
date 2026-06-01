@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.9] - 2026-06-01
+
+### Added
+
+- Login-required notice styling polish.
+
 ## [1.2.0.8] - 2026-06-01
 
 ### Added
