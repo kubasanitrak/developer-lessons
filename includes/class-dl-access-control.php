@@ -173,9 +173,12 @@ class DL_Access_Control {
                 <?php if ($purchased): ?>
                     <p class="dl-purchased-notice">✓ <?php _e('You own this lesson', 'developer-lessons'); ?></p>
                 <?php else: ?>
-                    <h3><?php _e('Get Full Access to This Lesson', 'developer-lessons'); ?></h3>
-                    <p class="dl-price"><?php echo esc_html($formatted_price); ?></p>
+                    <h2 class="dl-cta-box--headline"><?php _e('Get Full Access to This Lesson', 'developer-lessons'); ?></h2>
+                    <h2 class="dl-price"><?php echo esc_html($formatted_price); ?></h2>
                     
+                    <p class="dl-cta-note plain">
+                        <?php _e('Instant access after payment', 'developer-lessons'); ?>
+                    </p>
                     <?php if ($in_basket): ?>
                         <button type="button" class="dl-btn dl-btn-secondary dl-view-basket-btn">
                             <?php _e('View Basket', 'developer-lessons'); ?>
@@ -188,9 +191,6 @@ class DL_Access_Control {
                         </button>
                     <?php endif; ?>
                     
-                    <p class="dl-cta-note">
-                        <?php _e('Instant access after payment', 'developer-lessons'); ?>
-                    </p>
                 <?php endif; ?>
             </div>
         </div>

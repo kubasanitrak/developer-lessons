@@ -429,56 +429,44 @@ class DL_Basket {
 
         ob_start();
         ?>
-        <div class="dl-buy-all-box<?php echo $extra_class; ?>">
-            <div class="dl-buy-all-header">
-                <h3><?php _e('Get All Lessons', 'developer-lessons'); ?></h3>
-                <?php if ($show_count): ?>
-                    <span class="dl-lesson-count"><?php printf(__('%d lessons', 'developer-lessons'), $summary['count']); ?></span>
-                <?php endif; ?>
+        <div class="buy-all--widget<?php echo $extra_class; ?>">
+    
+            <div class="buy-all--col buy-all--col_num">
+                <div class="lesson-num"><?php print($summary['count']); ?></div>
+                <div class="lessons"><?php #_e('Lessons', 'developer-lessons'); ?></div>
             </div>
-
-            <div class="dl-buy-all-pricing">
-                <?php if ($show_discount && $summary['discount_percentage'] > 0): ?>
-                    <div class="dl-original-price">
-                        <span class="dl-strikethrough"><?php echo DL_Payments::format_price($summary['subtotal']); ?></span>
-                        <span class="dl-discount-badge">-<?php echo $summary['discount_percentage']; ?>%</span>
-                    </div>
-                <?php endif; ?>
-                
-                <div class="dl-final-price">
-                    <?php echo DL_Payments::format_price($summary['total']); ?>
+            <div class="buy-all--col buy-all--col_sale">
+                <div class="sale-line sale-line_sale">
+                    <p class="price"><span class="price-original"><?php echo DL_Payments::format_price($summary['subtotal']); ?></span> <span class="price-saving"><?php echo DL_Payments::format_price($summary['total']); ?></span></p>
                 </div>
-
-                <?php if ($show_discount && $summary['discount_percentage'] > 0): ?>
-                    <p class="dl-savings">
-                        <?php printf(
-                            __('You save %s with bundle discount!', 'developer-lessons'),
-                            DL_Payments::format_price($summary['discount_amount'])
-                        ); ?>
-                    </p>
-                <?php elseif ($show_discount && $summary['count'] >= 3): ?>
-                    <p class="dl-discount-hint">
-                        <?php 
-                        $needed_for_5 = 5 - $summary['count'];
-                        $needed_for_10 = 10 - $summary['count'];
-                        
-                        if ($needed_for_5 > 0 && $needed_for_5 <= 2) {
-                            $discount_5 = get_option('dl_bundle_5_discount', 10);
-                            printf(__('Add %d more for %d%% bundle discount!', 'developer-lessons'), $needed_for_5, $discount_5);
-                        }
-                        ?>
-                    </p>
-                <?php endif; ?>
+                <div class="sale-line sale-line_savings">
+                    <?php if ($show_discount && $summary['discount_percentage'] > 0): ?>
+                        <p class="plain"><?php printf(__('You save %s with bundle discount!', 'developer-lessons'), DL_Payments::format_price($summary['discount_amount']) ); ?></p>
+                    <?php elseif ($show_discount && $summary['count'] >= 3): ?>
+                        <p class="plain">
+                            <?php 
+                            $needed_for_5 = 5 - $summary['count'];
+                            $needed_for_10 = 10 - $summary['count'];
+                            
+                            if ($needed_for_5 > 0 && $needed_for_5 <= 2) {
+                                $discount_5 = get_option('dl_bundle_5_discount', 10);
+                                printf(__('Add %d more for %d%% bundle discount!', 'developer-lessons'), $needed_for_5, $discount_5);
+                            }
+                            ?>
+                        </p>
+                    <?php endif; ?>
+                </div>
+                <div class="sale-line sale-line_access">
+                    <p class="plain"><?php _e('Instant access to all lessons after payment', 'developer-lessons'); ?></p>
+                </div>
             </div>
-
-            <button type="button" class="dl-btn dl-btn-primary dl-btn-large dl-add-all-btn">
-                <?php echo esc_html($button_text); ?>
-            </button>
-
-            <p class="dl-buy-all-note">
-                <?php _e('Instant access to all lessons after payment', 'developer-lessons'); ?>
-            </p>
+            <div class="buy-all--col buy-all--col_cta">
+                <button type="button" class="dl-btn dl-btn-primary dl-btn-large dl-add-all-btn">
+                    <?php echo esc_html($button_text); ?>
+                </button>
+            </div>
         </div>
+
         <?php
         return ob_get_clean();
     }
