@@ -405,8 +405,8 @@ class DL_Basket {
         if (!is_user_logged_in()) {
             $login_url = wp_login_url(get_permalink());
             return '<div class="dl-buy-all-box dl-login-required">
-                <p>' . __('Please log in to purchase lessons.', 'developer-lessons') . '</p>
-                <a href="' . esc_url($login_url) . '" class="dl-btn">' . __('Log In', 'developer-lessons') . '</a>
+                <p class="plain caps">' . __('Please log in to purchase lessons.', 'developer-lessons') . '</p>
+                <a href="' . esc_url($login_url) . '" class="dl-btn button">' . __('Log In', 'developer-lessons') . '</a>
             </div>';
         }
 
@@ -415,7 +415,7 @@ class DL_Basket {
         // No lessons available
         if ($summary['count'] === 0) {
             return '<div class="dl-buy-all-box dl-all-purchased">
-                <p>✓ ' . __('You already own all available lessons!', 'developer-lessons') . '</p>
+                <p class="plain caps">✓ ' . __('You already own all available lessons!', 'developer-lessons') . '</p>
             </div>';
         }
 
