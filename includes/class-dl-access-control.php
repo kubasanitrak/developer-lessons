@@ -404,9 +404,77 @@ class DL_Access_Control {
     }
 
     /**
+     * Dashboard "My Lessons" overview (single markup; grid/list via CSS + data-view).
+     *
+     * @param array $purchases Rows from DL_User::get_purchased_lessons().
+     */
+    public function render_dashboard_lessons_overview($purchases) {
+        if (empty($purchases)) {
+            return '';
+        }
+
+        ob_start();
+        ?>
+        <div class="dl-other-lessons list-grid list-grid--lessons dl-dashboard-lessons">
+            <?php foreach ($purchases as $purchase) :
+                $lesson = get_post((int) $purchase->lesson_id);
+                if (!$lesson || $lesson->post_status !== 'publish') {
+                    continue;
+                }
+
+                $post_id = $lesson->ID;
+                $post_title = $lesson->post_title;
+                $permalink = get_permalink($lesson);
+                $img_id = $this->get_lesson_image_id($post_id);
+                $purchased_label = sprintf(
+                    __('Purchased on %s', 'developer-lessons'),
+                    date_i18n(get_option('date_format'), mysql2date('U', $purchase->purchased_at))
+                );
+                ?>
+                <div class="customtable-row grid-item dl-dashboard-lesson-item mar-T-0">
+                    <div class="grid-item--img_container customtable-col customtable-col_THUMB">
+                        <?php if ($img_id) :
+                            $img_src = wp_get_attachment_image_url($img_id, 'medium');
+                            $img_srcset = wp_get_attachment_image_srcset($img_id, 'full');
+                            ?>
+                            <img class="grid-item--img lazyload"
+                                 data-srcset="<?php echo esc_attr($img_srcset); ?>"
+                                 data-src="<?php echo esc_url($img_src); ?>"
+                                 src="<?php echo esc_url($img_src); ?>"
+                                 data-sizes="auto"
+                                 alt="<?php echo esc_attr($post_title); ?>"
+                                 title="<?php echo esc_attr($post_title); ?>">
+                        <?php else : ?>
+                            <div class="grid-item--img grid-item--img-placeholder">
+                                <span class="dashicons dashicons-welcome-learn-more"></span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="customtable-col customtable-col_COURSE grid-item--label">
+                        <h4 class="grid-item--title customtable-col--item"><?php echo esc_html($post_title); ?></h4>
+                        <span class="customtable-col--item dl-lesson-purchased-date"><?php echo esc_html($purchased_label); ?></span>
+                    </div>
+
+                    <div class="customtable-col customtable-col_BOOK">
+                        <a class="customtable-col--item_link caps" href="<?php echo esc_url($permalink); ?>">
+                            <?php _e('View Lesson', 'developer-lessons'); ?>
+                        </a>
+                    </div>
+
+                    <a href="<?php echo esc_url($permalink); ?>" class="abs-link grid-item--title_link" aria-label="<?php echo esc_attr($post_title); ?>"></a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <?php
+
+        return ob_get_clean();
+    }
+
+    /**
      * Get lesson image ID - tries ACF, then custom meta, then featured image
      */
-    private function get_lesson_image_id($post_id) {
+    public function get_lesson_image_id($post_id) {
         $img_id = null;
         
         // Try ACF field first (if ACF is active)

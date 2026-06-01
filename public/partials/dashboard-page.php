@@ -56,47 +56,39 @@ if (!defined('ABSPATH')) {
     <?php endif; ?>
 
     <div class="dl-dashboard-section dl-my-lessons">
-        <div class="dl-dashboard--section_header divider">
+        <div class="dl-dashboard--section_header divider dl-my-lessons-header">
             <p class="dl-dashboard--section_headline strong"><?php _e('My Lessons', 'developer-lessons'); ?></p>
+            <?php if (!empty($purchased_lessons)) : ?>
+                <div class="dl-lessons-view-switch" role="group" aria-label="<?php esc_attr_e('Lessons overview layout', 'developer-lessons'); ?>">
+                    <button type="button"
+                            class="dl-lessons-view-btn<?php echo $lessons_view === 'grid' ? ' is-active' : ''; ?>"
+                            data-view="grid"
+                            aria-pressed="<?php echo $lessons_view === 'grid' ? 'true' : 'false'; ?>">
+                        <span class="dashicons dashicons-grid-view" aria-hidden="true"></span>
+                        <span class="screen-reader-text"><?php _e('Grid view', 'developer-lessons'); ?></span>
+                    </button>
+                    <button type="button"
+                            class="dl-lessons-view-btn<?php echo $lessons_view === 'list' ? ' is-active' : ''; ?>"
+                            data-view="list"
+                            aria-pressed="<?php echo $lessons_view === 'list' ? 'true' : 'false'; ?>">
+                        <span class="dashicons dashicons-list-view" aria-hidden="true"></span>
+                        <span class="screen-reader-text"><?php _e('List view', 'developer-lessons'); ?></span>
+                    </button>
+                </div>
+            <?php endif; ?>
         </div>
-        
-        <?php if (empty($purchased_lessons)): ?>
+
+        <?php if (empty($purchased_lessons)) : ?>
             <p class="dl-no-lessons"><?php _e('You have not purchased any lessons yet.', 'developer-lessons'); ?></p>
-            <a href="<?php echo get_post_type_archive_link('lesson'); ?>" class="dl-btn">
+            <a href="<?php echo esc_url(get_post_type_archive_link('lesson')); ?>" class="dl-btn">
                 <?php _e('Browse Lessons', 'developer-lessons'); ?>
             </a>
-        <?php else: ?>
-            <div class="dl-lessons-grid">
-                <?php foreach ($purchased_lessons as $purchase): ?>
-                    <?php $lesson = get_post($purchase->lesson_id); ?>
-                    <?php if ($lesson): ?>
-                        <div class="dl-lesson-card">
-                            <?php if (has_post_thumbnail($lesson)): ?>
-                                <div class="dl-lesson-thumbnail">
-                                    <a href="<?php echo get_permalink($lesson); ?>">
-                                        <?php echo get_the_post_thumbnail($lesson, 'medium'); ?>
-                                    </a>
-                                </div>
-                            <?php endif; ?>
-                            <div class="dl-lesson-info">
-                                <h3>
-                                    <a href="<?php echo get_permalink($lesson); ?>">
-                                        <?php echo esc_html($lesson->post_title); ?>
-                                    </a>
-                                </h3>
-                                <p class="dl-lesson-date">
-                                    <?php printf(
-                                        __('Purchased on %s', 'developer-lessons'),
-                                        date_i18n(get_option('date_format'), mysql2date('U', $purchase->purchased_at))
-                                    ); ?>
-                                </p>
-                                <a href="<?php echo get_permalink($lesson); ?>" class="dl-btn dl-btn-small">
-                                    <?php _e('View Lesson', 'developer-lessons'); ?>
-                                </a>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                <?php endforeach; ?>
+        <?php else : ?>
+            <div class="dl-my-lessons-overview customtable" data-view="<?php echo esc_attr($lessons_view); ?>">
+                <?php
+                $access_control = new DL_Access_Control();
+                echo $access_control->render_dashboard_lessons_overview($purchased_lessons);
+                ?>
             </div>
         <?php endif; ?>
     </div>

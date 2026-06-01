@@ -791,6 +791,21 @@ msgstr "Zatím jste si nezakoupili žádné lekce."
 msgid "Purchased on %s"
 msgstr "Zakoupeno %s"
 
+msgid "Lessons overview layout"
+msgstr "Způsob zobrazení lekcí"
+
+msgid "Grid view"
+msgstr "Mřížka"
+
+msgid "List view"
+msgstr "Seznam"
+
+msgid "Unauthorized."
+msgstr "Neautorizovaný přístup."
+
+msgid "Invalid view."
+msgstr "Neplatné zobrazení."
+
 msgid "Payment Failed"
 msgstr "Platba selhala"
 

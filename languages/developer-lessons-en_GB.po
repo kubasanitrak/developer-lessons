@@ -791,6 +791,21 @@ msgstr "You have not purchased any lessons yet."
 msgid "Purchased on %s"
 msgstr "Purchased on %s"
 
+msgid "Lessons overview layout"
+msgstr "Lessons overview layout"
+
+msgid "Grid view"
+msgstr "Grid view"
+
+msgid "List view"
+msgstr "List view"
+
+msgid "Unauthorized."
+msgstr "Unauthorized."
+
+msgid "Invalid view."
+msgstr "Invalid view."
+
 msgid "Payment Failed"
 msgstr "Payment Failed"
 

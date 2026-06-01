@@ -39,6 +39,9 @@
             
             // Save invoice to profile toggle
             $(document).on('change', '#dl_save_invoice_to_profile', this.toggleSaveInvoice.bind(this));
+
+            // Dashboard lessons grid / list view
+            $(document).on('click', '.dl-lessons-view-btn', this.setDashboardLessonsView.bind(this));
         },
 
         initBasket: function() {
@@ -612,6 +615,39 @@
             });
         },
 
+
+        setDashboardLessonsView: function(e) {
+            e.preventDefault();
+
+            const $btn = $(e.currentTarget);
+            const view = $btn.data('view');
+            const $section = $btn.closest('.dl-my-lessons');
+            const $overview = $section.find('.dl-my-lessons-overview');
+
+            if (!$overview.length || !view) {
+                return;
+            }
+
+            $overview.attr('data-view', view);
+            $section.find('.dl-lessons-view-btn')
+                .removeClass('is-active')
+                .attr('aria-pressed', 'false');
+            $btn.addClass('is-active').attr('aria-pressed', 'true');
+
+            if (!dl_public.is_logged_in) {
+                return;
+            }
+
+            $.ajax({
+                url: dl_public.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'dl_save_dashboard_lessons_view',
+                    view: view,
+                    nonce: dl_public.nonce
+                }
+            });
+        },
 
         scrollToElement: function($element) {
             if ($element.length) {

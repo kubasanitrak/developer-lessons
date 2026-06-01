@@ -31,6 +31,7 @@ class DL_Public {
             DL_VERSION,
             true
         );
+        wp_enqueue_style('dashicons');
         $page_ids = get_option('dl_page_ids', array());
         wp_localize_script('dl-public-js', 'dl_public', array(
             'ajax_url' => admin_url('admin-ajax.php'),

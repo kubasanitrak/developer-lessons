@@ -1045,6 +1045,26 @@ msgstr ""
 msgid "Purchased on %s"
 msgstr ""
 
+#: public/partials/dashboard-page.php
+msgid "Lessons overview layout"
+msgstr ""
+
+#: public/partials/dashboard-page.php
+msgid "Grid view"
+msgstr ""
+
+#: public/partials/dashboard-page.php
+msgid "List view"
+msgstr ""
+
+#: includes/class-dl-user.php
+msgid "Unauthorized."
+msgstr ""
+
+#: includes/class-dl-user.php
+msgid "Invalid view."
+msgstr ""
+
 #: public/partials/payment-failed.php
 msgid "Payment Failed"
 msgstr ""

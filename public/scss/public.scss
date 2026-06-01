@@ -674,53 +674,175 @@ $btn-radius: 0;
     }
 }
 
-.dl-lessons-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
+// Dashboard — My Lessons overview (grid / list toggle, single markup)
+.dl-my-lessons-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: calc(var(--gap, 10px) * 1.5);
+
+    .dl-dashboard--section_headline {
+        flex: 1 1 auto;
+        margin: 0;
+    }
 }
 
-.dl-lesson-card {
+.dl-lessons-view-switch {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.dl-lessons-view-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--touch-S, 32px);
+    height: var(--touch-S, 32px);
+    padding: 0;
     border: 1px solid $border-color;
     border-radius: $border-radius;
-    overflow: hidden;
-    background: #fff;
-    transition: box-shadow 0.2s ease;
+    background: transparent;
+    color: $text-color;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
 
-    &:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-}
-
-.dl-lesson-thumbnail {
-    img {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-    }
-}
-
-.dl-lesson-info {
-    padding: 20px;
-
-    h3 {
-        margin: 0 0 10px;
+    .dashicons {
         font-size: 18px;
+        width: 18px;
+        height: 18px;
+    }
 
-        a {
-            color: $text-color;
+    &:hover,
+    &.is-active {
+        border-color: $primary-color;
+        background: rgba($primary-color, 0.12);
+        color: $primary-color;
+    }
+
+    &.is-active {
+        cursor: default;
+    }
+}
+
+.dl-my-lessons-overview {
+    margin-top: calc(var(--pad-T) * 0.5);
+
+    &[data-view='list'] {
+        .dl-dashboard-lessons {
+            display: block;
+        }
+
+        .dl-dashboard-lesson-item {
+            display: flex;
+            flex-direction: column;
+            padding: 0.5em 0;
+            border-bottom: 1px solid $border-color;
+            position: relative;
+
+            &.mar-T-0 {
+                margin-top: 0;
+            }
+
+            @include mq(mq-land) {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .customtable-col_THUMB,
+        .grid-item--title_link {
+            display: none;
+        }
+
+        .customtable-col {
+            position: relative;
+            margin-top: calc(var(--pad-T) * 0.25);
+
+            @include mq(mq-land) {
+                margin-top: 0;
+            }
+        }
+
+        .customtable-col_COURSE {
+            flex-grow: 2;
+
+            @include mq(mq-land) {
+                text-align: left;
+            }
+        }
+
+        .grid-item--label {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25em;
+        }
+
+        .grid-item--title {
+            margin: 0;
+            font-size: inherit;
+            font-weight: inherit;
+            line-height: inherit;
+        }
+
+        .dl-lesson-purchased-date {
+            font-size: calc(14.85714px + 0.04464vw);
+            color: var(--gray2, #7a7a7a);
+        }
+
+        .customtable-col_BOOK {
+            margin-top: calc(var(--pad-T) * 0.5);
+            position: relative;
+            height: auto;
+            top: auto;
+            right: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            @include mq(mq-land) {
+                flex-basis: 8em;
+                margin-top: 0;
+                padding-left: var(--pad-R);
+                margin-left: auto;
+            }
+        }
+
+        .customtable-col--item_link {
+            display: block;
+            border: 1px solid $primary-color;
+            padding: calc(var(--pad-T) * 0.3) calc(var(--pad-R) * 0.3);
+            font-size: calc(14.85714px + 0.04464vw);
+            text-transform: uppercase;
+            text-align: center;
             text-decoration: none;
+            color: $primary-color;
+            background: transparent;
+
+            @include mq(mq-land) {
+                padding: calc(var(--pad-T) * 0.15) calc(var(--pad-R) * 0.3);
+            }
 
             &:hover {
-                color: $primary-color;
+                background: rgba($primary-color, 0.08);
             }
         }
     }
 
-    .dl-lesson-date {
-        font-size: 13px;
-        color: #666;
-        margin-bottom: 15px;
+    &[data-view='grid'] {
+        .customtable-col_BOOK {
+            display: none;
+        }
+
+        .dl-lesson-purchased-date {
+            display: block;
+            margin-top: 0.35em;
+            font-size: calc(13.71429px + 0.04464vw);
+            color: var(--gray2, #7a7a7a);
+            font-weight: 400;
+        }
     }
 }
 
@@ -809,10 +931,6 @@ $btn-radius: 0;
             padding-block: calc(var(--pad-T) * .75);
             padding-inline: 0;
         }
-    }
-
-    .dl-lessons-grid {
-        grid-template-columns: 1fr;
     }
 
     .dl-result-actions .dl-btn {
