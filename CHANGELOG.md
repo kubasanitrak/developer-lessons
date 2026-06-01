@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.8] - 2026-06-01
+
+### Added
+
+- Buy-all and lesson CTA styling polish; basket and access-control markup updates.
+
 ## [1.2.0.7] - 2026-05-26
 
 ### Fixed
