@@ -38,6 +38,7 @@ class DL_Admin_Settings {
         register_setting('dl_general_settings', 'dl_currency_position');
         register_setting('dl_general_settings', 'dl_terms_page');
         register_setting('dl_general_settings', 'dl_landing_page');
+        register_setting('dl_general_settings', 'dl_registration_page');
 
         // Pricing settings
         register_setting('dl_pricing_settings', 'dl_bundle_5_discount');
@@ -195,6 +196,19 @@ class DL_Admin_Settings {
                             <option value="0"><?php _e('— Use WordPress Login —', 'developer-lessons'); ?></option>
                             <?php foreach ($pages as $page): ?>
                                 <option value="<?php echo $page->ID; ?>" <?php selected(get_option('dl_landing_page'), $page->ID); ?>>
+                                    <?php echo esc_html($page->post_title); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="dl_registration_page"><?php _e('Registration Page (for non-logged-in users)', 'developer-lessons'); ?></label></th>
+                    <td>
+                        <select name="dl_registration_page" id="dl_registration_page">
+                            <option value="0"><?php _e('— Use WordPress Registration —', 'developer-lessons'); ?></option>
+                            <?php foreach ($pages as $page): ?>
+                                <option value="<?php echo $page->ID; ?>" <?php selected(get_option('dl_registration_page'), $page->ID); ?>>
                                     <?php echo esc_html($page->post_title); ?>
                                 </option>
                             <?php endforeach; ?>

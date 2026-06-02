@@ -35,6 +35,7 @@ $options = array(
     'dl_currency_position',
     'dl_terms_page',
     'dl_landing_page',
+    'dl_registration_page',
     'dl_bundle_5_discount',
     'dl_bundle_10_discount',
     'dl_comgate_enabled',

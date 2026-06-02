@@ -228,6 +228,7 @@ class DL_Activator {
             'dl_currency_position' => 'after',
             'dl_terms_page' => 0,
             'dl_landing_page' => 0,
+            'dl_registration_page' => 0,
             
             // Pricing
             'dl_bundle_5_discount' => 10,

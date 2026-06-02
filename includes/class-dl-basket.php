@@ -403,11 +403,29 @@ class DL_Basket {
 
         // Not logged in message
         if (!is_user_logged_in()) {
-            $login_url = wp_login_url(get_permalink());
+            $current_url = get_permalink();
+            $login_url = wp_login_url($current_url);
+            $registration_page_id = (int) get_option('dl_registration_page');
+            $registration_url = '';
+
+            if ($registration_page_id > 0) {
+                $registration_url = get_permalink($registration_page_id);
+            } elseif (get_option('users_can_register')) {
+                $registration_url = wp_registration_url();
+            }
+
+            $register_button_html = '';
+            if (!empty($registration_url)) {
+                $register_button_html = '<div class="wp-block-button is-style-outline button"><a href="' . esc_url($registration_url) . '" class="dl-btn button dl-btn-secondary wp-block-button__link wp-element-button">' . __('Register for free', 'developer-lessons') . '</a></div>';
+            }
+
             return '<div class="dl-buy-all-box dl-login-required">
-                <p class="plain caps">' . __('Please log in to purchase lessons.', 'developer-lessons') . '</p>
-                <a href="' . esc_url($login_url) . '" class="dl-btn button">' . __('Log In', 'developer-lessons') . '</a>
-            </div>';
+                <p class="plain caps">' . __('Please register first and log in to purchase lessons.', 'developer-lessons') . '</p>
+                <div class="wp-block-group wp-block-buttons is-content-justification-left"><div class="wp-block-group__inner-container is-layout-flex wp-block-buttons-is-layout-flex">
+                <div class="wp-block-button is-style-filled button">
+                <a href="' . esc_url($login_url) . '" class="dl-btn button wp-block-button__link wp-element-button">' . __('Log In', 'developer-lessons') . '</a></div>
+                ' . $register_button_html . '
+            </div></div></div>';
         }
 
         $summary = $this->get_all_lessons_summary();

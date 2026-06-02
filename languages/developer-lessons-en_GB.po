@@ -604,11 +604,14 @@ msgstr "Add All %d Lessons to Basket"
 msgid "Instant access to all lessons after payment"
 msgstr "Instant access to all lessons after payment"
 
-msgid "Please log in to purchase lessons."
-msgstr "Please log in to purchase lessons."
+msgid "Please register first and log in to purchase lessons."
+msgstr "Please register first and log in to purchase lessons."
 
 msgid "Log In"
 msgstr "Log In"
+
+msgid "Register for free"
+msgstr "Register for free"
 
 msgid "You already own all available lessons!"
 msgstr "You already own all available lessons!"

@@ -794,11 +794,14 @@ msgid "Instant access to all lessons after payment"
 msgstr ""
 
 #: includes/class-dl-basket.php
-msgid "Please log in to purchase lessons."
+msgid "Please register first and log in to purchase lessons."
 msgstr ""
 
 #: includes/class-dl-basket.php
 msgid "Log In"
+msgstr ""
+
+msgid "Register for free"
 msgstr ""
 
 #: includes/class-dl-basket.php

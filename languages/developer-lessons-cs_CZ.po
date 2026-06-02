@@ -604,11 +604,14 @@ msgstr "Přidat všech %d lekcí do košíku"
 msgid "Instant access to all lessons after payment"
 msgstr "Okamžitý přístup ke všem lekcím po zaplacení"
 
-msgid "Please log in to purchase lessons."
-msgstr "Pro zakoupení lekcí se prosím přihlaste."
+msgid "Please register first and log in to purchase lessons."
+msgstr "Pro zakoupení lekcí se prosím zaregistrujte a přihlaste."
 
 msgid "Log In"
 msgstr "Přihlásit se"
+
+msgid "Register for free"
+msgstr "Registrace zdarma"
 
 msgid "You already own all available lessons!"
 msgstr "Již vlastníte všechny dostupné lekce!"
