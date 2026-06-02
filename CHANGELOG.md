@@ -2,6 +2,8 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.13] - 2026-06-02
+
 ## [1.2.0.12] - 2026-06-02
 
 ### Changed

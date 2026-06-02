@@ -380,7 +380,7 @@ class DL_Access_Control {
 
                         <?php $this->render_grid_item_lesson_link($post_id); ?>
 
-                        <?php if ($show_basket) : ?>
+                        <?php if ($show_basket && is_user_logged_in()) : ?>
                             <?php if ($in_basket) : ?>
                                 <button type="button"
                                         class="dl-btn dl-btn-secondary dl-view-basket-btn grid-item--btn">
@@ -692,7 +692,7 @@ class DL_Access_Control {
                     
                     <?php $this->render_grid_item_lesson_link($post_id); ?>
                     
-                    <?php if ($show_basket) : ?>
+                    <?php if ($show_basket && is_user_logged_in()) : ?>
                         <?php if ($in_basket) : ?>
                             <button type="button" 
                                     class="dl-btn dl-btn-secondary dl-view-basket-btn grid-item--btn">
@@ -716,26 +716,20 @@ class DL_Access_Control {
     }
 
     /**
-     * Grid item lesson link for logged-in users, or login button for guests.
+     * Grid item overlay link to the lesson (logged-in users only).
      *
      * @param int $post_id Lesson post ID.
      */
     private function render_grid_item_lesson_link($post_id) {
-        $permalink = get_permalink($post_id);
-
-        if (is_user_logged_in()) {
-            ?>
-            <a href="<?php echo esc_url($permalink); ?>"
-               class="abs-link grid-item--title_link"
-               aria-label="<?php echo esc_attr(get_the_title($post_id)); ?>"></a>
-            <?php
+        if (!is_user_logged_in()) {
             return;
         }
+
+        $permalink = get_permalink($post_id);
         ?>
-        <a href="<?php echo esc_url(wp_login_url($permalink)); ?>"
-           class="dl-btn grid-item--btn grid-item--login-btn">
-            <?php _e('Log In', 'developer-lessons'); ?>
-        </a>
+        <a href="<?php echo esc_url($permalink); ?>"
+           class="abs-link grid-item--title_link"
+           aria-label="<?php echo esc_attr(get_the_title($post_id)); ?>"></a>
         <?php
     }
 
