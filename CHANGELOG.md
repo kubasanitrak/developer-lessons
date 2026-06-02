@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.10] - 2026-06-02
+
+### Added
+
+- Dashboard My Lessons view switch (grid/list) with persisted user preference and updated translations.
+
 ## [1.2.0.9] - 2026-06-01
 
 ### Added

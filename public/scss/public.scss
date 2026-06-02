@@ -1,3 +1,11 @@
+/* / — / — / — / — / — / — / — / — / — / — / */
+/* / — / — / — / — / — / — / — / — / — / — / */
+/* TOC */
+/* / — / — / — / — / — / — / — / — / — / — / */
+/* DASHBOARD - MY LESSONS */
+/* 685 */
+/* / — / — / — / — / — / — / — / — / — / — / */
+
 @import '1-settings/_colors';
 @import '1-settings/_vars';
 // @import '1-settings/_custom-ff';
@@ -673,18 +681,24 @@ $btn-radius: 0;
         color: darken($error-color, 5%);
     }
 }
-
+/* / — / — / — / — / — / */
 // Dashboard — My Lessons overview (grid / list toggle, single markup)
+/* / — / — / — / — / — / */
 .dl-my-lessons-header {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
     justify-content: space-between;
+    padding-bottom: calc(var(--pad-T) * 0.5);
+    @include mq(mq-land) {
+        padding-bottom: calc(var(--pad-T) * 0.25);
+    }
     gap: calc(var(--gap, 10px) * 1.5);
 
     .dl-dashboard--section_headline {
         flex: 1 1 auto;
         margin: 0;
+        padding-bottom: 0;
     }
 }
 
@@ -701,10 +715,13 @@ $btn-radius: 0;
     width: var(--touch-S, 32px);
     height: var(--touch-S, 32px);
     padding: 0;
-    border: 1px solid $border-color;
-    border-radius: $border-radius;
+    // border: 1px solid $border-color;
+    border: none;
+    // border-radius: $border-radius;
     background: transparent;
-    color: $text-color;
+    // color: var(--LKBA-cream-dark);
+    // color: var(--LKBA-dark);
+    color: hsla(var(--LKBA-dark-hsl), .6);
     cursor: pointer;
     transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
 
@@ -716,9 +733,12 @@ $btn-radius: 0;
 
     &:hover,
     &.is-active {
-        border-color: $primary-color;
-        background: rgba($primary-color, 0.12);
-        color: $primary-color;
+        // border-color: $primary-color;
+        border: none;
+        // background: rgba($primary-color, 0.12);
+        // color: $primary-color;
+        color: var(--black);
+        // color: var(--LKBA-green);
     }
 
     &.is-active {
@@ -727,9 +747,19 @@ $btn-radius: 0;
 }
 
 .dl-my-lessons-overview {
-    margin-top: calc(var(--pad-T) * 0.5);
+    // margin-top: calc(var(--pad-T) * 0.5);
+    width: 100%;
+
+    .customtable-col--item_link {
+        transition: color #{$dur}s ease-out, background-color #{$dur}s ease-out;
+    }
 
     &[data-view='list'] {
+        font-size: $fz-PLAIN;
+        line-height: 1.25em;
+        font-family: 'InterR-var';
+        font-style: normal;
+        color: var(--black);
         .dl-dashboard-lessons {
             display: block;
         }
@@ -737,7 +767,7 @@ $btn-radius: 0;
         .dl-dashboard-lesson-item {
             display: flex;
             flex-direction: column;
-            padding: 0.5em 0;
+            padding: calc(var(--pad-T) * .5) 0 var(--pad-T);
             border-bottom: 1px solid $border-color;
             position: relative;
 
@@ -749,6 +779,7 @@ $btn-radius: 0;
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
+                padding: calc(var(--pad-T) * .5) 0;
             }
         }
 
@@ -767,17 +798,21 @@ $btn-radius: 0;
         }
 
         .customtable-col_COURSE {
-            flex-grow: 2;
-
+            flex-grow: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25em;
             @include mq(mq-land) {
+                flex-direction: row;
+                align-items: baseline;
+                padding-bottom: .5em;
                 text-align: left;
             }
         }
 
-        .grid-item--label {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25em;
+        .grid-item--label * {
+            font-family: inherit;
+            color: inhterit;
         }
 
         .grid-item--title {
@@ -785,11 +820,23 @@ $btn-radius: 0;
             font-size: inherit;
             font-weight: inherit;
             line-height: inherit;
+            text-transform: uppercase;
+            flex-grow: 1;
+            @include mq(mq-land) {
+            }
         }
 
         .dl-lesson-purchased-date {
-            font-size: calc(14.85714px + 0.04464vw);
-            color: var(--gray2, #7a7a7a);
+            // font-size: calc(14.85714px + 0.04464vw);
+            // color: var(--gray2, #7a7a7a);
+            // flex-grow: 0.5;
+            @include mq(mq-land) {
+                text-align: right;
+            }
+        }
+        .dl-lesson-purchased-date,
+        .customtable-col--item_link {
+            font-size: calc(#{$fz-PLAIN} * .9);
         }
 
         .customtable-col_BOOK {
@@ -803,7 +850,8 @@ $btn-radius: 0;
             justify-content: center;
 
             @include mq(mq-land) {
-                flex-basis: 8em;
+                flex-basis: 15em;
+                // flex-grow: 0.3;
                 margin-top: 0;
                 padding-left: var(--pad-R);
                 margin-left: auto;
@@ -812,36 +860,137 @@ $btn-radius: 0;
 
         .customtable-col--item_link {
             display: block;
-            border: 1px solid $primary-color;
+            border: $line-THICK solid var(--black);
             padding: calc(var(--pad-T) * 0.3) calc(var(--pad-R) * 0.3);
-            font-size: calc(14.85714px + 0.04464vw);
+            // font-size: calc(#{$fz-PLAIN} * .9);
             text-transform: uppercase;
             text-align: center;
             text-decoration: none;
-            color: $primary-color;
-            background: transparent;
+            color: inherit;
+            background-color: transparent;
 
             @include mq(mq-land) {
                 padding: calc(var(--pad-T) * 0.15) calc(var(--pad-R) * 0.3);
             }
 
             &:hover {
-                background: rgba($primary-color, 0.08);
+                background-color: var(--black);
+                color: var(--LKBA-cream);
             }
         }
     }
 
     &[data-view='grid'] {
-        .customtable-col_BOOK {
-            display: none;
+        // .list-grid--lessons,
+        .dl-dashboard-lessons {
+            display: flex;
+            gap: var(--gap);
+            flex-wrap: wrap;
+            margin-top: var(--gap);
         }
+        .dl-dashboard-lesson-item {
+            border: none;
+            width: 100%;
+            @include mq(mq-land) {
+                width: calc((100% - (var(--gap) * 2.05)) / 3);
+            }
+            display: grid;
+            gap: calc(var(--gutter) * 1.5);
+            grid-template-areas: 
+                "thumb"
+                "label"
+            ;
+            grid-template-rows: 3fr 1fr;
+            grid-template-columns: 1fr;
+            // .customtable-col,
 
-        .dl-lesson-purchased-date {
-            display: block;
-            margin-top: 0.35em;
-            font-size: calc(13.71429px + 0.04464vw);
-            color: var(--gray2, #7a7a7a);
-            font-weight: 400;
+            .customtable-col_THUMB,
+            .customtable-col_BOOK {
+                // grid-row: thumb-end;
+                grid-column: 1;
+                grid-area: thumb;
+            }
+            .grid-item--img_container,
+            .customtable-col_THUMB {
+                margin-bottom: 0;
+                // grid-column: 1;
+                img {}
+            }
+            // .customtable-col,
+            // .grid-item--label {
+            .customtable-col_COURSE {
+                grid-area: label;
+                .grid-item--title,
+                .dl-lesson-purchased-date {
+                    text-align: left;
+                }
+                // .customtable-col--item,
+                .grid-item--title {
+                    margin-top: 0;
+                    max-width: 24ch;
+                    text-wrap: pretty;
+                }
+                // .customtable-col--item,
+                .dl-lesson-purchased-date {
+                    display: block;
+                    font-size: calc(#{$fz-PLAIN} * .9);
+                    // margin-top: 0.35em;
+                    // font-size: calc(13.71429px + 0.04464vw);
+                    // color: var(--gray2, #7a7a7a);
+                    // font-weight: 400;
+                }
+            }
+            // .customtable-col,
+            .customtable-col_BOOK {
+                // grid-row: 1;
+                // padding-left: 0;
+                // align-self: flex-end;
+                position: relative;
+                justify-content: flex-end;
+                padding-inline: calc(var(--pad-R) * .5);
+                padding-bottom: calc(var(--pad-R) * .5);
+                @include mq(mq-land) {
+                    // padding-inline: calc(var(--pad-R) * .5);
+                    // padding-bottom: calc(var(--pad-R) * .5);
+                }
+                .customtable-col--item_link {
+                    background-color: hsla(var(--LKBA-cream-hsl), .5);
+                    // position: absolute;
+                    // right: calc(var(--pad-R) * .15);
+                    // left: calc(var(--pad-R) * .15);
+                    // top: calc(((100vw - (var(--gutter) * 3)) * .5) - (var(--pad-T) * 2));
+                    // bottom: initial;
+                    border-radius: $bor-RADIUS;
+                    padding: calc(#{$pad-T} * 0.5) calc(#{$pad-L} * 0.5);
+                    @include mq(mq-iPad-port) {
+                        // top: calc(((100vw - (var(--gutter) * 4)) / 3) - (var(--pad-T) * 2));
+                    }
+                    @include mq(mq-land) {
+                        padding: calc(#{$pad-T} * 0.3) calc(#{$pad-L} * 0.3);
+                        // right: calc(var(--pad-R) * .5);
+                        // left: calc(var(--pad-R) * .5);
+                        // top: calc( ( ( 100vw - (var(--gutter) * 4) ) / 5 ) - (var(--pad-T) * 2) );
+                    }
+                    @include mq(mq-BREAK-P) {
+                        // top: calc( ( ( #{$max-W} - (var(--gutter) * 4) ) / 5 ) - (var(--pad-T) * 1)  );
+                    }
+                    z-index: 2;
+                    border: $line-THICK solid var(--LKBA-green);
+                    color: var(--LKBA-green);
+                    &:active,
+                    &:focus,
+                    &:focus-visible,
+                    &:focus-within,
+                    &:hover {
+                        background-color: hsla(var(--LKBA-cream-hsl), 1.0);
+                        // background-color: var(--LKBA-green);
+                    }
+                }
+            }
+            // .abs-link {}
+            .grid-item--title_link {
+                z-index: 1;
+            }
         }
     }
 }
@@ -940,15 +1089,6 @@ $btn-radius: 0;
 }
 // Buy All Lessons Box
 .dl-buy-all-box {
-    // background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    // border: 2px solid #0073aa;
-    // border-radius: 12px;
-    // padding: 30px;
-    // text-align: center;
-    // max-width: 500px;
-    // margin: 30px auto;
-    // box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-
     &.dl-login-required,
     &.dl-all-purchased {
         background-color: transparent;
@@ -971,82 +1111,8 @@ $btn-radius: 0;
             }
         }
     }
-
-    // &.dl-all-purchased {
-    //     border-color: #46b450;
-        
-    //     p {
-    //         color: #46b450;
-    //         font-size: 18px;
-    //         font-weight: 600;
-    //         margin: 0;
-    //     }
-    // }
-}
-/*
-.dl-buy-all-header {
-    margin-bottom: var(--pad-T);
-
-    h3 {
-        margin: 0 0 5px;
-        font-size: 24px;
-        color: #333;
-    }
-
-    .dl-lesson-count {
-        display: inline-block;
-        background: #0073aa;
-        color: #fff;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 14px;
-        font-weight: 500;
-    }
 }
 
-.dl-buy-all-pricing {
-    margin-bottom: 25px;
-}
-
-.dl-original-price {
-    margin-bottom: 10px;
-
-    .dl-strikethrough {
-        text-decoration: line-through;
-        color: #999;
-        font-size: 18px;
-    }
-
-    .dl-discount-badge {
-        display: inline-block;
-        background: #46b450;
-        color: #fff;
-        padding: 3px 10px;
-        border-radius: 4px;
-        font-size: 14px;
-        font-weight: 600;
-        margin-left: 10px;
-    }
-}
-
-.dl-final-price {
-    font-size: 36px;
-    font-weight: 700;
-    color: #0073aa;
-}
-
-.dl-savings {
-    color: #46b450;
-    font-weight: 500;
-    margin: 10px 0 0;
-}
-
-.dl-discount-hint {
-    color: #666;
-    font-size: 14px;
-    margin: 10px 0 0;
-}
-*/
 // .dl-add-all-btn,
 .dl-go-to-checkout-btn {
     width: 100%;
