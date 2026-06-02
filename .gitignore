@@ -33,6 +33,9 @@ wp-config.php
 # Log files
 *.log
 
+# Sass cache
+.sass-cache/
+
 # htaccess
 /.htaccess
 
