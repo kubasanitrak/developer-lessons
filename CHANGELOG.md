@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.12] - 2026-06-02
+
+### Changed
+
+- Ignore Sass cache directory in git.
+
 ## [1.2.0.11] - 2026-06-02
 
 ### Added

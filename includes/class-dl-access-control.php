@@ -352,8 +352,9 @@ class DL_Access_Control {
                     $post_title = get_the_title();
                     $in_basket = $show_basket && is_user_logged_in() ? $basket->is_in_basket($post_id) : false;
                     $img_id = $this->get_lesson_image_id($post_id);
+                    $grid_item_class = 'grid-item' . (is_user_logged_in() ? '' : ' grid-item--login-required');
                     ?>
-                    <div class="grid-item">
+                    <div class="<?php echo esc_attr($grid_item_class); ?>">
                         <div class="grid-item--img_container">
                             <?php if ($img_id) :
                                 $img_src = wp_get_attachment_image_url($img_id, 'medium');
@@ -377,7 +378,7 @@ class DL_Access_Control {
                             <h4 class="grid-item--title"><?php echo esc_html($post_title); ?></h4>
                         </div>
 
-                        <a href="<?php the_permalink(); ?>" class="abs-link grid-item--title_link"></a>
+                        <?php $this->render_grid_item_lesson_link($post_id); ?>
 
                         <?php if ($show_basket) : ?>
                             <?php if ($in_basket) : ?>
@@ -662,8 +663,9 @@ class DL_Access_Control {
                 
                 // Get image
                 $img_id = $this->get_lesson_image_id($post_id);
+                $grid_item_class = 'grid-item' . (is_user_logged_in() ? '' : ' grid-item--login-required');
             ?>
-                <div class="grid-item">
+                <div class="<?php echo esc_attr($grid_item_class); ?>">
                     <div class="grid-item--img_container">
                         <?php if ($img_id): 
                             $img_src = wp_get_attachment_image_url($img_id, 'medium');
@@ -688,7 +690,7 @@ class DL_Access_Control {
                         <span class="grid-item--price"><?php echo DL_Payments::format_price($price); ?></span>
                     </div>
                     
-                    <a href="<?php the_permalink(); ?>" class="abs-link grid-item--title_link"></a>
+                    <?php $this->render_grid_item_lesson_link($post_id); ?>
                     
                     <?php if ($show_basket) : ?>
                         <?php if ($in_basket) : ?>
@@ -711,6 +713,30 @@ class DL_Access_Control {
         wp_reset_postdata();
         
         return ob_get_clean();
+    }
+
+    /**
+     * Grid item lesson link for logged-in users, or login button for guests.
+     *
+     * @param int $post_id Lesson post ID.
+     */
+    private function render_grid_item_lesson_link($post_id) {
+        $permalink = get_permalink($post_id);
+
+        if (is_user_logged_in()) {
+            ?>
+            <a href="<?php echo esc_url($permalink); ?>"
+               class="abs-link grid-item--title_link"
+               aria-label="<?php echo esc_attr(get_the_title($post_id)); ?>"></a>
+            <?php
+            return;
+        }
+        ?>
+        <a href="<?php echo esc_url(wp_login_url($permalink)); ?>"
+           class="dl-btn grid-item--btn grid-item--login-btn">
+            <?php _e('Log In', 'developer-lessons'); ?>
+        </a>
+        <?php
     }
 
     /**
