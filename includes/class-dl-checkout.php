@@ -292,6 +292,26 @@ class DL_Checkout {
     }
 
     /**
+     * Get order by payment gateway transaction ID
+     */
+    public static function get_order_by_transaction_id($transaction_id) {
+        global $wpdb;
+
+        $orders_table = $wpdb->prefix . 'dl_orders';
+
+        $order_id = $wpdb->get_var($wpdb->prepare(
+            "SELECT id FROM $orders_table WHERE transaction_id = %s",
+            $transaction_id
+        ));
+
+        if ($order_id) {
+            return self::get_order($order_id);
+        }
+
+        return null;
+    }
+
+    /**
      * Get order by order number
      */
     public static function get_order_by_number($order_number) {

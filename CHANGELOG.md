@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.14] - 2026-06-02
+
+### Fixed
+
+- Comgate payment callbacks and return URLs; notification URL shown in admin settings.
+
 ## [1.2.0.13] - 2026-06-02
 
 ## [1.2.0.12] - 2026-06-02

@@ -22,30 +22,71 @@ class DL_Payments {
      */
     public function handle_payment_return() {
         $page_ids = get_option('dl_page_ids', array());
-        $success_page_id = isset($page_ids['payment_success']) ? $page_ids['payment_success'] : 0;
-        
-        if (!is_page($success_page_id)) {
+        $success_page_id = isset($page_ids['payment_success']) ? (int) $page_ids['payment_success'] : 0;
+        $failed_page_id = isset($page_ids['payment_failed']) ? (int) $page_ids['payment_failed'] : 0;
+
+        if (!is_page($success_page_id) && !is_page($failed_page_id)) {
             return;
         }
 
-        $order_id = isset($_GET['order']) ? intval($_GET['order']) : 0;
-        
-        if (!$order_id) {
+        if (!is_user_logged_in()) {
             return;
         }
 
-        $order = DL_Checkout::get_order($order_id);
-        
-        if (!$order || $order->user_id != get_current_user_id()) {
+        $order = self::resolve_order_from_request();
+
+        if (!$order || (int) $order->user_id !== get_current_user_id()) {
             return;
         }
 
-        // If order is still processing (Stripe), check and complete it
-        if ($order->status === 'processing' && $order->payment_method === 'stripe') {
-            // The payment was successful if user reached success page
+        if ($order->status === 'completed') {
+            return;
+        }
+
+        if ($order->payment_method === 'stripe' && is_page($success_page_id) && $order->status === 'processing') {
             // Stripe redirects here only on success
-            self::complete_payment($order_id, $order->transaction_id);
+            self::complete_payment($order->id, $order->transaction_id);
+            return;
         }
+
+        if ($order->payment_method === 'comgate') {
+            $comgate = new DL_Comgate();
+            $comgate->complete_order_from_return($order);
+        }
+    }
+
+    /**
+     * Resolve order from payment return query parameters
+     */
+    public static function resolve_order_from_request() {
+        $order_id = isset($_GET['order']) ? intval($_GET['order']) : 0;
+
+        if ($order_id) {
+            return DL_Checkout::get_order($order_id);
+        }
+
+        if (isset($_GET['refId'])) {
+            $ref_id = sanitize_text_field(wp_unslash($_GET['refId']));
+            $order = DL_Checkout::get_order_by_number($ref_id);
+
+            if ($order) {
+                return $order;
+            }
+        }
+
+        $trans_id = '';
+
+        if (isset($_GET['id'])) {
+            $trans_id = sanitize_text_field(wp_unslash($_GET['id']));
+        } elseif (isset($_GET['transId'])) {
+            $trans_id = sanitize_text_field(wp_unslash($_GET['transId']));
+        }
+
+        if ($trans_id) {
+            return DL_Checkout::get_order_by_transaction_id($trans_id);
+        }
+
+        return null;
     }
 
     /**
@@ -142,10 +183,9 @@ class DL_Payments {
             return '<p>' . __('Please log in.', 'developer-lessons') . '</p>';
         }
 
-        $order_id = isset($_GET['order']) ? intval($_GET['order']) : 0;
-        $order = DL_Checkout::get_order($order_id);
+        $order = self::resolve_order_from_request();
 
-        if (!$order || $order->user_id != get_current_user_id()) {
+        if (!$order || (int) $order->user_id !== get_current_user_id()) {
             return '<p>' . __('Order not found.', 'developer-lessons') . '</p>';
         }
 
@@ -158,8 +198,7 @@ class DL_Payments {
      * Render payment failed page
      */
     public function render_payment_failed() {
-        $order_id = isset($_GET['order']) ? intval($_GET['order']) : 0;
-        $order = $order_id ? DL_Checkout::get_order($order_id) : null;
+        $order = self::resolve_order_from_request();
 
         ob_start();
         include DL_PLUGIN_DIR . 'public/partials/payment-failed.php';

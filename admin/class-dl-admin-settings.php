@@ -261,11 +261,23 @@ class DL_Admin_Settings {
      * Render Comgate tab
      */
     private function render_comgate_tab() {
+        $callback_url = add_query_arg('dl_comgate_callback', '1', home_url('/'));
         ?>
         <form method="post" action="options.php">
             <?php settings_fields('dl_comgate_settings'); ?>
             
             <h2><?php _e('Comgate Payment Gateway', 'developer-lessons'); ?></h2>
+
+            <p><?php _e('Return URLs are sent automatically with each payment. Configure the background notification URL in your Comgate portal (Integration settings):', 'developer-lessons'); ?></p>
+            <table class="form-table">
+                <tr>
+                    <th><?php _e('Notification URL', 'developer-lessons'); ?></th>
+                    <td>
+                        <code><?php echo esc_html($callback_url); ?></code>
+                        <p class="description"><?php _e('Comgate sends payment status updates here. Without this URL, orders may stay in Processing until the customer returns to the success page.', 'developer-lessons'); ?></p>
+                    </td>
+                </tr>
+            </table>
             
             <table class="form-table">
                 <tr>

@@ -53,6 +53,9 @@ class DL_Comgate {
             'country' => 'CZ',
             'lang' => 'cs',
             'method' => 'ALL',
+            'url_paid' => $this->get_return_url($order_id, 'success'),
+            'url_cancelled' => $this->get_return_url($order_id, 'failed'),
+            'url_pending' => $this->get_return_url($order_id, 'success'),
         );
 
         // Generate signature
@@ -94,19 +97,35 @@ class DL_Comgate {
      * Process callback from Comgate
      */
     public function process_callback() {
-        $trans_id = isset($_POST['transId']) ? sanitize_text_field($_POST['transId']) : '';
-        $ref_id = isset($_POST['refId']) ? sanitize_text_field($_POST['refId']) : '';
-        $status = isset($_POST['status']) ? sanitize_text_field($_POST['status']) : '';
-        
+        $trans_id = isset($_POST['transId']) ? sanitize_text_field(wp_unslash($_POST['transId'])) : '';
+        $ref_id = isset($_POST['refId']) ? sanitize_text_field(wp_unslash($_POST['refId'])) : '';
+        $post_secret = isset($_POST['secret']) ? sanitize_text_field(wp_unslash($_POST['secret'])) : '';
+
         if (!$trans_id || !$ref_id) {
+            DL_Payments::log('comgate_callback_error', 'Missing callback parameters', array(
+                'trans_id' => $trans_id,
+                'ref_id' => $ref_id,
+            ));
             http_response_code(400);
             exit('Missing parameters');
         }
 
-        // Verify payment status with Comgate
-        $verified = $this->verify_payment($trans_id);
+        if ($post_secret !== $this->secret_key) {
+            DL_Payments::log('comgate_callback_error', 'Invalid callback secret', array(
+                'trans_id' => $trans_id,
+                'ref_id' => $ref_id,
+            ));
+            http_response_code(403);
+            exit('Invalid secret');
+        }
 
-        if (!$verified) {
+        $status = $this->get_transaction_status($trans_id);
+
+        if ($status === null) {
+            DL_Payments::log('comgate_callback_error', 'Payment verification failed', array(
+                'trans_id' => $trans_id,
+                'ref_id' => $ref_id,
+            ));
             http_response_code(400);
             exit('Verification failed');
         }
@@ -114,14 +133,17 @@ class DL_Comgate {
         $order = DL_Checkout::get_order_by_number($ref_id);
 
         if (!$order) {
+            DL_Payments::log('comgate_callback_error', 'Order not found for callback', array(
+                'trans_id' => $trans_id,
+                'ref_id' => $ref_id,
+            ));
             http_response_code(404);
             exit('Order not found');
         }
 
-        $page_ids = get_option('dl_page_ids');
-
         switch ($status) {
             case 'PAID':
+            case 'AUTHORIZED':
                 DL_Payments::complete_payment($order->id, $trans_id);
                 break;
 
@@ -131,24 +153,65 @@ class DL_Comgate {
                 break;
         }
 
-        // Return success to Comgate
+        header('Content-Type: application/x-www-form-urlencoded; charset=utf-8');
         http_response_code(200);
-        exit('OK');
+        exit('code=0&message=OK');
     }
 
     /**
-     * Verify payment with Comgate
+     * Get payment status from Comgate
      */
-    private function verify_payment($trans_id) {
+    public function get_transaction_status($trans_id) {
         $params = array(
             'merchant' => $this->merchant_id,
             'transId' => $trans_id,
-            'secret' => $this->secret_key
+            'secret' => $this->secret_key,
         );
 
         $response = $this->api_request('status', $params);
 
-        return isset($response['code']) && $response['code'] == 0;
+        if (!isset($response['code']) || (int) $response['code'] !== 0) {
+            return null;
+        }
+
+        return isset($response['status']) ? $response['status'] : null;
+    }
+
+    /**
+     * Complete order after payer returns from Comgate (fallback when callback is delayed)
+     */
+    public function complete_order_from_return($order) {
+        if (!$order || $order->payment_method !== 'comgate') {
+            return false;
+        }
+
+        if ($order->status === 'completed') {
+            return true;
+        }
+
+        $trans_id = $order->transaction_id;
+
+        if (!$trans_id && isset($_GET['id'])) {
+            $trans_id = sanitize_text_field(wp_unslash($_GET['id']));
+        } elseif (!$trans_id && isset($_GET['transId'])) {
+            $trans_id = sanitize_text_field(wp_unslash($_GET['transId']));
+        }
+
+        if (!$trans_id) {
+            return false;
+        }
+
+        $status = $this->get_transaction_status($trans_id);
+
+        if ($status === 'PAID' || $status === 'AUTHORIZED') {
+            return DL_Payments::complete_payment($order->id, $trans_id);
+        }
+
+        if ($status === 'CANCELLED' || $status === 'FAILED') {
+            return DL_Payments::fail_payment($order->id, $status);
+        }
+
+        return false;
     }
 
     /**
