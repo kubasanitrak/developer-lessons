@@ -15,12 +15,28 @@ class DL_Admin_Statistics {
     public function render() {
         global $wpdb;
 
-        $purchases_table = $wpdb->prefix . 'dl_purchases';
-        $orders_table = $wpdb->prefix . 'dl_orders';
+        $tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'sales';
+        if (!in_array($tab, array('sales', 'users', 'lessons'), true)) {
+            $tab = 'sales';
+        }
 
-        // Date range filter
         $range = isset($_GET['range']) ? sanitize_text_field($_GET['range']) : '30days';
         $date_filter = $this->get_date_filter($range);
+
+        if ($tab === 'users') {
+            $user_stats = DL_Analytics::get_registration_report(50, $this->get_range_days($range));
+            include DL_PLUGIN_DIR . 'admin/partials/statistics-page.php';
+            return;
+        }
+
+        if ($tab === 'lessons') {
+            $lesson_view_stats = DL_Analytics::get_lesson_view_stats(20, $this->get_range_days($range));
+            include DL_PLUGIN_DIR . 'admin/partials/statistics-page.php';
+            return;
+        }
+
+        $purchases_table = $wpdb->prefix . 'dl_purchases';
+        $orders_table = $wpdb->prefix . 'dl_orders';
 
         // Lesson statistics
         $lesson_stats = $wpdb->get_results(
@@ -109,6 +125,26 @@ class DL_Admin_Statistics {
                 return '1970-01-01';
             default:
                 return date('Y-m-d', strtotime('-30 days'));
+        }
+    }
+
+    /**
+     * Convert range slug to number of days for user/lesson activity reports.
+     */
+    private function get_range_days($range) {
+        switch ($range) {
+            case '7days':
+                return 7;
+            case '30days':
+                return 30;
+            case '90days':
+                return 90;
+            case 'year':
+                return 365;
+            case 'all':
+                return 3650;
+            default:
+                return 30;
         }
     }
 }

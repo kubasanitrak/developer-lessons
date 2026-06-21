@@ -64,6 +64,9 @@ class DL_Activator {
 
         DL_Seller::maybe_migrate_legacy_bank_options();
         DL_Invoices::ensure_storage_dir();
+
+        require_once DL_PLUGIN_DIR . 'includes/class-dl-analytics.php';
+        DL_Analytics::create_table();
     }
 
     /**
@@ -163,6 +166,9 @@ class DL_Activator {
         dbDelta($purchases_sql);
         dbDelta($basket_sql);
         dbDelta($logs_sql);
+
+        require_once DL_PLUGIN_DIR . 'includes/class-dl-analytics.php';
+        DL_Analytics::create_table();
         
         update_option('dl_db_version', DL_VERSION);
     }

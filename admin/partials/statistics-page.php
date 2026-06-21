@@ -8,13 +8,35 @@ if (!defined('ABSPATH')) {
 }
 
 $currency_symbol = get_option('dl_currency_symbol', 'Kč');
+$tab = isset($tab) ? $tab : (isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'sales');
+if (!in_array($tab, array('sales', 'users', 'lessons'), true)) {
+    $tab = 'sales';
+}
+
+$base_url = admin_url('admin.php?page=dl-statistics');
 ?>
 <div class="wrap dl-admin-wrap">
     <h1><?php _e('Statistics', 'developer-lessons'); ?></h1>
 
+    <nav class="nav-tab-wrapper">
+        <a href="<?php echo esc_url(add_query_arg(array('tab' => 'sales', 'range' => $range), $base_url)); ?>"
+           class="nav-tab <?php echo $tab === 'sales' ? 'nav-tab-active' : ''; ?>">
+            <?php _e('Sales', 'developer-lessons'); ?>
+        </a>
+        <a href="<?php echo esc_url(add_query_arg(array('tab' => 'users', 'range' => $range), $base_url)); ?>"
+           class="nav-tab <?php echo $tab === 'users' ? 'nav-tab-active' : ''; ?>">
+            <?php _e('Users', 'developer-lessons'); ?>
+        </a>
+        <a href="<?php echo esc_url(add_query_arg(array('tab' => 'lessons', 'range' => $range), $base_url)); ?>"
+           class="nav-tab <?php echo $tab === 'lessons' ? 'nav-tab-active' : ''; ?>">
+            <?php _e('Lesson Views', 'developer-lessons'); ?>
+        </a>
+    </nav>
+
     <div class="dl-stats-filter">
         <form method="get">
             <input type="hidden" name="page" value="dl-statistics">
+            <input type="hidden" name="tab" value="<?php echo esc_attr($tab); ?>">
             <select name="range" onchange="this.form.submit()">
                 <option value="7days" <?php selected($range, '7days'); ?>><?php _e('Last 7 Days', 'developer-lessons'); ?></option>
                 <option value="30days" <?php selected($range, '30days'); ?>><?php _e('Last 30 Days', 'developer-lessons'); ?></option>
@@ -24,6 +46,111 @@ $currency_symbol = get_option('dl_currency_symbol', 'Kč');
             </select>
         </form>
     </div>
+
+    <?php if ($tab === 'users') : ?>
+        <div class="dl-stats-section dl-stats-wide">
+            <h2><?php _e('Recent Registrations', 'developer-lessons'); ?></h2>
+            <p class="description">
+                <?php _e('Track who registered, whether they logged in, and how long it took to return.', 'developer-lessons'); ?>
+            </p>
+            <table class="widefat striped">
+                <thead>
+                    <tr>
+                        <th><?php _e('User', 'developer-lessons'); ?></th>
+                        <th><?php _e('Registered', 'developer-lessons'); ?></th>
+                        <th><?php _e('Logged In', 'developer-lessons'); ?></th>
+                        <th><?php _e('Days to First Login', 'developer-lessons'); ?></th>
+                        <th><?php _e('Last Login', 'developer-lessons'); ?></th>
+                        <th><?php _e('Logins', 'developer-lessons'); ?></th>
+                        <th><?php _e('Lesson Views', 'developer-lessons'); ?></th>
+                        <th><?php _e('Purchases', 'developer-lessons'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($user_stats)) : ?>
+                        <tr><td colspan="8"><?php _e('No registrations in this period.', 'developer-lessons'); ?></td></tr>
+                    <?php else : ?>
+                        <?php foreach ($user_stats as $stat) :
+                            $has_logged_in = !empty($stat->first_login_at);
+                            $days_to_first = null;
+                            if ($has_logged_in) {
+                                $days_to_first = (int) floor((strtotime($stat->first_login_at) - strtotime($stat->user_registered)) / DAY_IN_SECONDS);
+                            }
+                            ?>
+                            <tr>
+                                <td>
+                                    <a href="<?php echo esc_url(get_edit_user_link($stat->ID)); ?>">
+                                        <?php echo esc_html($stat->user_login); ?>
+                                    </a>
+                                    <br><small><?php echo esc_html($stat->user_email); ?></small>
+                                </td>
+                                <td><?php echo esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($stat->user_registered))); ?></td>
+                                <td><?php echo $has_logged_in ? esc_html__('Yes', 'developer-lessons') : esc_html__('No', 'developer-lessons'); ?></td>
+                                <td>
+                                    <?php
+                                    if ($has_logged_in) {
+                                        echo esc_html((string) $days_to_first);
+                                    } else {
+                                        echo '&mdash;';
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    if (!empty($stat->last_login_at)) {
+                                        echo esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($stat->last_login_at)));
+                                    } else {
+                                        echo '&mdash;';
+                                    }
+                                    ?>
+                                </td>
+                                <td><?php echo esc_html((string) intval($stat->login_count)); ?></td>
+                                <td><?php echo esc_html((string) intval($stat->lesson_views)); ?></td>
+                                <td><?php echo esc_html((string) intval($stat->purchase_count)); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php elseif ($tab === 'lessons') : ?>
+        <div class="dl-stats-section dl-stats-wide">
+            <h2><?php _e('Lesson Page Views', 'developer-lessons'); ?></h2>
+            <p class="description">
+                <?php _e('Unique views are deduplicated per user and lesson every 30 minutes.', 'developer-lessons'); ?>
+            </p>
+            <table class="widefat striped">
+                <thead>
+                    <tr>
+                        <th><?php _e('Lesson', 'developer-lessons'); ?></th>
+                        <th><?php _e('Views', 'developer-lessons'); ?></th>
+                        <th><?php _e('Unique Users', 'developer-lessons'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($lesson_view_stats)) : ?>
+                        <tr><td colspan="3"><?php _e('No lesson views recorded in this period.', 'developer-lessons'); ?></td></tr>
+                    <?php else : ?>
+                        <?php foreach ($lesson_view_stats as $stat) : ?>
+                            <tr>
+                                <td>
+                                    <?php if ($stat->lesson_id) : ?>
+                                        <a href="<?php echo esc_url(get_edit_post_link($stat->lesson_id)); ?>">
+                                            <?php echo esc_html($stat->title ?: __('(deleted lesson)', 'developer-lessons')); ?>
+                                        </a>
+                                    <?php else : ?>
+                                        <?php _e('Unknown lesson', 'developer-lessons'); ?>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo intval($stat->views); ?></td>
+                                <td><?php echo intval($stat->unique_users); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php else : ?>
 
     <!-- Summary Cards -->
     <div class="dl-stats-summary">
@@ -158,4 +285,5 @@ $currency_symbol = get_option('dl_currency_symbol', 'Kč');
             </table>
         </div>
     </div>
+    <?php endif; ?>
 </div>

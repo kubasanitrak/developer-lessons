@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.15] - 2026-06-02
+
+### Added
+
+- User activity analytics (registration, login, lesson views) with admin statistics reporting.
+
 ## [1.2.0.14] - 2026-06-02
 
 ### Fixed

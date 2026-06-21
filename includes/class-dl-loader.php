@@ -39,6 +39,7 @@ class DL_Loader {
         require_once DL_PLUGIN_DIR . 'includes/class-dl-user-profile.php';
         require_once DL_PLUGIN_DIR . 'includes/class-dl-cron.php';
         require_once DL_PLUGIN_DIR . 'includes/class-dl-ajax.php';
+        require_once DL_PLUGIN_DIR . 'includes/class-dl-analytics.php';
 
         // Admin
         if (is_admin()) {
@@ -72,6 +73,7 @@ class DL_Loader {
         new DL_User_Profile(); // Add this line
         new DL_Cron();
         new DL_Ajax();
+        new DL_Analytics();
 
         // Initialize admin
         if (is_admin()) {
