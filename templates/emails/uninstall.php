@@ -41,6 +41,7 @@ $options = array(
     'dl_comgate_enabled',
     'dl_comgate_merchant_id',
     'dl_comgate_secret_key',
+    'dl_comgate_push_secret',
     'dl_comgate_test_mode',
     'dl_bank_transfer_enabled',
     'dl_bank_account_name',

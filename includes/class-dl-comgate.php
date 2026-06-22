@@ -17,15 +17,12 @@ class DL_Comgate {
     public function __construct() {
         $this->merchant_id = get_option('dl_comgate_merchant_id');
         $this->secret_key = get_option('dl_comgate_secret_key');
-        $this->test_mode = get_option('dl_comgate_test_mode', true);
-        
-        $this->api_url = $this->test_mode 
-            ? 'https://payments.comgate.cz/v1.0'
-            : 'https://payments.comgate.cz/v1.0';
+        $this->test_mode = filter_var(get_option('dl_comgate_test_mode', true), FILTER_VALIDATE_BOOLEAN);
 
-        add_action('init', array($this, 'handle_callback'));
-        add_action('wp_ajax_nopriv_dl_comgate_callback', array($this, 'process_callback'));
-        add_action('wp_ajax_dl_comgate_callback', array($this, 'process_callback'));
+        $this->api_url = 'https://payments.comgate.cz/v1.0';
+
+        add_action('init', array($this, 'handle_callback'), 0);
+        add_action('rest_api_init', array($this, 'register_callback_endpoint'));
     }
 
     /**
@@ -39,7 +36,6 @@ class DL_Comgate {
         }
 
         $user = get_user_by('id', $order->user_id);
-        $page_ids = get_option('dl_page_ids');
 
         $params = array(
             'merchant' => $this->merchant_id,
@@ -58,13 +54,11 @@ class DL_Comgate {
             'url_pending' => $this->get_return_url($order_id, 'success'),
         );
 
-        // Generate signature
         $params['secret'] = $this->secret_key;
-        
+
         $response = $this->api_request('create', $params);
 
-        if (isset($response['code']) && $response['code'] == 0) {
-            // Update order with transaction ID
+        if (isset($response['code']) && (int) $response['code'] === 0) {
             DL_Checkout::update_order_status($order_id, 'processing', $response['transId']);
 
             return array(
@@ -73,7 +67,7 @@ class DL_Comgate {
         }
 
         $error_message = isset($response['message']) ? $response['message'] : __('Payment creation failed.', 'developer-lessons');
-        
+
         DL_Payments::log('comgate_error', $error_message, array(
             'order_id' => $order_id,
             'response' => $response
@@ -83,40 +77,100 @@ class DL_Comgate {
     }
 
     /**
-     * Handle payment callback
+     * Register REST callback endpoint
+     */
+    public function register_callback_endpoint() {
+        register_rest_route('developer-lessons/v1', '/comgate-callback', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'handle_rest_callback'),
+            'permission_callback' => '__return_true',
+        ));
+    }
+
+    /**
+     * Handle callback via REST API (recommended for production)
+     */
+    public function handle_rest_callback($request) {
+        $params = $request->get_body_params();
+
+        if (empty($params)) {
+            parse_str($request->get_body(), $params);
+        }
+
+        $result = $this->process_callback_request($params);
+
+        return new WP_REST_Response(
+            $result['body'],
+            $result['code'],
+            array('Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8')
+        );
+    }
+
+    /**
+     * Handle payment callback on homepage query arg (legacy)
      */
     public function handle_callback() {
         if (!isset($_GET['dl_comgate_callback'])) {
             return;
         }
 
-        $this->process_callback();
+        $result = $this->process_callback_request($_POST);
+
+        status_header($result['code']);
+        header('Content-Type: application/x-www-form-urlencoded; charset=utf-8');
+        echo $result['body'];
+        exit;
     }
 
     /**
      * Process callback from Comgate
      */
-    public function process_callback() {
-        $trans_id = isset($_POST['transId']) ? sanitize_text_field(wp_unslash($_POST['transId'])) : '';
-        $ref_id = isset($_POST['refId']) ? sanitize_text_field(wp_unslash($_POST['refId'])) : '';
-        $post_secret = isset($_POST['secret']) ? sanitize_text_field(wp_unslash($_POST['secret'])) : '';
+    public function process_callback_request($params) {
+        $trans_id = isset($params['transId']) ? sanitize_text_field(wp_unslash($params['transId'])) : '';
+        $ref_id = isset($params['refId']) ? sanitize_text_field(wp_unslash($params['refId'])) : '';
+        $post_secret = isset($params['secret']) ? sanitize_text_field(wp_unslash($params['secret'])) : '';
+        $post_merchant = isset($params['merchant']) ? sanitize_text_field(wp_unslash($params['merchant'])) : '';
+        $post_status = isset($params['status']) ? sanitize_text_field(wp_unslash($params['status'])) : '';
 
         if (!$trans_id || !$ref_id) {
             DL_Payments::log('comgate_callback_error', 'Missing callback parameters', array(
                 'trans_id' => $trans_id,
                 'ref_id' => $ref_id,
             ));
-            http_response_code(400);
-            exit('Missing parameters');
+
+            return $this->callback_response(400, 'code=1400&message=Missing parameters');
         }
 
-        if ($post_secret !== $this->secret_key) {
+        if ($post_merchant && (string) $this->merchant_id !== $post_merchant) {
+            DL_Payments::log('comgate_callback_error', 'Merchant ID mismatch', array(
+                'expected' => $this->merchant_id,
+                'received' => $post_merchant,
+                'trans_id' => $trans_id,
+                'ref_id' => $ref_id,
+            ));
+
+            return $this->callback_response(403, 'code=1400&message=Invalid merchant');
+        }
+
+        if (!$this->is_valid_callback_secret($post_secret)) {
             DL_Payments::log('comgate_callback_error', 'Invalid callback secret', array(
                 'trans_id' => $trans_id,
                 'ref_id' => $ref_id,
             ));
-            http_response_code(403);
-            exit('Invalid secret');
+
+            return $this->callback_response(403, 'code=1400&message=Invalid secret');
+        }
+
+        $order = $this->find_order_for_callback($ref_id, $trans_id);
+
+        if (!$order) {
+            DL_Payments::log('comgate_callback_error', 'Order not found for callback', array(
+                'trans_id' => $trans_id,
+                'ref_id' => $ref_id,
+                'post_status' => $post_status,
+            ));
+
+            return $this->callback_response(404, 'code=1400&message=Order not found');
         }
 
         $status = $this->get_transaction_status($trans_id);
@@ -125,20 +179,10 @@ class DL_Comgate {
             DL_Payments::log('comgate_callback_error', 'Payment verification failed', array(
                 'trans_id' => $trans_id,
                 'ref_id' => $ref_id,
+                'order_id' => $order->id,
             ));
-            http_response_code(400);
-            exit('Verification failed');
-        }
 
-        $order = DL_Checkout::get_order_by_number($ref_id);
-
-        if (!$order) {
-            DL_Payments::log('comgate_callback_error', 'Order not found for callback', array(
-                'trans_id' => $trans_id,
-                'ref_id' => $ref_id,
-            ));
-            http_response_code(404);
-            exit('Order not found');
+            return $this->callback_response(400, 'code=1400&message=Verification failed');
         }
 
         switch ($status) {
@@ -153,9 +197,54 @@ class DL_Comgate {
                 break;
         }
 
-        header('Content-Type: application/x-www-form-urlencoded; charset=utf-8');
-        http_response_code(200);
-        exit('code=0&message=OK');
+        return $this->callback_response(200, 'code=0&message=OK');
+    }
+
+    /**
+     * Find order for callback, with a short retry for DB replication lag
+     */
+    private function find_order_for_callback($ref_id, $trans_id) {
+        $order = DL_Checkout::resolve_order_for_callback($ref_id, $trans_id);
+
+        if ($order) {
+            return $order;
+        }
+
+        usleep(500000);
+
+        return DL_Checkout::resolve_order_for_callback($ref_id, $trans_id);
+    }
+
+    /**
+     * Validate callback secret (API secret and optional push secret)
+     */
+    private function is_valid_callback_secret($post_secret) {
+        if ($post_secret === '') {
+            return false;
+        }
+
+        $secrets = array_filter(array(
+            $this->secret_key,
+            get_option('dl_comgate_push_secret'),
+        ));
+
+        foreach ($secrets as $secret) {
+            if (hash_equals((string) $secret, $post_secret)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Build callback HTTP response payload
+     */
+    private function callback_response($code, $body) {
+        return array(
+            'code' => (int) $code,
+            'body' => $body,
+        );
     }
 
     /**
@@ -230,8 +319,7 @@ class DL_Comgate {
         }
 
         $body = wp_remote_retrieve_body($response);
-        
-        // Parse response
+
         parse_str($body, $result);
 
         return $result;
@@ -242,7 +330,7 @@ class DL_Comgate {
      */
     public function get_return_url($order_id, $status = 'success') {
         $page_ids = get_option('dl_page_ids');
-        
+
         if ($status === 'success') {
             $page_id = $page_ids['payment_success'];
         } else {
@@ -253,9 +341,16 @@ class DL_Comgate {
     }
 
     /**
-     * Get callback URL
+     * Get callback URL (REST endpoint, recommended)
      */
-    public function get_callback_url() {
+    public static function get_callback_url() {
+        return rest_url('developer-lessons/v1/comgate-callback');
+    }
+
+    /**
+     * Get legacy callback URL
+     */
+    public static function get_legacy_callback_url() {
         return add_query_arg('dl_comgate_callback', '1', home_url('/'));
     }
 }

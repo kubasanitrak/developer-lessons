@@ -245,6 +245,7 @@ class DL_Activator {
             'dl_comgate_enabled' => 0,
             'dl_comgate_merchant_id' => '',
             'dl_comgate_secret_key' => '',
+            'dl_comgate_push_secret' => '',
             'dl_comgate_test_mode' => 1,
             
             // Bank Transfer

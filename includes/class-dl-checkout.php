@@ -309,6 +309,11 @@ class DL_Checkout {
         global $wpdb;
 
         $orders_table = $wpdb->prefix . 'dl_orders';
+        $transaction_id = trim((string) $transaction_id);
+
+        if ($transaction_id === '') {
+            return null;
+        }
 
         $order_id = $wpdb->get_var($wpdb->prepare(
             "SELECT id FROM $orders_table WHERE transaction_id = %s",
@@ -329,6 +334,11 @@ class DL_Checkout {
         global $wpdb;
 
         $orders_table = $wpdb->prefix . 'dl_orders';
+        $order_number = trim((string) $order_number);
+
+        if ($order_number === '') {
+            return null;
+        }
 
         $order_id = $wpdb->get_var($wpdb->prepare(
             "SELECT id FROM $orders_table WHERE order_number = %s",
@@ -337,6 +347,32 @@ class DL_Checkout {
 
         if ($order_id) {
             return self::get_order($order_id);
+        }
+
+        return null;
+    }
+
+    /**
+     * Resolve order from Comgate callback identifiers
+     */
+    public static function resolve_order_for_callback($ref_id = '', $trans_id = '') {
+        $ref_id = trim((string) $ref_id);
+        $trans_id = trim((string) $trans_id);
+
+        if ($trans_id !== '') {
+            $order = self::get_order_by_transaction_id($trans_id);
+
+            if ($order) {
+                return $order;
+            }
+        }
+
+        if ($ref_id !== '') {
+            $order = self::get_order_by_number($ref_id);
+
+            if ($order) {
+                return $order;
+            }
         }
 
         return null;

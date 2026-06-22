@@ -57,6 +57,7 @@ class DL_Admin_Settings {
         register_setting('dl_comgate_settings', 'dl_comgate_enabled');
         register_setting('dl_comgate_settings', 'dl_comgate_merchant_id');
         register_setting('dl_comgate_settings', 'dl_comgate_secret_key');
+        register_setting('dl_comgate_settings', 'dl_comgate_push_secret');
         register_setting('dl_comgate_settings', 'dl_comgate_test_mode');
 
         // Seller / company settings
@@ -261,7 +262,8 @@ class DL_Admin_Settings {
      * Render Comgate tab
      */
     private function render_comgate_tab() {
-        $callback_url = add_query_arg('dl_comgate_callback', '1', home_url('/'));
+        $callback_url = DL_Comgate::get_callback_url();
+        $legacy_callback_url = DL_Comgate::get_legacy_callback_url();
         ?>
         <form method="post" action="options.php">
             <?php settings_fields('dl_comgate_settings'); ?>
@@ -275,6 +277,7 @@ class DL_Admin_Settings {
                     <td>
                         <code><?php echo esc_html($callback_url); ?></code>
                         <p class="description"><?php _e('Comgate sends payment status updates here. Without this URL, orders may stay in Processing until the customer returns to the success page.', 'developer-lessons'); ?></p>
+                        <p class="description"><?php _e('Legacy fallback URL:', 'developer-lessons'); ?> <code><?php echo esc_html($legacy_callback_url); ?></code></p>
                     </td>
                 </tr>
             </table>
@@ -301,9 +304,19 @@ class DL_Admin_Settings {
                 <tr>
                     <th><label for="dl_comgate_secret_key"><?php _e('Secret Key', 'developer-lessons'); ?></label></th>
                     <td>
-                        <input type="password" name="dl_comgate_secret_key" id="dl_comgate_secret_key" 
-                               value="<?php echo esc_attr(get_option('dl_comgate_secret_key')); ?>" 
+                        <input type="password" name="dl_comgate_secret_key" id="dl_comgate_secret_key"
+                               value="<?php echo esc_attr(get_option('dl_comgate_secret_key')); ?>"
                                class="regular-text">
+                        <p class="description"><?php _e('Password for API and background communication from Comgate portal.', 'developer-lessons'); ?></p>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="dl_comgate_push_secret"><?php _e('Push Secret (optional)', 'developer-lessons'); ?></label></th>
+                    <td>
+                        <input type="password" name="dl_comgate_push_secret" id="dl_comgate_push_secret"
+                               value="<?php echo esc_attr(get_option('dl_comgate_push_secret')); ?>"
+                               class="regular-text">
+                        <p class="description"><?php _e('Only needed if Comgate uses a separate password for payment notifications in production.', 'developer-lessons'); ?></p>
                     </td>
                 </tr>
                 <tr>
