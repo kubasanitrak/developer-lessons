@@ -53,6 +53,22 @@ $base_url = admin_url('admin.php?page=dl-statistics');
             <p class="description">
                 <?php _e('Track who registered, whether they logged in, and how long it took to return.', 'developer-lessons'); ?>
             </p>
+            <?php if (current_user_can('manage_options')) : ?>
+                <p class="dl-analytics-backfill-actions">
+                    <a href="<?php echo esc_url(DL_Admin_Statistics::get_backfill_url($range)); ?>"
+                       class="button button-secondary">
+                        <?php _e('Backfill missing login meta', 'developer-lessons'); ?>
+                    </a>
+                    <a href="<?php echo esc_url(DL_Admin_Statistics::get_backfill_url($range, true)); ?>"
+                       class="button button-secondary"
+                       onclick="return confirm('<?php echo esc_js(__('Recompute login meta from historical orders, purchases, and events? Existing values will be overwritten.', 'developer-lessons')); ?>');">
+                        <?php _e('Recompute from historical data', 'developer-lessons'); ?>
+                    </a>
+                </p>
+                <p class="description">
+                    <?php _e('Use after deployment to populate older accounts. CLI: wp dl analytics backfill --force', 'developer-lessons'); ?>
+                </p>
+            <?php endif; ?>
             <table class="widefat striped">
                 <thead>
                     <tr>

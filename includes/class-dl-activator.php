@@ -67,6 +67,7 @@ class DL_Activator {
 
         require_once DL_PLUGIN_DIR . 'includes/class-dl-analytics.php';
         DL_Analytics::create_table();
+        DL_Analytics::maybe_backfill_user_meta();
     }
 
     /**

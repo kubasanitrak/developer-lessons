@@ -9,6 +9,116 @@ if (!defined('ABSPATH')) {
 
 class DL_Admin_Statistics {
 
+    public function __construct() {
+        add_action('admin_init', array($this, 'handle_backfill_action'));
+        add_action('admin_notices', array($this, 'render_backfill_notice'));
+    }
+
+    /**
+     * Handle manual analytics backfill requests.
+     */
+    public function handle_backfill_action() {
+        if (!isset($_GET['page']) || $_GET['page'] !== 'dl-statistics') {
+            return;
+        }
+
+        if (!isset($_GET['dl_analytics_backfill'])) {
+            return;
+        }
+
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        check_admin_referer('dl_analytics_backfill');
+
+        $overwrite = !empty($_GET['overwrite']);
+        $result = DL_Analytics::backfill_user_meta(array(
+            'force' => true,
+            'overwrite' => $overwrite,
+        ));
+
+        $user_id = get_current_user_id();
+        set_transient('dl_analytics_backfill_result_' . $user_id, array_merge($result, array(
+            'overwrite' => $overwrite,
+        )), 60);
+
+        $redirect_args = array(
+            'page' => 'dl-statistics',
+            'tab' => 'users',
+            'range' => isset($_GET['range']) ? sanitize_text_field(wp_unslash($_GET['range'])) : '30days',
+            'dl_backfill' => 'done',
+        );
+
+        wp_safe_redirect(add_query_arg($redirect_args, admin_url('admin.php')));
+        exit;
+    }
+
+    /**
+     * Show backfill result notice on the statistics page.
+     */
+    public function render_backfill_notice() {
+        if (!isset($_GET['page']) || $_GET['page'] !== 'dl-statistics') {
+            return;
+        }
+
+        if (!isset($_GET['dl_backfill']) || $_GET['dl_backfill'] !== 'done') {
+            return;
+        }
+
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        $result = get_transient('dl_analytics_backfill_result_' . get_current_user_id());
+        if (!$result) {
+            return;
+        }
+
+        delete_transient('dl_analytics_backfill_result_' . get_current_user_id());
+
+        if (!empty($result['skipped'])) {
+            echo '<div class="notice notice-warning is-dismissible"><p>';
+            esc_html_e('Analytics backfill was skipped because it already ran.', 'developer-lessons');
+            echo '</p></div>';
+            return;
+        }
+
+        $mode = !empty($result['overwrite'])
+            ? __('historical overwrite', 'developer-lessons')
+            : __('missing values only', 'developer-lessons');
+
+        echo '<div class="notice notice-success is-dismissible"><p>';
+        printf(
+            esc_html__('Analytics backfill complete (%1$s). Processed %2$d users. Updated registration: %3$d, first login: %4$d, last login: %5$d, login count: %6$d.', 'developer-lessons'),
+            esc_html($mode),
+            (int) $result['processed'],
+            (int) $result['updated_registration'],
+            (int) $result['updated_first_login'],
+            (int) $result['updated_last_login'],
+            (int) $result['updated_login_count']
+        );
+        echo '</p></div>';
+    }
+
+    /**
+     * Backfill action URL for the statistics page.
+     */
+    public static function get_backfill_url($range, $overwrite = false) {
+        $args = array(
+            'page' => 'dl-statistics',
+            'tab' => 'users',
+            'range' => $range,
+            'dl_analytics_backfill' => '1',
+        );
+
+        if ($overwrite) {
+            $args['overwrite'] = '1';
+        }
+
+        return wp_nonce_url(add_query_arg($args, admin_url('admin.php')), 'dl_analytics_backfill');
+    }
+
     /**
      * Render statistics page
      */

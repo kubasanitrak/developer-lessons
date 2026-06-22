@@ -10,6 +10,7 @@ if (!defined('ABSPATH')) {
 class DL_Analytics {
 
     const DEDUPE_MINUTES = 30;
+    const BACKFILL_VERSION = '1';
 
     public function __construct() {
         add_action('user_register', array($this, 'on_user_register'), 10, 1);
@@ -53,6 +54,85 @@ class DL_Analytics {
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta($sql);
+    }
+
+    /**
+     * Backfill analytics meta for existing users from historical plugin data.
+     */
+    public static function maybe_backfill_user_meta() {
+        if (get_option('dl_analytics_backfill_version') === self::BACKFILL_VERSION) {
+            return self::empty_backfill_stats(true);
+        }
+
+        $result = self::backfill_user_meta();
+        update_option('dl_analytics_backfill_version', self::BACKFILL_VERSION);
+
+        return $result;
+    }
+
+    /**
+     * Backfill analytics user meta from historical plugin data.
+     *
+     * @param array $args {
+     *     @type bool $force     Run even if automatic backfill already completed.
+     *     @type bool $overwrite Recompute values from historical data instead of preserving existing meta.
+     * }
+     */
+    public static function backfill_user_meta($args = array()) {
+        $args = wp_parse_args($args, array(
+            'force' => false,
+            'overwrite' => false,
+        ));
+
+        if (!$args['force'] && get_option('dl_analytics_backfill_version') === self::BACKFILL_VERSION) {
+            return self::empty_backfill_stats(true);
+        }
+
+        $stats = self::empty_backfill_stats(false);
+
+        foreach (self::get_users_for_backfill() as $user) {
+            $user_id = (int) $user->ID;
+
+            if (!self::should_track_user($user_id)) {
+                continue;
+            }
+
+            $stats['processed']++;
+
+            $registration_at = $user->user_registered;
+            if ($args['overwrite'] || empty($user->registration_at)) {
+                if (self::update_user_meta_if_changed($user_id, 'dl_registration_at', $registration_at, $args['overwrite'])) {
+                    $stats['updated_registration']++;
+                }
+            }
+
+            $first_login_at = self::get_historical_first_login_at($user, $args['overwrite']);
+            if (!empty($first_login_at) && ($args['overwrite'] || empty($user->first_login_at))) {
+                if (self::update_user_meta_if_changed($user_id, 'dl_first_login_at', $first_login_at, $args['overwrite'])) {
+                    $stats['updated_first_login']++;
+                }
+            }
+
+            $last_login_at = self::get_historical_last_login_at($user, $args['overwrite']);
+            if (!empty($last_login_at) && ($args['overwrite'] || empty($user->last_login_at))) {
+                if (self::update_user_meta_if_changed($user_id, 'dl_last_login_at', $last_login_at, $args['overwrite'])) {
+                    $stats['updated_last_login']++;
+                }
+            }
+
+            $login_count = self::get_historical_login_count($user, $args['overwrite']);
+            if ($login_count > 0 && ($args['overwrite'] || empty($user->login_count))) {
+                if (self::update_user_meta_if_changed($user_id, 'dl_login_count', $login_count, $args['overwrite'])) {
+                    $stats['updated_login_count']++;
+                }
+            }
+        }
+
+        if ($args['force'] || $args['overwrite']) {
+            update_option('dl_analytics_backfill_version', self::BACKFILL_VERSION);
+        }
+
+        return $stats;
     }
 
     /**
@@ -262,10 +342,135 @@ class DL_Analytics {
         ));
     }
 
+    /**
+     * Users eligible for analytics backfill.
+     */
+    private static function get_users_for_backfill() {
+        global $wpdb;
+
+        $events_table = self::table_name();
+        $orders_table = $wpdb->prefix . 'dl_orders';
+        $purchases_table = $wpdb->prefix . 'dl_purchases';
+
+        return $wpdb->get_results(
+            "SELECT u.ID, u.user_registered,
+                    first_login.meta_value AS first_login_at,
+                    last_login.meta_value AS last_login_at,
+                    login_count.meta_value AS login_count,
+                    registration.meta_value AS registration_at,
+                    MIN(
+                        CASE
+                            WHEN e.created_at IS NOT NULL THEN e.created_at
+                            WHEN p.purchased_at IS NOT NULL THEN p.purchased_at
+                            WHEN o.paid_at IS NOT NULL THEN o.paid_at
+                            ELSE o.created_at
+                        END
+                    ) AS earliest_activity_at,
+                    MAX(
+                        CASE
+                            WHEN e.created_at IS NOT NULL THEN e.created_at
+                            WHEN p.purchased_at IS NOT NULL THEN p.purchased_at
+                            WHEN o.paid_at IS NOT NULL THEN o.paid_at
+                            ELSE o.created_at
+                        END
+                    ) AS latest_activity_at,
+                    COUNT(DISTINCT e.id) AS event_count
+             FROM {$wpdb->users} u
+             LEFT JOIN {$wpdb->usermeta} first_login
+                    ON u.ID = first_login.user_id AND first_login.meta_key = 'dl_first_login_at'
+             LEFT JOIN {$wpdb->usermeta} last_login
+                    ON u.ID = last_login.user_id AND last_login.meta_key = 'dl_last_login_at'
+             LEFT JOIN {$wpdb->usermeta} login_count
+                    ON u.ID = login_count.user_id AND login_count.meta_key = 'dl_login_count'
+             LEFT JOIN {$wpdb->usermeta} registration
+                    ON u.ID = registration.user_id AND registration.meta_key = 'dl_registration_at'
+             LEFT JOIN $events_table e
+                    ON u.ID = e.user_id AND e.event_type IN ('login', 'first_login', 'lesson_view')
+             LEFT JOIN $purchases_table p
+                    ON u.ID = p.user_id
+             LEFT JOIN $orders_table o
+                    ON u.ID = o.user_id
+             GROUP BY u.ID"
+        );
+    }
+
     private static function table_exists() {
         global $wpdb;
         $table = self::table_name();
         return $wpdb->get_var("SHOW TABLES LIKE '$table'") === $table;
+    }
+
+    /**
+     * Derive earliest known authenticated activity for a user.
+     */
+    private static function get_historical_first_login_at($user, $overwrite = false) {
+        if (!$overwrite && !empty($user->first_login_at)) {
+            return $user->first_login_at;
+        }
+
+        return self::normalize_historical_timestamp($user->user_registered, $user->earliest_activity_at);
+    }
+
+    /**
+     * Derive latest known authenticated activity for a user.
+     */
+    private static function get_historical_last_login_at($user, $overwrite = false) {
+        if (!$overwrite && !empty($user->last_login_at)) {
+            return $user->last_login_at;
+        }
+
+        return self::normalize_historical_timestamp($user->user_registered, $user->latest_activity_at);
+    }
+
+    /**
+     * Approximate prior login count from known historical activity.
+     */
+    private static function get_historical_login_count($user, $overwrite = false) {
+        if (!$overwrite) {
+            $stored = (int) $user->login_count;
+            if ($stored > 0) {
+                return $stored;
+            }
+        }
+
+        if (!empty($user->latest_activity_at)) {
+            return max(1, (int) $user->event_count);
+        }
+
+        return 0;
+    }
+
+    /**
+     * Default backfill result structure.
+     */
+    private static function empty_backfill_stats($skipped) {
+        return array(
+            'skipped' => (bool) $skipped,
+            'processed' => 0,
+            'updated_registration' => 0,
+            'updated_first_login' => 0,
+            'updated_last_login' => 0,
+            'updated_login_count' => 0,
+        );
+    }
+
+    /**
+     * Update user meta only when the value changes.
+     */
+    private static function update_user_meta_if_changed($user_id, $meta_key, $value, $overwrite) {
+        $current = get_user_meta($user_id, $meta_key, true);
+
+        if (!$overwrite && $current !== '' && $current !== null) {
+            return false;
+        }
+
+        if ((string) $current === (string) $value) {
+            return false;
+        }
+
+        update_user_meta($user_id, $meta_key, $value);
+
+        return true;
     }
 
     private static function should_track_user($user_id) {
@@ -361,4 +566,30 @@ class DL_Analytics {
 
         return (int) floor(($end_ts - $start_ts) / DAY_IN_SECONDS);
     }
+
+    /**
+     * Keep inferred timestamps consistent with registration time.
+     */
+    private static function normalize_historical_timestamp($registered_at, $activity_at) {
+        if (empty($activity_at)) {
+            return null;
+        }
+
+        $registered_ts = strtotime($registered_at);
+        $activity_ts = strtotime($activity_at);
+
+        if (!$activity_ts) {
+            return null;
+        }
+
+        if ($registered_ts && $activity_ts < $registered_ts) {
+            return $registered_at;
+        }
+
+        return date('Y-m-d H:i:s', $activity_ts);
+    }
+}
+
+if (defined('WP_CLI') && WP_CLI) {
+    require_once DL_PLUGIN_DIR . 'includes/class-dl-analytics-cli.php';
 }
