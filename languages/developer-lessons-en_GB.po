@@ -131,6 +131,15 @@ msgstr "10+ Lessons Discount (%)"
 msgid "Comgate Payment Gateway"
 msgstr "Comgate Payment Gateway"
 
+msgid "Return URLs are sent automatically with each payment. Configure the background notification URL in your Comgate portal (Integration settings):"
+msgstr "Return URLs are sent automatically with each payment. Configure the background notification URL in your Comgate portal (Integration settings):"
+
+msgid "Notification URL"
+msgstr "Notification URL"
+
+msgid "Comgate sends payment status updates here. Without this URL, orders may stay in Processing until the customer returns to the success page."
+msgstr "Comgate sends payment status updates here. Without this URL, orders may stay in Processing until the customer returns to the success page."
+
 msgid "Enable Card Payments"
 msgstr "Enable Card Payments"
 

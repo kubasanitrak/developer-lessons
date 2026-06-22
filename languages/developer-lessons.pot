@@ -165,6 +165,18 @@ msgid "Comgate Payment Gateway"
 msgstr ""
 
 #: admin/class-dl-admin-settings.php
+msgid "Return URLs are sent automatically with each payment. Configure the background notification URL in your Comgate portal (Integration settings):"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Notification URL"
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
+msgid "Comgate sends payment status updates here. Without this URL, orders may stay in Processing until the customer returns to the success page."
+msgstr ""
+
+#: admin/class-dl-admin-settings.php
 msgid "Enable Card Payments"
 msgstr ""
 

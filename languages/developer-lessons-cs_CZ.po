@@ -131,6 +131,15 @@ msgstr "Sleva za 10+ lekcí (%)"
 msgid "Comgate Payment Gateway"
 msgstr "Platební brána Comgate"
 
+msgid "Return URLs are sent automatically with each payment. Configure the background notification URL in your Comgate portal (Integration settings):"
+msgstr "URL pro návrat z platby se odesílají automaticky s každou platbou. URL pro notifikaci na pozadí nastavte v portálu Comgate (Nastavení integrace):"
+
+msgid "Notification URL"
+msgstr "URL notifikace"
+
+msgid "Comgate sends payment status updates here. Without this URL, orders may stay in Processing until the customer returns to the success page."
+msgstr "Comgate sem odesílá aktualizace stavu platby. Bez této URL mohou objednávky zůstat ve stavu Zpracovává se, dokud zákazník nevrátí na stránku úspěšné platby."
+
 msgid "Enable Card Payments"
 msgstr "Povolit platby kartou"
 
