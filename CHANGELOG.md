@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.20] - 2026-06-02
+
+### Added
+
+- Expanded analytics tracking (checkout, basket, payments) and admin statistics reporting.
+
 ## [1.2.0.19] - 2026-06-02
 
 ### Fixed
