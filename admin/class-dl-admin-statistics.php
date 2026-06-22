@@ -10,8 +10,41 @@ if (!defined('ABSPATH')) {
 class DL_Admin_Statistics {
 
     public function __construct() {
+        add_action('load-dl-main-menu_page_dl-statistics', array($this, 'add_screen_options'));
+        add_filter('set_screen_option_dl_stats_users_per_page', array($this, 'save_screen_option'), 10, 3);
         add_action('admin_init', array($this, 'handle_backfill_action'));
         add_action('admin_notices', array($this, 'render_backfill_notice'));
+    }
+
+    /**
+     * Register screen options for the users report.
+     */
+    public function add_screen_options() {
+        add_screen_option('per_page', array(
+            'label' => __('Users per page', 'developer-lessons'),
+            'default' => 20,
+            'option' => 'dl_stats_users_per_page',
+        ));
+    }
+
+    /**
+     * Persist custom per-page screen option.
+     */
+    public function save_screen_option($status, $option, $value) {
+        return max(1, min(999, (int) $value));
+    }
+
+    /**
+     * Users per page for the statistics users tab.
+     */
+    private function get_users_per_page() {
+        $per_page = (int) get_user_option('dl_stats_users_per_page');
+
+        if ($per_page < 1) {
+            $per_page = 20;
+        }
+
+        return min($per_page, 999);
     }
 
     /**
@@ -134,7 +167,22 @@ class DL_Admin_Statistics {
         $date_filter = $this->get_date_filter($range);
 
         if ($tab === 'users') {
-            $user_stats = DL_Analytics::get_registration_report(50, $this->get_range_days($range));
+            $per_page = $this->get_users_per_page();
+            $current_page = isset($_GET['paged']) ? max(1, (int) $_GET['paged']) : 1;
+            $days = $this->get_range_days($range);
+            $total_users = DL_Analytics::count_registration_report($days);
+            $total_pages = max(1, (int) ceil($total_users / $per_page));
+
+            if ($current_page > $total_pages) {
+                $current_page = $total_pages;
+            }
+
+            $user_stats = DL_Analytics::get_registration_report(array(
+                'limit' => $per_page,
+                'offset' => ($current_page - 1) * $per_page,
+                'days' => $days,
+            ));
+
             include DL_PLUGIN_DIR . 'admin/partials/statistics-page.php';
             return;
         }

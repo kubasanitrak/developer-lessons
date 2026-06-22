@@ -275,10 +275,23 @@ class DL_Analytics {
     /**
      * Recent user registrations for the admin report.
      */
-    public static function get_registration_report($limit = 50, $days = 90) {
+    public static function get_registration_report($args = array()) {
         global $wpdb;
 
-        $since = date('Y-m-d H:i:s', strtotime('-' . absint($days) . ' days'));
+        if (is_numeric($args)) {
+            $args = array(
+                'limit' => (int) $args,
+                'days' => func_num_args() > 1 ? (int) func_get_arg(1) : 90,
+            );
+        }
+
+        $args = wp_parse_args($args, array(
+            'limit' => 20,
+            'offset' => 0,
+            'days' => 90,
+        ));
+
+        $since = date('Y-m-d H:i:s', strtotime('-' . absint($args['days']) . ' days'));
         $events_table = self::table_name();
         $purchases_table = $wpdb->prefix . 'dl_purchases';
         $has_events = self::table_exists();
@@ -306,9 +319,24 @@ class DL_Analytics {
              LEFT JOIN {$wpdb->usermeta} m_count ON u.ID = m_count.user_id AND m_count.meta_key = 'dl_login_count'
              WHERE u.user_registered >= %s
              ORDER BY u.user_registered DESC
-             LIMIT %d",
+             LIMIT %d OFFSET %d",
             $since,
-            absint($limit)
+            absint($args['limit']),
+            absint($args['offset'])
+        ));
+    }
+
+    /**
+     * Count user registrations in the report date range.
+     */
+    public static function count_registration_report($days = 90) {
+        global $wpdb;
+
+        $since = date('Y-m-d H:i:s', strtotime('-' . absint($days) . ' days'));
+
+        return (int) $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM {$wpdb->users} u WHERE u.user_registered >= %s",
+            $since
         ));
     }
 

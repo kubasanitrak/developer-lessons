@@ -47,7 +47,14 @@ $base_url = admin_url('admin.php?page=dl-statistics');
         </form>
     </div>
 
-    <?php if ($tab === 'users') : ?>
+    <?php if ($tab === 'users') :
+        $users_pagination_base = add_query_arg(array(
+            'page' => 'dl-statistics',
+            'tab' => 'users',
+            'range' => $range,
+            'paged' => '%#%',
+        ), admin_url('admin.php'));
+        ?>
         <div class="dl-stats-section dl-stats-wide">
             <h2><?php _e('Recent Registrations', 'developer-lessons'); ?></h2>
             <p class="description">
@@ -69,6 +76,34 @@ $base_url = admin_url('admin.php?page=dl-statistics');
                     <?php _e('Use after deployment to populate older accounts. CLI: wp dl analytics backfill --force', 'developer-lessons'); ?>
                 </p>
             <?php endif; ?>
+
+            <?php if (!empty($total_users)) : ?>
+                <div class="tablenav top">
+                    <div class="tablenav-pages">
+                        <span class="displaying-num">
+                            <?php
+                            printf(
+                                _n('%s user', '%s users', (int) $total_users, 'developer-lessons'),
+                                number_format_i18n((int) $total_users)
+                            );
+                            ?>
+                        </span>
+                        <?php if ($total_pages > 1) : ?>
+                            <?php
+                            echo paginate_links(array(
+                                'base' => $users_pagination_base,
+                                'format' => '',
+                                'prev_text' => '&laquo;',
+                                'next_text' => '&raquo;',
+                                'total' => $total_pages,
+                                'current' => $current_page,
+                            ));
+                            ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <table class="widefat striped">
                 <thead>
                     <tr>
@@ -128,6 +163,23 @@ $base_url = admin_url('admin.php?page=dl-statistics');
                     <?php endif; ?>
                 </tbody>
             </table>
+
+            <?php if (!empty($total_users) && $total_pages > 1) : ?>
+                <div class="tablenav bottom">
+                    <div class="tablenav-pages">
+                        <?php
+                        echo paginate_links(array(
+                            'base' => $users_pagination_base,
+                            'format' => '',
+                            'prev_text' => '&laquo;',
+                            'next_text' => '&raquo;',
+                            'total' => $total_pages,
+                            'current' => $current_page,
+                        ));
+                        ?>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
     <?php elseif ($tab === 'lessons') : ?>
         <div class="dl-stats-section dl-stats-wide">
