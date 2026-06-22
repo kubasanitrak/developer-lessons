@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.16] - 2026-06-02
+
+### Changed
+
+- Comgate admin settings translation updates.
+
 ## [1.2.0.15] - 2026-06-02
 
 ### Added
