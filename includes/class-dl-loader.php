@@ -79,7 +79,7 @@ class DL_Loader {
         if (is_admin()) {
             new DL_Admin();
             new DL_Admin_Settings();
-            new DL_Admin_Statistics();
+            DL_Admin_Statistics::instance();
             new DL_Admin_Invoices();
         }
 

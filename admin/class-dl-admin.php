@@ -109,7 +109,7 @@ class DL_Admin {
         );
 
         // Statistics
-        add_submenu_page(
+        $statistics_hook = add_submenu_page(
             'dl-main-menu',
             __('Statistics', 'developer-lessons'),
             '── ' . __('Statistics', 'developer-lessons'),
@@ -117,6 +117,7 @@ class DL_Admin {
             'dl-statistics',
             array($this, 'render_statistics')
         );
+        add_action('load-' . $statistics_hook, array($this, 'load_statistics_page'));
 
         // Settings
         add_submenu_page(
@@ -320,11 +321,17 @@ class DL_Admin {
     }
 
     /**
+     * Register statistics page screen options.
+     */
+    public function load_statistics_page() {
+        DL_Admin_Statistics::register_screen_options();
+    }
+
+    /**
      * Render statistics page
      */
     public function render_statistics() {
-        $statistics = new DL_Admin_Statistics();
-        $statistics->render();
+        DL_Admin_Statistics::instance()->render();
     }
 
     /**

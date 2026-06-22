@@ -44,6 +44,20 @@ $base_url = admin_url('admin.php?page=dl-statistics');
                 <option value="year" <?php selected($range, 'year'); ?>><?php _e('Last Year', 'developer-lessons'); ?></option>
                 <option value="all" <?php selected($range, 'all'); ?>><?php _e('All Time', 'developer-lessons'); ?></option>
             </select>
+            <?php if ($tab === 'users') :
+                $per_page = isset($per_page) ? (int) $per_page : 20;
+                ?>
+                <label for="dl-stats-users-per-page" class="dl-stats-users-per-page">
+                    <?php _e('Users per page', 'developer-lessons'); ?>
+                    <select id="dl-stats-users-per-page" name="users_per_page" onchange="this.form.submit()">
+                        <?php foreach (array(10, 20, 50, 100, 200, 999) as $users_per_page_option) : ?>
+                            <option value="<?php echo esc_attr((string) $users_per_page_option); ?>" <?php selected((int) $per_page, $users_per_page_option); ?>>
+                                <?php echo esc_html((string) $users_per_page_option); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
+            <?php endif; ?>
         </form>
     </div>
 

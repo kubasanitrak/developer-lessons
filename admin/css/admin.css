@@ -130,6 +130,13 @@
 .dl-stats-filter select {
   min-width: 200px;
 }
+.dl-stats-filter .dl-stats-users-per-page {
+  margin-left: 12px;
+}
+.dl-stats-filter .dl-stats-users-per-page select {
+  min-width: 100px;
+  margin-left: 6px;
+}
 
 .dl-orders-filter {
   margin-bottom: 15px;

@@ -9,17 +9,33 @@ if (!defined('ABSPATH')) {
 
 class DL_Admin_Statistics {
 
+    /**
+     * @var DL_Admin_Statistics|null
+     */
+    private static $instance = null;
+
     public function __construct() {
-        add_action('load-dl-main-menu_page_dl-statistics', array($this, 'add_screen_options'));
+        self::$instance = $this;
         add_filter('set_screen_option_dl_stats_users_per_page', array($this, 'save_screen_option'), 10, 3);
         add_action('admin_init', array($this, 'handle_backfill_action'));
         add_action('admin_notices', array($this, 'render_backfill_notice'));
     }
 
     /**
+     * Shared statistics admin instance.
+     */
+    public static function instance() {
+        if (null === self::$instance) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
+    /**
      * Register screen options for the users report.
      */
-    public function add_screen_options() {
+    public static function register_screen_options() {
         add_screen_option('per_page', array(
             'label' => __('Users per page', 'developer-lessons'),
             'default' => 20,
@@ -38,6 +54,13 @@ class DL_Admin_Statistics {
      * Users per page for the statistics users tab.
      */
     private function get_users_per_page() {
+        if (isset($_GET['users_per_page'])) {
+            $per_page = max(1, min(999, (int) $_GET['users_per_page']));
+            update_user_option(get_current_user_id(), 'dl_stats_users_per_page', $per_page);
+
+            return $per_page;
+        }
+
         $per_page = (int) get_user_option('dl_stats_users_per_page');
 
         if ($per_page < 1) {
