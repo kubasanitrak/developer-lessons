@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.21] - 2026-06-02
+
+### Fixed
+
+- Comgate payment verification and callback handling.
+
 ## [1.2.0.20] - 2026-06-02
 
 ### Added
