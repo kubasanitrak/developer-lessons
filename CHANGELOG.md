@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.17] - 2026-06-02
+
+### Added
+
+- Analytics backfill for existing users (admin UI and WP-CLI).
+
 ## [1.2.0.16] - 2026-06-02
 
 ### Changed
