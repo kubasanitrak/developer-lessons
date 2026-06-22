@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.19] - 2026-06-02
+
+### Fixed
+
+- Admin statistics screen options and users-per-page pagination.
+
 ## [1.2.0.18] - 2026-06-02
 
 ### Fixed
