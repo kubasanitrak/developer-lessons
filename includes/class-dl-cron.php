@@ -28,6 +28,7 @@ class DL_Cron {
     public function daily_tasks() {
         $this->cleanup_old_baskets();
         $this->cleanup_old_logs();
+        $this->aggregate_analytics();
     }
 
     /**
@@ -110,6 +111,14 @@ class DL_Cron {
         $wpdb->query(
             "DELETE FROM $logs_table WHERE created_at < DATE_SUB(NOW(), INTERVAL 90 DAY)"
         );
+    }
+
+    /**
+     * Aggregate analytics and prune old raw events.
+     */
+    private function aggregate_analytics() {
+        DL_Analytics::aggregate_daily_events();
+        DL_Analytics::cleanup_old_events(90);
     }
 
     /**

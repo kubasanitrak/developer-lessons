@@ -65,6 +65,14 @@ class DL_Basket {
             array('%d', '%d', '%s')
         );
 
+        if ($result !== false) {
+            DL_Analytics::track_commerce_event('basket_add', array(
+                'user_id' => $user_id,
+                'object_type' => 'lesson',
+                'object_id' => $lesson_id,
+            ));
+        }
+
         return $result !== false;
     }
 
@@ -80,7 +88,7 @@ class DL_Basket {
 
         $basket_table = $wpdb->prefix . 'dl_basket';
 
-        return $wpdb->delete(
+        $deleted = $wpdb->delete(
             $basket_table,
             array(
                 'user_id' => $user_id,
@@ -88,6 +96,16 @@ class DL_Basket {
             ),
             array('%d', '%d')
         );
+
+        if ($deleted) {
+            DL_Analytics::track_commerce_event('basket_remove', array(
+                'user_id' => $user_id,
+                'object_type' => 'lesson',
+                'object_id' => $lesson_id,
+            ));
+        }
+
+        return $deleted;
     }
 
     /**

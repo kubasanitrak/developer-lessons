@@ -152,6 +152,17 @@ class DL_Payments {
             'payment_method' => $order->payment_method
         ));
 
+        DL_Analytics::track_commerce_event('checkout_complete', array(
+            'user_id' => (int) $order->user_id,
+            'object_type' => 'order',
+            'object_id' => $order_id,
+            'meta' => array(
+                'item_count' => count($order->items),
+                'total' => (float) $order->total,
+                'payment_method' => $order->payment_method,
+            ),
+        ));
+
         return true;
     }
 

@@ -182,7 +182,7 @@ class DL_Admin_Statistics {
         global $wpdb;
 
         $tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'sales';
-        if (!in_array($tab, array('sales', 'users', 'lessons'), true)) {
+        if (!in_array($tab, array('sales', 'users', 'lessons', 'funnel'), true)) {
             $tab = 'sales';
         }
 
@@ -211,7 +211,15 @@ class DL_Admin_Statistics {
         }
 
         if ($tab === 'lessons') {
-            $lesson_view_stats = DL_Analytics::get_lesson_view_stats(20, $this->get_range_days($range));
+            $lesson_view_stats = DL_Analytics::get_lesson_view_stats(50, $this->get_range_days($range));
+            include DL_PLUGIN_DIR . 'admin/partials/statistics-page.php';
+            return;
+        }
+
+        if ($tab === 'funnel') {
+            $days = $this->get_range_days($range);
+            $funnel_summary = DL_Analytics::get_funnel_summary($days);
+            $daily_activity = DL_Analytics::get_daily_activity($days);
             include DL_PLUGIN_DIR . 'admin/partials/statistics-page.php';
             return;
         }

@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 
 $currency_symbol = get_option('dl_currency_symbol', 'Kč');
 $tab = isset($tab) ? $tab : (isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'sales');
-if (!in_array($tab, array('sales', 'users', 'lessons'), true)) {
+if (!in_array($tab, array('sales', 'users', 'lessons', 'funnel'), true)) {
     $tab = 'sales';
 }
 
@@ -30,6 +30,10 @@ $base_url = admin_url('admin.php?page=dl-statistics');
         <a href="<?php echo esc_url(add_query_arg(array('tab' => 'lessons', 'range' => $range), $base_url)); ?>"
            class="nav-tab <?php echo $tab === 'lessons' ? 'nav-tab-active' : ''; ?>">
             <?php _e('Lesson Views', 'developer-lessons'); ?>
+        </a>
+        <a href="<?php echo esc_url(add_query_arg(array('tab' => 'funnel', 'range' => $range), $base_url)); ?>"
+           class="nav-tab <?php echo $tab === 'funnel' ? 'nav-tab-active' : ''; ?>">
+            <?php _e('Funnel', 'developer-lessons'); ?>
         </a>
     </nav>
 
@@ -128,12 +132,14 @@ $base_url = admin_url('admin.php?page=dl-statistics');
                         <th><?php _e('Last Login', 'developer-lessons'); ?></th>
                         <th><?php _e('Logins', 'developer-lessons'); ?></th>
                         <th><?php _e('Lesson Views', 'developer-lessons'); ?></th>
+                        <th><?php _e('Basket Adds', 'developer-lessons'); ?></th>
+                        <th><?php _e('Checkouts', 'developer-lessons'); ?></th>
                         <th><?php _e('Purchases', 'developer-lessons'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($user_stats)) : ?>
-                        <tr><td colspan="8"><?php _e('No registrations in this period.', 'developer-lessons'); ?></td></tr>
+                        <tr><td colspan="10"><?php _e('No registrations in this period.', 'developer-lessons'); ?></td></tr>
                     <?php else : ?>
                         <?php foreach ($user_stats as $stat) :
                             $has_logged_in = !empty($stat->first_login_at);
@@ -171,6 +177,8 @@ $base_url = admin_url('admin.php?page=dl-statistics');
                                 </td>
                                 <td><?php echo esc_html((string) intval($stat->login_count)); ?></td>
                                 <td><?php echo esc_html((string) intval($stat->lesson_views)); ?></td>
+                                <td><?php echo esc_html((string) intval($stat->basket_adds)); ?></td>
+                                <td><?php echo esc_html((string) intval($stat->checkout_starts)); ?></td>
                                 <td><?php echo esc_html((string) intval($stat->purchase_count)); ?></td>
                             </tr>
                         <?php endforeach; ?>
@@ -199,19 +207,21 @@ $base_url = admin_url('admin.php?page=dl-statistics');
         <div class="dl-stats-section dl-stats-wide">
             <h2><?php _e('Lesson Page Views', 'developer-lessons'); ?></h2>
             <p class="description">
-                <?php _e('Unique views are deduplicated per user and lesson every 30 minutes.', 'developer-lessons'); ?>
+                <?php _e('Views are deduplicated per user and lesson every 30 minutes. Full vs teaser shows purchased access state.', 'developer-lessons'); ?>
             </p>
             <table class="widefat striped">
                 <thead>
                     <tr>
                         <th><?php _e('Lesson', 'developer-lessons'); ?></th>
                         <th><?php _e('Views', 'developer-lessons'); ?></th>
+                        <th><?php _e('Full', 'developer-lessons'); ?></th>
+                        <th><?php _e('Teaser', 'developer-lessons'); ?></th>
                         <th><?php _e('Unique Users', 'developer-lessons'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($lesson_view_stats)) : ?>
-                        <tr><td colspan="3"><?php _e('No lesson views recorded in this period.', 'developer-lessons'); ?></td></tr>
+                        <tr><td colspan="5"><?php _e('No lesson views recorded in this period.', 'developer-lessons'); ?></td></tr>
                     <?php else : ?>
                         <?php foreach ($lesson_view_stats as $stat) : ?>
                             <tr>
@@ -225,7 +235,73 @@ $base_url = admin_url('admin.php?page=dl-statistics');
                                     <?php endif; ?>
                                 </td>
                                 <td><?php echo intval($stat->views); ?></td>
+                                <td><?php echo intval($stat->full_views); ?></td>
+                                <td><?php echo intval($stat->teaser_views); ?></td>
                                 <td><?php echo intval($stat->unique_users); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php elseif ($tab === 'funnel') : ?>
+        <div class="dl-stats-summary">
+            <div class="dl-stat-card">
+                <h3><?php _e('Registrations', 'developer-lessons'); ?></h3>
+                <div class="dl-stat-value"><?php echo intval($funnel_summary['registrations']); ?></div>
+            </div>
+            <div class="dl-stat-card">
+                <h3><?php _e('First Logins', 'developer-lessons'); ?></h3>
+                <div class="dl-stat-value"><?php echo intval($funnel_summary['first_logins']); ?></div>
+                <p class="description"><?php printf(esc_html__('%s%% of registrations', 'developer-lessons'), esc_html((string) $funnel_summary['registration_to_login_rate'])); ?></p>
+            </div>
+            <div class="dl-stat-card">
+                <h3><?php _e('Lesson Views', 'developer-lessons'); ?></h3>
+                <div class="dl-stat-value"><?php echo intval($funnel_summary['lesson_views']); ?></div>
+            </div>
+            <div class="dl-stat-card">
+                <h3><?php _e('Basket Adds', 'developer-lessons'); ?></h3>
+                <div class="dl-stat-value"><?php echo intval($funnel_summary['basket_adds']); ?></div>
+                <p class="description"><?php printf(esc_html__('%s%% of lesson views', 'developer-lessons'), esc_html((string) $funnel_summary['lesson_to_basket_rate'])); ?></p>
+            </div>
+            <div class="dl-stat-card">
+                <h3><?php _e('Checkout Starts', 'developer-lessons'); ?></h3>
+                <div class="dl-stat-value"><?php echo intval($funnel_summary['checkout_starts']); ?></div>
+            </div>
+            <div class="dl-stat-card">
+                <h3><?php _e('Completed Orders', 'developer-lessons'); ?></h3>
+                <div class="dl-stat-value"><?php echo intval($funnel_summary['checkout_completes']); ?></div>
+                <p class="description"><?php printf(esc_html__('%s%% of checkout starts', 'developer-lessons'), esc_html((string) $funnel_summary['checkout_completion_rate'])); ?></p>
+            </div>
+        </div>
+
+        <div class="dl-stats-section dl-stats-wide">
+            <h2><?php _e('Daily Activity', 'developer-lessons'); ?></h2>
+            <table class="widefat striped">
+                <thead>
+                    <tr>
+                        <th><?php _e('Date', 'developer-lessons'); ?></th>
+                        <th><?php _e('Registrations', 'developer-lessons'); ?></th>
+                        <th><?php _e('First Logins', 'developer-lessons'); ?></th>
+                        <th><?php _e('Lesson Views', 'developer-lessons'); ?></th>
+                        <th><?php _e('Basket Adds', 'developer-lessons'); ?></th>
+                        <th><?php _e('Checkout Starts', 'developer-lessons'); ?></th>
+                        <th><?php _e('Completed Orders', 'developer-lessons'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($daily_activity)) : ?>
+                        <tr><td colspan="7"><?php _e('No activity recorded in this period.', 'developer-lessons'); ?></td></tr>
+                    <?php else : ?>
+                        <?php foreach ($daily_activity as $row) : ?>
+                            <tr>
+                                <td><?php echo esc_html(date_i18n(get_option('date_format'), strtotime($row->date))); ?></td>
+                                <td><?php echo intval($row->registrations); ?></td>
+                                <td><?php echo intval($row->first_logins); ?></td>
+                                <td><?php echo intval($row->lesson_views); ?></td>
+                                <td><?php echo intval($row->basket_adds); ?></td>
+                                <td><?php echo intval($row->checkout_starts); ?></td>
+                                <td><?php echo intval($row->checkout_completes); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

@@ -251,6 +251,17 @@ class DL_Checkout {
         $emails = new DL_Emails();
         $emails->send_order_placed_notifications($order_id);
 
+        DL_Analytics::track_commerce_event('checkout_start', array(
+            'user_id' => $user_id,
+            'object_type' => 'order',
+            'object_id' => $order_id,
+            'meta' => array(
+                'item_count' => count($items),
+                'total' => $total,
+                'payment_method' => $payment_method,
+            ),
+        ));
+
         return $order_id;
     }
 

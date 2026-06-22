@@ -15,7 +15,7 @@ class DL_Analytics {
     public function __construct() {
         add_action('user_register', array($this, 'on_user_register'), 10, 1);
         add_action('wp_login', array($this, 'on_wp_login'), 10, 2);
-        add_action('template_redirect', array($this, 'track_lesson_view'), 20);
+        add_action('template_redirect', array($this, 'track_page_views'), 20);
     }
 
     /**
@@ -27,9 +27,25 @@ class DL_Analytics {
     }
 
     /**
-     * Create or update the events table.
+     * Create or update analytics tables.
      */
     public static function create_table() {
+        self::create_events_table();
+        self::create_daily_table();
+    }
+
+    /**
+     * Events table name.
+     */
+    public static function aggregates_table_name() {
+        global $wpdb;
+        return $wpdb->prefix . 'dl_event_daily';
+    }
+
+    /**
+     * Create or update the events table.
+     */
+    public static function create_events_table() {
         global $wpdb;
 
         $table = self::table_name();
@@ -50,6 +66,33 @@ class DL_Analytics {
             KEY event_type (event_type),
             KEY object_lookup (object_type, object_id),
             KEY created_at (created_at)
+        ) $charset_collate;";
+
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+        dbDelta($sql);
+    }
+
+    /**
+     * Create or update the daily aggregates table.
+     */
+    public static function create_daily_table() {
+        global $wpdb;
+
+        $table = self::aggregates_table_name();
+        $charset_collate = $wpdb->get_charset_collate();
+
+        $sql = "CREATE TABLE $table (
+            id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            event_date date NOT NULL,
+            event_type varchar(50) NOT NULL,
+            object_type varchar(50) DEFAULT NULL,
+            object_id bigint(20) UNSIGNED DEFAULT NULL,
+            event_count int(10) UNSIGNED NOT NULL DEFAULT 0,
+            unique_users int(10) UNSIGNED NOT NULL DEFAULT 0,
+            PRIMARY KEY (id),
+            UNIQUE KEY day_event_object (event_date, event_type, object_type, object_id),
+            KEY event_date (event_date),
+            KEY event_type (event_type)
         ) $charset_collate;";
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -155,7 +198,7 @@ class DL_Analytics {
             return false;
         }
 
-        if (self::is_bot_request()) {
+        if (empty($args['system']) && self::is_bot_request()) {
             return false;
         }
 
@@ -241,6 +284,62 @@ class DL_Analytics {
     }
 
     /**
+     * Track lesson, checkout, and dashboard page views.
+     */
+    public function track_page_views() {
+        if (!is_user_logged_in()) {
+            return;
+        }
+
+        $user_id = get_current_user_id();
+        if (!self::should_track_user($user_id)) {
+            return;
+        }
+
+        if (is_singular('lesson')) {
+            $this->track_lesson_view();
+            return;
+        }
+
+        $page_ids = get_option('dl_page_ids', array());
+
+        if (!empty($page_ids['dashboard']) && is_page((int) $page_ids['dashboard'])) {
+            $basket = new DL_Basket();
+            self::log_event('dashboard_view', array(
+                'user_id' => $user_id,
+                'object_type' => 'page',
+                'object_id' => (int) $page_ids['dashboard'],
+                'meta' => array(
+                    'has_purchases' => count(DL_Access_Control::get_user_purchased_lessons($user_id)) > 0,
+                    'basket_count' => $basket->get_count($user_id),
+                ),
+                'dedupe' => self::DEDUPE_MINUTES,
+            ));
+            return;
+        }
+
+        if (!empty($page_ids['checkout']) && is_page((int) $page_ids['checkout'])) {
+            $basket = new DL_Basket();
+            $items = $basket->get_items($user_id);
+
+            if (empty($items)) {
+                return;
+            }
+
+            self::log_event('checkout_view', array(
+                'user_id' => $user_id,
+                'object_type' => 'page',
+                'object_id' => (int) $page_ids['checkout'],
+                'meta' => array(
+                    'item_count' => count($items),
+                    'total' => $basket->get_final_total($user_id),
+                ),
+                'dedupe' => self::DEDUPE_MINUTES,
+            ));
+        }
+    }
+
+    /**
      * Track lesson page views for logged-in users.
      */
     public function track_lesson_view() {
@@ -306,12 +405,21 @@ class DL_Analytics {
             $purchase_count_sql = "(SELECT COUNT(*) FROM $purchases_table p WHERE p.user_id = u.ID) AS purchase_count";
         }
 
+        $basket_adds_sql = '0 AS basket_adds';
+        $checkout_starts_sql = '0 AS checkout_starts';
+        if ($has_events) {
+            $basket_adds_sql = "(SELECT COUNT(*) FROM $events_table e WHERE e.user_id = u.ID AND e.event_type = 'basket_add') AS basket_adds";
+            $checkout_starts_sql = "(SELECT COUNT(*) FROM $events_table e WHERE e.user_id = u.ID AND e.event_type = 'checkout_start') AS checkout_starts";
+        }
+
         return $wpdb->get_results($wpdb->prepare(
             "SELECT u.ID, u.user_login, u.user_email, u.user_registered,
                     m_first.meta_value AS first_login_at,
                     m_last.meta_value AS last_login_at,
                     m_count.meta_value AS login_count,
                     $lesson_views_sql,
+                    $basket_adds_sql,
+                    $checkout_starts_sql,
                     $purchase_count_sql
              FROM {$wpdb->users} u
              LEFT JOIN {$wpdb->usermeta} m_first ON u.ID = m_first.user_id AND m_first.meta_key = 'dl_first_login_at'
@@ -356,7 +464,9 @@ class DL_Analytics {
         return $wpdb->get_results($wpdb->prepare(
             "SELECT e.object_id AS lesson_id, p.post_title AS title,
                     COUNT(*) AS views,
-                    COUNT(DISTINCT e.user_id) AS unique_users
+                    COUNT(DISTINCT e.user_id) AS unique_users,
+                    SUM(CASE WHEN e.meta LIKE %s THEN 1 ELSE 0 END) AS full_views,
+                    SUM(CASE WHEN e.meta LIKE %s THEN 1 ELSE 0 END) AS teaser_views
              FROM $events_table e
              LEFT JOIN {$wpdb->posts} p ON e.object_id = p.ID
              WHERE e.event_type = 'lesson_view'
@@ -365,9 +475,184 @@ class DL_Analytics {
              GROUP BY e.object_id
              ORDER BY views DESC
              LIMIT %d",
+            '%"access":"full"%',
+            '%"access":"teaser"%',
             $since,
             absint($limit)
         ));
+    }
+
+    /**
+     * Funnel summary counts for the admin report.
+     */
+    public static function get_funnel_summary($days = 30) {
+        $since = date('Y-m-d H:i:s', strtotime('-' . absint($days) . ' days'));
+        $events = self::get_event_counts($since, array(
+            'registration',
+            'first_login',
+            'login',
+            'lesson_view',
+            'dashboard_view',
+            'checkout_view',
+            'basket_add',
+            'basket_remove',
+            'checkout_start',
+            'checkout_complete',
+        ));
+
+        $registrations = (int) ($events['registration'] ?? 0);
+        $first_logins = (int) ($events['first_login'] ?? 0);
+        $lesson_views = (int) ($events['lesson_view'] ?? 0);
+        $basket_adds = (int) ($events['basket_add'] ?? 0);
+        $checkout_starts = (int) ($events['checkout_start'] ?? 0);
+        $checkout_completes = (int) ($events['checkout_complete'] ?? 0);
+
+        return array(
+            'registrations' => $registrations,
+            'first_logins' => $first_logins,
+            'logins' => (int) ($events['login'] ?? 0),
+            'lesson_views' => $lesson_views,
+            'dashboard_views' => (int) ($events['dashboard_view'] ?? 0),
+            'checkout_views' => (int) ($events['checkout_view'] ?? 0),
+            'basket_adds' => $basket_adds,
+            'basket_removes' => (int) ($events['basket_remove'] ?? 0),
+            'checkout_starts' => $checkout_starts,
+            'checkout_completes' => $checkout_completes,
+            'registration_to_login_rate' => self::percentage($first_logins, $registrations),
+            'lesson_to_basket_rate' => self::percentage($basket_adds, $lesson_views),
+            'checkout_completion_rate' => self::percentage($checkout_completes, $checkout_starts),
+        );
+    }
+
+    /**
+     * Daily activity rows for funnel dashboards.
+     */
+    public static function get_daily_activity($days = 30) {
+        global $wpdb;
+
+        $days = absint($days);
+        $since = date('Y-m-d', strtotime('-' . $days . ' days'));
+        $daily_table = self::aggregates_table_name();
+
+        if (self::daily_table_exists()) {
+            $rows = $wpdb->get_results($wpdb->prepare(
+                "SELECT event_date AS date,
+                        SUM(CASE WHEN event_type = 'registration' THEN event_count ELSE 0 END) AS registrations,
+                        SUM(CASE WHEN event_type = 'first_login' THEN event_count ELSE 0 END) AS first_logins,
+                        SUM(CASE WHEN event_type = 'lesson_view' THEN event_count ELSE 0 END) AS lesson_views,
+                        SUM(CASE WHEN event_type = 'basket_add' THEN event_count ELSE 0 END) AS basket_adds,
+                        SUM(CASE WHEN event_type = 'checkout_start' THEN event_count ELSE 0 END) AS checkout_starts,
+                        SUM(CASE WHEN event_type = 'checkout_complete' THEN event_count ELSE 0 END) AS checkout_completes
+                 FROM $daily_table
+                 WHERE event_date >= %s
+                 GROUP BY event_date
+                 ORDER BY event_date DESC",
+                $since
+            ));
+
+            if (!empty($rows)) {
+                return $rows;
+            }
+        }
+
+        if (!self::table_exists()) {
+            return array();
+        }
+
+        $events_table = self::table_name();
+
+        return $wpdb->get_results($wpdb->prepare(
+            "SELECT DATE(created_at) AS date,
+                    SUM(CASE WHEN event_type = 'registration' THEN 1 ELSE 0 END) AS registrations,
+                    SUM(CASE WHEN event_type = 'first_login' THEN 1 ELSE 0 END) AS first_logins,
+                    SUM(CASE WHEN event_type = 'lesson_view' THEN 1 ELSE 0 END) AS lesson_views,
+                    SUM(CASE WHEN event_type = 'basket_add' THEN 1 ELSE 0 END) AS basket_adds,
+                    SUM(CASE WHEN event_type = 'checkout_start' THEN 1 ELSE 0 END) AS checkout_starts,
+                    SUM(CASE WHEN event_type = 'checkout_complete' THEN 1 ELSE 0 END) AS checkout_completes
+             FROM $events_table
+             WHERE created_at >= %s
+             GROUP BY DATE(created_at)
+             ORDER BY date DESC",
+            $since . ' 00:00:00'
+        ));
+    }
+
+    /**
+     * Aggregate raw events into daily summary rows.
+     */
+    public static function aggregate_daily_events($date = null) {
+        global $wpdb;
+
+        if (!self::table_exists() || !self::daily_table_exists()) {
+            return 0;
+        }
+
+        if (!$date) {
+            $date = date('Y-m-d', strtotime('-1 day'));
+        }
+
+        $events_table = self::table_name();
+        $daily_table = self::aggregates_table_name();
+        $rows = $wpdb->get_results($wpdb->prepare(
+            "SELECT DATE(created_at) AS event_date,
+                    event_type,
+                    object_type,
+                    object_id,
+                    COUNT(*) AS event_count,
+                    COUNT(DISTINCT user_id) AS unique_users
+             FROM $events_table
+             WHERE DATE(created_at) = %s
+             GROUP BY DATE(created_at), event_type, object_type, object_id",
+            $date
+        ));
+
+        $processed = 0;
+
+        foreach ($rows as $row) {
+            $object_type = $row->object_type ? $row->object_type : '';
+            $object_id = (int) $row->object_id;
+
+            $wpdb->query($wpdb->prepare(
+                "INSERT INTO $daily_table (event_date, event_type, object_type, object_id, event_count, unique_users)
+                 VALUES (%s, %s, %s, %d, %d, %d)
+                 ON DUPLICATE KEY UPDATE
+                    event_count = VALUES(event_count),
+                    unique_users = VALUES(unique_users)",
+                $row->event_date,
+                $row->event_type,
+                $object_type,
+                $object_id,
+                (int) $row->event_count,
+                (int) $row->unique_users
+            ));
+            $processed++;
+        }
+
+        return $processed;
+    }
+
+    /**
+     * Remove old raw analytics events.
+     */
+    public static function cleanup_old_events($days = 90) {
+        global $wpdb;
+
+        if (!self::table_exists()) {
+            return 0;
+        }
+
+        return (int) $wpdb->query($wpdb->prepare(
+            "DELETE FROM " . self::table_name() . " WHERE created_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
+            absint($days)
+        ));
+    }
+
+    /**
+     * Log a commerce funnel event from plugin code.
+     */
+    public static function track_commerce_event($event_type, $args = array()) {
+        $args['system'] = true;
+        return self::log_event($event_type, $args);
     }
 
     /**
@@ -426,6 +711,53 @@ class DL_Analytics {
         global $wpdb;
         $table = self::table_name();
         return $wpdb->get_var("SHOW TABLES LIKE '$table'") === $table;
+    }
+
+    private static function daily_table_exists() {
+        global $wpdb;
+        $table = self::aggregates_table_name();
+        return $wpdb->get_var("SHOW TABLES LIKE '$table'") === $table;
+    }
+
+    /**
+     * Count events since a datetime for selected event types.
+     */
+    private static function get_event_counts($since, $event_types) {
+        global $wpdb;
+
+        if (!self::table_exists() || empty($event_types)) {
+            return array();
+        }
+
+        $events_table = self::table_name();
+        $placeholders = implode(', ', array_fill(0, count($event_types), '%s'));
+        $params = array_merge(array($since), $event_types);
+        $rows = $wpdb->get_results($wpdb->prepare(
+            "SELECT event_type, COUNT(*) AS total
+             FROM $events_table
+             WHERE created_at >= %s
+               AND event_type IN ($placeholders)
+             GROUP BY event_type",
+            $params
+        ));
+
+        $counts = array();
+        foreach ($rows as $row) {
+            $counts[$row->event_type] = (int) $row->total;
+        }
+
+        return $counts;
+    }
+
+    private static function percentage($part, $whole) {
+        $part = (int) $part;
+        $whole = (int) $whole;
+
+        if ($whole <= 0) {
+            return 0;
+        }
+
+        return round(($part / $whole) * 100, 1);
     }
 
     /**
