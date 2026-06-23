@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.23] - 2026-06-02
+
+### Added
+
+- Video play analytics tracking and admin statistics reporting.
+
 ## [1.2.0.22] - 2026-06-02
 
 ### Added
