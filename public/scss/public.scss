@@ -296,8 +296,10 @@ $btn-radius: 0;
         transform: scale(1.1);
     }
 
-    .dashicons {
-        font-size: 24px;
+    .dl-basket-toggle-icon {
+        display: flex;
+        width: 24px;
+        height: 24px;
     }
 
     .dl-basket-count {

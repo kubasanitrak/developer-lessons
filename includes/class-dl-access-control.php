@@ -368,9 +368,7 @@ class DL_Access_Control {
                                      alt="<?php echo esc_attr($post_title); ?>"
                                      title="<?php echo esc_attr($post_title); ?>">
                             <?php else : ?>
-                                <div class="grid-item--img grid-item--img-placeholder">
-                                    <span class="dashicons dashicons-welcome-learn-more"></span>
-                                </div>
+                                <div class="grid-item--img grid-item--img-placeholder" aria-hidden="true"></div>
                             <?php endif; ?>
                         </div>
 
@@ -446,9 +444,7 @@ class DL_Access_Control {
                                  alt="<?php echo esc_attr($post_title); ?>"
                                  title="<?php echo esc_attr($post_title); ?>">
                         <?php else : ?>
-                            <div class="grid-item--img grid-item--img-placeholder">
-                                <span class="dashicons dashicons-welcome-learn-more"></span>
-                            </div>
+                            <div class="grid-item--img grid-item--img-placeholder" aria-hidden="true"></div>
                         <?php endif; ?>
                     </div>
 
@@ -679,9 +675,7 @@ class DL_Access_Control {
                                  alt="<?php echo esc_attr($post_title); ?>" 
                                  title="<?php echo esc_attr($post_title); ?>">
                         <?php else: ?>
-                            <div class="grid-item--img grid-item--img-placeholder">
-                                <span class="dashicons dashicons-welcome-learn-more"></span>
-                            </div>
+                            <div class="grid-item--img grid-item--img-placeholder" aria-hidden="true"></div>
                         <?php endif; ?>
                     </div>
                     
