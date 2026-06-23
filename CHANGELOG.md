@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.24] - 2026-06-02
+
+### Added
+
+- Spam scoring and review statistics in admin analytics.
+
 ## [1.2.0.23] - 2026-06-02
 
 ### Added
