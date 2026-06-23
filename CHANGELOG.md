@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.22] - 2026-06-02
+
+### Added
+
+- Admin statistics enhancements and analytics reporting improvements.
+
 ## [1.2.0.21] - 2026-06-02
 
 ### Fixed
