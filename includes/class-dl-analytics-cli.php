@@ -51,3 +51,26 @@ class DL_Analytics_CLI {
 }
 
 WP_CLI::add_command('dl analytics', 'DL_Analytics_CLI');
+
+class DL_Spam_CLI {
+
+    /**
+     * Recalculate spam scores for all non-admin users.
+     *
+     * ## EXAMPLES
+     *
+     *     wp dl spam recalculate
+     *
+     * @when after_wp_load
+     */
+    public function recalculate($args, $assoc_args) {
+        $processed = DL_Spam_Scoring::recalculate_all();
+
+        WP_CLI::success(sprintf(
+            'Spam scores recalculated for %d users.',
+            (int) $processed
+        ));
+    }
+}
+
+WP_CLI::add_command('dl spam', 'DL_Spam_CLI');

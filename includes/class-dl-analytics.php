@@ -245,6 +245,10 @@ class DL_Analytics {
 
         update_user_meta($user_id, 'dl_registration_at', $user->user_registered);
 
+        if (!get_user_meta($user_id, DL_Spam_Scoring::META_FLAG, true)) {
+            update_user_meta($user_id, DL_Spam_Scoring::META_FLAG, 'normal');
+        }
+
         self::log_event('registration', array(
             'user_id' => $user_id,
             'meta' => array(
@@ -486,11 +490,15 @@ class DL_Analytics {
                     $basket_adds_sql,
                     $checkout_starts_sql,
                     $video_plays_sql,
-                    $purchase_count_sql
+                    $purchase_count_sql,
+                    score_meta.meta_value AS spam_score,
+                    flag_meta.meta_value AS account_flag
              FROM {$wpdb->users} u
              LEFT JOIN {$wpdb->usermeta} m_first ON u.ID = m_first.user_id AND m_first.meta_key = 'dl_first_login_at'
              LEFT JOIN {$wpdb->usermeta} m_last ON u.ID = m_last.user_id AND m_last.meta_key = 'dl_last_login_at'
              LEFT JOIN {$wpdb->usermeta} m_count ON u.ID = m_count.user_id AND m_count.meta_key = 'dl_login_count'
+             LEFT JOIN {$wpdb->usermeta} score_meta ON u.ID = score_meta.user_id AND score_meta.meta_key = '" . DL_Spam_Scoring::META_SCORE . "'
+             LEFT JOIN {$wpdb->usermeta} flag_meta ON u.ID = flag_meta.user_id AND flag_meta.meta_key = '" . DL_Spam_Scoring::META_FLAG . "'
              WHERE u.user_registered >= %s
              ORDER BY $order_by
              LIMIT %d OFFSET %d",
@@ -516,6 +524,8 @@ class DL_Analytics {
             'checkout_starts',
             'video_plays',
             'purchase_count',
+            'spam_score',
+            'account_flag',
         );
     }
 
@@ -538,6 +548,8 @@ class DL_Analytics {
             'checkout_starts' => 'checkout_starts',
             'video_plays' => 'video_plays',
             'purchase_count' => 'purchase_count',
+            'spam_score' => 'CAST(IFNULL(score_meta.meta_value, 0) AS UNSIGNED)',
+            'account_flag' => 'flag_meta.meta_value',
         );
 
         if (!isset($columns[$orderby])) {

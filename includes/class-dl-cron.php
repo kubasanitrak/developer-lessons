@@ -119,6 +119,7 @@ class DL_Cron {
     private function aggregate_analytics() {
         DL_Analytics::aggregate_daily_events();
         DL_Analytics::cleanup_old_events(90);
+        DL_Spam_Scoring::recalculate_all();
     }
 
     /**

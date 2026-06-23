@@ -40,6 +40,7 @@ class DL_Loader {
         require_once DL_PLUGIN_DIR . 'includes/class-dl-cron.php';
         require_once DL_PLUGIN_DIR . 'includes/class-dl-ajax.php';
         require_once DL_PLUGIN_DIR . 'includes/class-dl-analytics.php';
+        require_once DL_PLUGIN_DIR . 'includes/class-dl-spam-scoring.php';
 
         // Admin
         if (is_admin()) {

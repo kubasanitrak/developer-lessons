@@ -199,3 +199,97 @@
   font-size: 11px;
   font-weight: 500;
 }
+
+.dl-review-tab-count {
+  display: inline-block;
+  min-width: 18px;
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: #d63638;
+  color: #fff;
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.dl-review-filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.dl-spam-score {
+  display: inline-block;
+  min-width: 28px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.dl-spam-score-low {
+  background: #edf7ed;
+  color: #1e7e34;
+}
+
+.dl-spam-score-medium {
+  background: #fff8e5;
+  color: #996800;
+}
+
+.dl-spam-score-high {
+  background: #fcebea;
+  color: #b32d2e;
+}
+
+.dl-account-flag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.dl-account-flag-normal {
+  background: #edf7ed;
+  color: #1e7e34;
+}
+
+.dl-account-flag-review {
+  background: #fff8e5;
+  color: #996800;
+}
+
+.dl-account-flag-spam {
+  background: #fcebea;
+  color: #b32d2e;
+}
+
+.dl-spam-signals {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.dl-spam-signals li {
+  margin: 0 0 4px;
+}
+
+.dl-review-actions {
+  white-space: nowrap;
+}
+
+.dl-review-actions .button {
+  margin: 0 4px 4px 0;
+}
+
+.dl-spam-recalculate-actions {
+  margin-top: 16px;
+}
+
+.dl-stats-section table thead th.sortable {
+  padding: 1em .5em;
+}

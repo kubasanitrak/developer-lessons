@@ -18,7 +18,9 @@ class DL_Admin_Statistics {
         self::$instance = $this;
         add_filter('set_screen_option_dl_stats_users_per_page', array($this, 'save_screen_option'), 10, 3);
         add_action('admin_init', array($this, 'handle_backfill_action'));
+        add_action('admin_init', array($this, 'handle_spam_action'));
         add_action('admin_notices', array($this, 'render_backfill_notice'));
+        add_action('admin_notices', array($this, 'render_spam_notice'));
     }
 
     /**
@@ -158,6 +160,191 @@ class DL_Admin_Statistics {
     }
 
     /**
+     * Handle spam review queue actions.
+     */
+    public function handle_spam_action() {
+        if (!isset($_GET['page']) || $_GET['page'] !== 'dl-statistics') {
+            return;
+        }
+
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        if (!empty($_GET['dl_spam_recalculate'])) {
+            check_admin_referer('dl_spam_recalculate');
+
+            $processed = DL_Spam_Scoring::recalculate_all();
+            $filter = isset($_GET['review_filter']) ? sanitize_key(wp_unslash($_GET['review_filter'])) : 'review';
+
+            set_transient('dl_spam_action_result_' . get_current_user_id(), array(
+                'type' => 'recalculate',
+                'processed' => $processed,
+            ), 60);
+
+            wp_safe_redirect(add_query_arg(array(
+                'page' => 'dl-statistics',
+                'tab' => 'review',
+                'review_filter' => $filter,
+                'dl_spam' => 'done',
+            ), admin_url('admin.php')));
+            exit;
+        }
+
+        if (empty($_GET['dl_spam_action']) || empty($_GET['user_id'])) {
+            return;
+        }
+
+        check_admin_referer('dl_spam_action');
+
+        $action = sanitize_key(wp_unslash($_GET['dl_spam_action']));
+        $user_id = (int) $_GET['user_id'];
+        $filter = isset($_GET['review_filter']) ? sanitize_key(wp_unslash($_GET['review_filter'])) : 'review';
+
+        if (!$user_id || !get_userdata($user_id)) {
+            return;
+        }
+
+        switch ($action) {
+            case 'mark_normal':
+                DL_Spam_Scoring::mark_normal($user_id);
+                $message_type = 'mark_normal';
+                break;
+            case 'mark_review':
+                DL_Spam_Scoring::mark_review($user_id);
+                $message_type = 'mark_review';
+                break;
+            case 'mark_spam':
+                DL_Spam_Scoring::mark_spam($user_id);
+                $message_type = 'mark_spam';
+                break;
+            case 'recalculate':
+                DL_Spam_Scoring::score_user($user_id);
+                $message_type = 'recalculate_user';
+                break;
+            default:
+                return;
+        }
+
+        set_transient('dl_spam_action_result_' . get_current_user_id(), array(
+            'type' => $message_type,
+            'user_id' => $user_id,
+        ), 60);
+
+        wp_safe_redirect(add_query_arg(array(
+            'page' => 'dl-statistics',
+            'tab' => 'review',
+            'review_filter' => $filter,
+            'dl_spam' => 'done',
+        ), admin_url('admin.php')));
+        exit;
+    }
+
+    /**
+     * Show spam action result notice.
+     */
+    public function render_spam_notice() {
+        if (!isset($_GET['page']) || $_GET['page'] !== 'dl-statistics') {
+            return;
+        }
+
+        if (!isset($_GET['dl_spam']) || $_GET['dl_spam'] !== 'done') {
+            return;
+        }
+
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        $result = get_transient('dl_spam_action_result_' . get_current_user_id());
+        if (!$result) {
+            return;
+        }
+
+        delete_transient('dl_spam_action_result_' . get_current_user_id());
+
+        echo '<div class="notice notice-success is-dismissible"><p>';
+
+        switch ($result['type']) {
+            case 'recalculate':
+                printf(
+                    esc_html__('Spam scores recalculated for %d users.', 'developer-lessons'),
+                    (int) $result['processed']
+                );
+                break;
+            case 'mark_normal':
+                printf(
+                    esc_html__('User #%d marked as normal. Automatic review is paused for this account.', 'developer-lessons'),
+                    (int) $result['user_id']
+                );
+                break;
+            case 'mark_review':
+                printf(
+                    esc_html__('User #%d marked for review.', 'developer-lessons'),
+                    (int) $result['user_id']
+                );
+                break;
+            case 'mark_spam':
+                printf(
+                    esc_html__('User #%d marked as spam.', 'developer-lessons'),
+                    (int) $result['user_id']
+                );
+                break;
+            case 'recalculate_user':
+                printf(
+                    esc_html__('Spam score recalculated for user #%d.', 'developer-lessons'),
+                    (int) $result['user_id']
+                );
+                break;
+        }
+
+        echo '</p></div>';
+    }
+
+    /**
+     * Spam action URL for the review queue.
+     */
+    public static function get_spam_action_url($action, $user_id, $filter = 'review') {
+        return wp_nonce_url(add_query_arg(array(
+            'page' => 'dl-statistics',
+            'tab' => 'review',
+            'review_filter' => $filter,
+            'dl_spam_action' => $action,
+            'user_id' => (int) $user_id,
+        ), admin_url('admin.php')), 'dl_spam_action');
+    }
+
+    /**
+     * Recalculate all spam scores from the review tab.
+     */
+    public static function get_spam_recalculate_url($filter = 'review') {
+        return wp_nonce_url(add_query_arg(array(
+            'page' => 'dl-statistics',
+            'tab' => 'review',
+            'review_filter' => $filter,
+            'dl_spam_recalculate' => '1',
+        ), admin_url('admin.php')), 'dl_spam_recalculate');
+    }
+
+    /**
+     * Render account flag badge.
+     */
+    public static function render_account_flag_badge($flag) {
+        $flag = in_array($flag, array('normal', 'review', 'spam'), true) ? $flag : 'normal';
+        $labels = array(
+            'normal' => __('Normal', 'developer-lessons'),
+            'review' => __('Review', 'developer-lessons'),
+            'spam' => __('Spam', 'developer-lessons'),
+        );
+
+        printf(
+            '<span class="dl-account-flag dl-account-flag-%1$s">%2$s</span>',
+            esc_attr($flag),
+            esc_html($labels[$flag])
+        );
+    }
+
+    /**
      * Backfill action URL for the statistics page.
      */
     public static function get_backfill_url($range, $overwrite = false) {
@@ -182,7 +369,7 @@ class DL_Admin_Statistics {
         global $wpdb;
 
         $tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'sales';
-        if (!in_array($tab, array('sales', 'users', 'lessons', 'funnel'), true)) {
+        if (!in_array($tab, array('sales', 'users', 'lessons', 'funnel', 'review'), true)) {
             $tab = 'sales';
         }
 
@@ -224,6 +411,42 @@ class DL_Admin_Statistics {
             $days = $this->get_range_days($range);
             $funnel_summary = DL_Analytics::get_funnel_summary($days);
             $daily_activity = DL_Analytics::get_daily_activity($days);
+            include DL_PLUGIN_DIR . 'admin/partials/statistics-page.php';
+            return;
+        }
+
+        if ($tab === 'review') {
+            $review_filter = isset($_GET['review_filter']) ? sanitize_key($_GET['review_filter']) : 'review';
+            if (!in_array($review_filter, array('review', 'spam', 'high', 'all'), true)) {
+                $review_filter = 'review';
+            }
+
+            $per_page = 20;
+            $current_page = isset($_GET['paged']) ? max(1, (int) $_GET['paged']) : 1;
+            $orderby = isset($_GET['orderby']) ? sanitize_key($_GET['orderby']) : 'score';
+            $order = isset($_GET['order']) && strtolower($_GET['order']) === 'asc' ? 'asc' : 'desc';
+            $total_users = DL_Spam_Scoring::count_review_queue($review_filter);
+            $total_pages = max(1, (int) ceil($total_users / $per_page));
+
+            if ($current_page > $total_pages) {
+                $current_page = $total_pages;
+            }
+
+            $review_users = DL_Spam_Scoring::get_review_queue(array(
+                'filter' => $review_filter,
+                'limit' => $per_page,
+                'offset' => ($current_page - 1) * $per_page,
+                'orderby' => $orderby,
+                'order' => $order,
+            ));
+
+            $review_counts = array(
+                'review' => DL_Spam_Scoring::count_review_queue('review'),
+                'spam' => DL_Spam_Scoring::count_review_queue('spam'),
+                'high' => DL_Spam_Scoring::count_review_queue('high'),
+                'all' => DL_Spam_Scoring::count_review_queue('all'),
+            );
+
             include DL_PLUGIN_DIR . 'admin/partials/statistics-page.php';
             return;
         }

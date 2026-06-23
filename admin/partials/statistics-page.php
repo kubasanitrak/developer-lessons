@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 
 $currency_symbol = get_option('dl_currency_symbol', 'Kč');
 $tab = isset($tab) ? $tab : (isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'sales');
-if (!in_array($tab, array('sales', 'users', 'lessons', 'funnel'), true)) {
+if (!in_array($tab, array('sales', 'users', 'lessons', 'funnel', 'review'), true)) {
     $tab = 'sales';
 }
 
@@ -35,8 +35,19 @@ $base_url = admin_url('admin.php?page=dl-statistics');
            class="nav-tab <?php echo $tab === 'funnel' ? 'nav-tab-active' : ''; ?>">
             <?php _e('Funnel', 'developer-lessons'); ?>
         </a>
+        <a href="<?php echo esc_url(add_query_arg(array('tab' => 'review'), $base_url)); ?>"
+           class="nav-tab <?php echo $tab === 'review' ? 'nav-tab-active' : ''; ?>">
+            <?php _e('Review', 'developer-lessons'); ?>
+            <?php
+            $review_queue_count = DL_Spam_Scoring::count_review_queue('review');
+            if ($review_queue_count > 0) :
+                ?>
+                <span class="dl-review-tab-count"><?php echo esc_html((string) $review_queue_count); ?></span>
+            <?php endif; ?>
+        </a>
     </nav>
 
+    <?php if ($tab !== 'review') : ?>
     <div class="dl-stats-filter">
         <form method="get">
             <input type="hidden" name="page" value="dl-statistics">
@@ -68,6 +79,7 @@ $base_url = admin_url('admin.php?page=dl-statistics');
             <?php endif; ?>
         </form>
     </div>
+    <?php endif; ?>
 
     <?php if ($tab === 'users') :
         $orderby = isset($orderby) ? $orderby : 'user_registered';
@@ -146,12 +158,14 @@ $base_url = admin_url('admin.php?page=dl-statistics');
                         DL_Admin_Statistics::render_users_sortable_header(__('Checkouts', 'developer-lessons'), 'checkout_starts', $orderby, $order, $range, $per_page);
                         DL_Admin_Statistics::render_users_sortable_header(__('Video Plays', 'developer-lessons'), 'video_plays', $orderby, $order, $range, $per_page);
                         DL_Admin_Statistics::render_users_sortable_header(__('Purchases', 'developer-lessons'), 'purchase_count', $orderby, $order, $range, $per_page);
+                        DL_Admin_Statistics::render_users_sortable_header(__('Spam Score', 'developer-lessons'), 'spam_score', $orderby, $order, $range, $per_page);
                         ?>
+                        <th scope="col" class="manage-column column-account_flag"><?php esc_html_e('Flag', 'developer-lessons'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($user_stats)) : ?>
-                        <tr><td colspan="11"><?php _e('No registrations in this period.', 'developer-lessons'); ?></td></tr>
+                        <tr><td colspan="13"><?php _e('No registrations in this period.', 'developer-lessons'); ?></td></tr>
                     <?php else : ?>
                         <?php foreach ($user_stats as $stat) :
                             $has_logged_in = !empty($stat->first_login_at);
@@ -193,6 +207,21 @@ $base_url = admin_url('admin.php?page=dl-statistics');
                                 <td><?php echo esc_html((string) intval($stat->checkout_starts)); ?></td>
                                 <td><?php echo esc_html((string) intval($stat->video_plays)); ?></td>
                                 <td><?php echo esc_html((string) intval($stat->purchase_count)); ?></td>
+                                <td>
+                                    <?php
+                                    $spam_score = isset($stat->spam_score) ? (int) $stat->spam_score : 0;
+                                    $score_class = 'dl-spam-score-low';
+                                    if ($spam_score >= 70) {
+                                        $score_class = 'dl-spam-score-high';
+                                    } elseif ($spam_score >= 50) {
+                                        $score_class = 'dl-spam-score-medium';
+                                    }
+                                    ?>
+                                    <span class="dl-spam-score <?php echo esc_attr($score_class); ?>">
+                                        <?php echo esc_html((string) $spam_score); ?>
+                                    </span>
+                                </td>
+                                <td><?php DL_Admin_Statistics::render_account_flag_badge($stat->account_flag ?? 'normal'); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -205,6 +234,197 @@ $base_url = admin_url('admin.php?page=dl-statistics');
                         <?php
                         echo paginate_links(array(
                             'base' => $users_pagination_base,
+                            'format' => '',
+                            'prev_text' => '&laquo;',
+                            'next_text' => '&raquo;',
+                            'total' => $total_pages,
+                            'current' => $current_page,
+                        ));
+                        ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+    <?php elseif ($tab === 'review') :
+        $review_filter = isset($review_filter) ? $review_filter : 'review';
+        $review_pagination_base = add_query_arg(array(
+            'page' => 'dl-statistics',
+            'tab' => 'review',
+            'review_filter' => $review_filter,
+            'orderby' => isset($orderby) ? $orderby : 'score',
+            'order' => isset($order) ? $order : 'desc',
+            'paged' => '%#%',
+        ), admin_url('admin.php'));
+        ?>
+        <div class="dl-stats-summary">
+            <div class="dl-stat-card <?php echo !empty($review_counts['review']) ? 'dl-stat-alert' : ''; ?>">
+                <h3><?php _e('Needs Review', 'developer-lessons'); ?></h3>
+                <div class="dl-stat-value"><?php echo intval($review_counts['review']); ?></div>
+            </div>
+            <div class="dl-stat-card">
+                <h3><?php _e('Marked Spam', 'developer-lessons'); ?></h3>
+                <div class="dl-stat-value"><?php echo intval($review_counts['spam']); ?></div>
+            </div>
+            <div class="dl-stat-card">
+                <h3><?php _e('High Score (70+)', 'developer-lessons'); ?></h3>
+                <div class="dl-stat-value"><?php echo intval($review_counts['high']); ?></div>
+            </div>
+            <div class="dl-stat-card">
+                <h3><?php _e('All Suspicious', 'developer-lessons'); ?></h3>
+                <div class="dl-stat-value"><?php echo intval($review_counts['all']); ?></div>
+            </div>
+        </div>
+
+        <div class="dl-stats-section dl-stats-wide">
+            <h2><?php _e('Account Review Queue', 'developer-lessons'); ?></h2>
+            <p class="description">
+                <?php _e('Scores are computed daily from engagement signals. High scores queue accounts for manual review — nothing is blocked automatically.', 'developer-lessons'); ?>
+            </p>
+
+            <div class="dl-review-filter-tabs">
+                <?php
+                $review_filters = array(
+                    'review' => __('Needs Review', 'developer-lessons'),
+                    'high' => __('High Score', 'developer-lessons'),
+                    'spam' => __('Marked Spam', 'developer-lessons'),
+                    'all' => __('All Suspicious', 'developer-lessons'),
+                );
+                foreach ($review_filters as $filter_key => $filter_label) :
+                    ?>
+                    <a href="<?php echo esc_url(add_query_arg(array('tab' => 'review', 'review_filter' => $filter_key), $base_url)); ?>"
+                       class="button <?php echo $review_filter === $filter_key ? 'button-primary' : 'button-secondary'; ?>">
+                        <?php echo esc_html($filter_label); ?>
+                        (<?php echo esc_html((string) intval($review_counts[$filter_key])); ?>)
+                    </a>
+                <?php endforeach; ?>
+            </div>
+
+            <?php if (current_user_can('manage_options')) : ?>
+                <p class="dl-spam-recalculate-actions">
+                    <a href="<?php echo esc_url(DL_Admin_Statistics::get_spam_recalculate_url($review_filter)); ?>"
+                       class="button button-secondary">
+                        <?php _e('Recalculate all scores now', 'developer-lessons'); ?>
+                    </a>
+                </p>
+                <p class="description">
+                    <?php _e('Runs automatically with the daily cron. CLI: wp dl spam recalculate', 'developer-lessons'); ?>
+                </p>
+            <?php endif; ?>
+
+            <?php if (!empty($total_users)) : ?>
+                <div class="tablenav top">
+                    <div class="tablenav-pages">
+                        <span class="displaying-num">
+                            <?php
+                            printf(
+                                _n('%s account', '%s accounts', (int) $total_users, 'developer-lessons'),
+                                number_format_i18n((int) $total_users)
+                            );
+                            ?>
+                        </span>
+                        <?php if ($total_pages > 1) : ?>
+                            <?php
+                            echo paginate_links(array(
+                                'base' => $review_pagination_base,
+                                'format' => '',
+                                'prev_text' => '&laquo;',
+                                'next_text' => '&raquo;',
+                                'total' => $total_pages,
+                                'current' => $current_page,
+                            ));
+                            ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <table class="widefat striped dl-review-queue-table">
+                <thead>
+                    <tr>
+                        <th><?php _e('User', 'developer-lessons'); ?></th>
+                        <th><?php _e('Registered', 'developer-lessons'); ?></th>
+                        <th><?php _e('Score', 'developer-lessons'); ?></th>
+                        <th><?php _e('Flag', 'developer-lessons'); ?></th>
+                        <th><?php _e('Signals', 'developer-lessons'); ?></th>
+                        <th><?php _e('Engagement', 'developer-lessons'); ?></th>
+                        <th><?php _e('Actions', 'developer-lessons'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($review_users)) : ?>
+                        <tr><td colspan="7"><?php _e('No accounts in this queue.', 'developer-lessons'); ?></td></tr>
+                    <?php else : ?>
+                        <?php foreach ($review_users as $row) :
+                            $signals = DL_Spam_Scoring::get_signal_labels($row->spam_signals);
+                            $spam_score = isset($row->spam_score) ? (int) $row->spam_score : 0;
+                            $score_class = 'dl-spam-score-low';
+                            if ($spam_score >= 70) {
+                                $score_class = 'dl-spam-score-high';
+                            } elseif ($spam_score >= 50) {
+                                $score_class = 'dl-spam-score-medium';
+                            }
+                            ?>
+                            <tr>
+                                <td>
+                                    <a href="<?php echo esc_url(get_edit_user_link($row->ID)); ?>">
+                                        <?php echo esc_html($row->user_login); ?>
+                                    </a>
+                                    <br><small><?php echo esc_html($row->user_email); ?></small>
+                                </td>
+                                <td><?php echo esc_html(date_i18n(get_option('date_format'), strtotime($row->user_registered))); ?></td>
+                                <td><span class="dl-spam-score <?php echo esc_attr($score_class); ?>"><?php echo esc_html((string) $spam_score); ?></span></td>
+                                <td><?php DL_Admin_Statistics::render_account_flag_badge($row->account_flag ?: 'normal'); ?></td>
+                                <td>
+                                    <?php if (empty($signals)) : ?>
+                                        <span class="description">&mdash;</span>
+                                    <?php else : ?>
+                                        <ul class="dl-spam-signals">
+                                            <?php foreach ($signals as $signal) : ?>
+                                                <li><?php echo esc_html($signal); ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    $has_logged_in = !empty($row->first_login_at);
+                                    printf(
+                                        esc_html__('Logged in: %1$s | Lessons: %2$d | Videos: %3$d | Basket: %4$d | Purchases: %5$d', 'developer-lessons'),
+                                        $has_logged_in ? __('Yes', 'developer-lessons') : __('No', 'developer-lessons'),
+                                        (int) $row->lesson_views,
+                                        (int) $row->video_plays,
+                                        (int) $row->basket_adds,
+                                        (int) $row->purchase_count
+                                    );
+                                    ?>
+                                </td>
+                                <td class="dl-review-actions">
+                                    <a class="button button-small" href="<?php echo esc_url(DL_Admin_Statistics::get_spam_action_url('mark_normal', $row->ID, $review_filter)); ?>">
+                                        <?php _e('Mark Normal', 'developer-lessons'); ?>
+                                    </a>
+                                    <a class="button button-small" href="<?php echo esc_url(DL_Admin_Statistics::get_spam_action_url('mark_review', $row->ID, $review_filter)); ?>">
+                                        <?php _e('Mark Review', 'developer-lessons'); ?>
+                                    </a>
+                                    <a class="button button-small button-link-delete" href="<?php echo esc_url(DL_Admin_Statistics::get_spam_action_url('mark_spam', $row->ID, $review_filter)); ?>"
+                                       onclick="return confirm('<?php echo esc_js(__('Mark this account as spam?', 'developer-lessons')); ?>');">
+                                        <?php _e('Mark Spam', 'developer-lessons'); ?>
+                                    </a>
+                                    <a class="button button-small" href="<?php echo esc_url(DL_Admin_Statistics::get_spam_action_url('recalculate', $row->ID, $review_filter)); ?>">
+                                        <?php _e('Recalculate', 'developer-lessons'); ?>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+
+            <?php if (!empty($total_users) && $total_pages > 1) : ?>
+                <div class="tablenav bottom">
+                    <div class="tablenav-pages">
+                        <?php
+                        echo paginate_links(array(
+                            'base' => $review_pagination_base,
                             'format' => '',
                             'prev_text' => '&laquo;',
                             'next_text' => '&raquo;',
