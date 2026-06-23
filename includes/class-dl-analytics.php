@@ -388,6 +388,8 @@ class DL_Analytics {
             'limit' => 20,
             'offset' => 0,
             'days' => 90,
+            'orderby' => 'user_registered',
+            'order' => 'desc',
         ));
 
         $since = date('Y-m-d H:i:s', strtotime('-' . absint($args['days']) . ' days'));
@@ -412,11 +414,22 @@ class DL_Analytics {
             $checkout_starts_sql = "(SELECT COUNT(*) FROM $events_table e WHERE e.user_id = u.ID AND e.event_type = 'checkout_start') AS checkout_starts";
         }
 
+        $order_by = self::get_registration_order_by($args['orderby'], $args['order']);
+
         return $wpdb->get_results($wpdb->prepare(
             "SELECT u.ID, u.user_login, u.user_email, u.user_registered,
                     m_first.meta_value AS first_login_at,
                     m_last.meta_value AS last_login_at,
                     m_count.meta_value AS login_count,
+                    CASE
+                        WHEN m_first.meta_value IS NOT NULL AND m_first.meta_value != '' THEN 1
+                        ELSE 0
+                    END AS logged_in,
+                    CASE
+                        WHEN m_first.meta_value IS NOT NULL AND m_first.meta_value != ''
+                        THEN GREATEST(0, TIMESTAMPDIFF(DAY, u.user_registered, m_first.meta_value))
+                        ELSE NULL
+                    END AS days_to_first_login,
                     $lesson_views_sql,
                     $basket_adds_sql,
                     $checkout_starts_sql,
@@ -426,12 +439,72 @@ class DL_Analytics {
              LEFT JOIN {$wpdb->usermeta} m_last ON u.ID = m_last.user_id AND m_last.meta_key = 'dl_last_login_at'
              LEFT JOIN {$wpdb->usermeta} m_count ON u.ID = m_count.user_id AND m_count.meta_key = 'dl_login_count'
              WHERE u.user_registered >= %s
-             ORDER BY u.user_registered DESC
+             ORDER BY $order_by
              LIMIT %d OFFSET %d",
             $since,
             absint($args['limit']),
             absint($args['offset'])
         ));
+    }
+
+    /**
+     * Allowed orderby keys for the users registration report.
+     */
+    public static function get_registration_sort_columns() {
+        return array(
+            'user_login',
+            'user_registered',
+            'logged_in',
+            'days_to_first_login',
+            'last_login',
+            'login_count',
+            'lesson_views',
+            'basket_adds',
+            'checkout_starts',
+            'purchase_count',
+        );
+    }
+
+    /**
+     * Build a safe ORDER BY clause for the users registration report.
+     */
+    private static function get_registration_order_by($orderby, $order) {
+        $orderby = sanitize_key($orderby);
+        $order = strtolower($order) === 'asc' ? 'ASC' : 'DESC';
+
+        $columns = array(
+            'user_login' => 'u.user_login',
+            'user_registered' => 'u.user_registered',
+            'logged_in' => 'logged_in',
+            'days_to_first_login' => 'days_to_first_login',
+            'last_login' => 'm_last.meta_value',
+            'login_count' => 'CAST(IFNULL(m_count.meta_value, 0) AS UNSIGNED)',
+            'lesson_views' => 'lesson_views',
+            'basket_adds' => 'basket_adds',
+            'checkout_starts' => 'checkout_starts',
+            'purchase_count' => 'purchase_count',
+        );
+
+        if (!isset($columns[$orderby])) {
+            $orderby = 'user_registered';
+        }
+
+        $nulls_last = array('days_to_first_login', 'last_login');
+        if (in_array($orderby, $nulls_last, true)) {
+            $direction = $order === 'ASC' ? 'ASC' : 'DESC';
+            $null_rank = $order === 'ASC' ? 1 : 0;
+            $value_rank = $order === 'ASC' ? 0 : 1;
+
+            return sprintf(
+                'CASE WHEN %1$s IS NULL THEN %2$d ELSE %3$d END, %1$s %4$s',
+                $columns[$orderby],
+                $null_rank,
+                $value_rank,
+                $direction
+            );
+        }
+
+        return $columns[$orderby] . ' ' . $order;
     }
 
     /**

@@ -41,6 +41,10 @@ $base_url = admin_url('admin.php?page=dl-statistics');
         <form method="get">
             <input type="hidden" name="page" value="dl-statistics">
             <input type="hidden" name="tab" value="<?php echo esc_attr($tab); ?>">
+            <?php if ($tab === 'users' && !empty($orderby)) : ?>
+                <input type="hidden" name="orderby" value="<?php echo esc_attr($orderby); ?>">
+                <input type="hidden" name="order" value="<?php echo esc_attr($order); ?>">
+            <?php endif; ?>
             <select name="range" onchange="this.form.submit()">
                 <option value="7days" <?php selected($range, '7days'); ?>><?php _e('Last 7 Days', 'developer-lessons'); ?></option>
                 <option value="30days" <?php selected($range, '30days'); ?>><?php _e('Last 30 Days', 'developer-lessons'); ?></option>
@@ -66,10 +70,15 @@ $base_url = admin_url('admin.php?page=dl-statistics');
     </div>
 
     <?php if ($tab === 'users') :
+        $orderby = isset($orderby) ? $orderby : 'user_registered';
+        $order = isset($order) ? $order : 'desc';
         $users_pagination_base = add_query_arg(array(
             'page' => 'dl-statistics',
             'tab' => 'users',
             'range' => $range,
+            'orderby' => $orderby,
+            'order' => $order,
+            'users_per_page' => isset($per_page) ? (int) $per_page : 20,
             'paged' => '%#%',
         ), admin_url('admin.php'));
         ?>
@@ -125,16 +134,18 @@ $base_url = admin_url('admin.php?page=dl-statistics');
             <table class="widefat striped">
                 <thead>
                     <tr>
-                        <th><?php _e('User', 'developer-lessons'); ?></th>
-                        <th><?php _e('Registered', 'developer-lessons'); ?></th>
-                        <th><?php _e('Logged In', 'developer-lessons'); ?></th>
-                        <th><?php _e('Days to First Login', 'developer-lessons'); ?></th>
-                        <th><?php _e('Last Login', 'developer-lessons'); ?></th>
-                        <th><?php _e('Logins', 'developer-lessons'); ?></th>
-                        <th><?php _e('Lesson Views', 'developer-lessons'); ?></th>
-                        <th><?php _e('Basket Adds', 'developer-lessons'); ?></th>
-                        <th><?php _e('Checkouts', 'developer-lessons'); ?></th>
-                        <th><?php _e('Purchases', 'developer-lessons'); ?></th>
+                        <?php
+                        DL_Admin_Statistics::render_users_sortable_header(__('User', 'developer-lessons'), 'user_login', $orderby, $order, $range, $per_page);
+                        DL_Admin_Statistics::render_users_sortable_header(__('Registered', 'developer-lessons'), 'user_registered', $orderby, $order, $range, $per_page);
+                        DL_Admin_Statistics::render_users_sortable_header(__('Logged In', 'developer-lessons'), 'logged_in', $orderby, $order, $range, $per_page);
+                        DL_Admin_Statistics::render_users_sortable_header(__('Days to First Login', 'developer-lessons'), 'days_to_first_login', $orderby, $order, $range, $per_page);
+                        DL_Admin_Statistics::render_users_sortable_header(__('Last Login', 'developer-lessons'), 'last_login', $orderby, $order, $range, $per_page);
+                        DL_Admin_Statistics::render_users_sortable_header(__('Logins', 'developer-lessons'), 'login_count', $orderby, $order, $range, $per_page);
+                        DL_Admin_Statistics::render_users_sortable_header(__('Lesson Views', 'developer-lessons'), 'lesson_views', $orderby, $order, $range, $per_page);
+                        DL_Admin_Statistics::render_users_sortable_header(__('Basket Adds', 'developer-lessons'), 'basket_adds', $orderby, $order, $range, $per_page);
+                        DL_Admin_Statistics::render_users_sortable_header(__('Checkouts', 'developer-lessons'), 'checkout_starts', $orderby, $order, $range, $per_page);
+                        DL_Admin_Statistics::render_users_sortable_header(__('Purchases', 'developer-lessons'), 'purchase_count', $orderby, $order, $range, $per_page);
+                        ?>
                     </tr>
                 </thead>
                 <tbody>

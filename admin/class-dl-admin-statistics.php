@@ -193,6 +193,8 @@ class DL_Admin_Statistics {
             $per_page = $this->get_users_per_page();
             $current_page = isset($_GET['paged']) ? max(1, (int) $_GET['paged']) : 1;
             $days = $this->get_range_days($range);
+            $orderby = $this->get_users_orderby();
+            $order = $this->get_users_order();
             $total_users = DL_Analytics::count_registration_report($days);
             $total_pages = max(1, (int) ceil($total_users / $per_page));
 
@@ -204,6 +206,8 @@ class DL_Admin_Statistics {
                 'limit' => $per_page,
                 'offset' => ($current_page - 1) * $per_page,
                 'days' => $days,
+                'orderby' => $orderby,
+                'order' => $order,
             ));
 
             include DL_PLUGIN_DIR . 'admin/partials/statistics-page.php';
@@ -335,5 +339,72 @@ class DL_Admin_Statistics {
             default:
                 return 30;
         }
+    }
+
+    /**
+     * Current users table orderby value.
+     */
+    private function get_users_orderby() {
+        $orderby = isset($_GET['orderby']) ? sanitize_key($_GET['orderby']) : 'user_registered';
+
+        if (!in_array($orderby, DL_Analytics::get_registration_sort_columns(), true)) {
+            return 'user_registered';
+        }
+
+        return $orderby;
+    }
+
+    /**
+     * Current users table sort direction.
+     */
+    private function get_users_order() {
+        $order = isset($_GET['order']) ? strtolower(sanitize_key($_GET['order'])) : 'desc';
+
+        return $order === 'asc' ? 'asc' : 'desc';
+    }
+
+    /**
+     * Build a sort link for a users table column.
+     */
+    public static function get_users_sort_link($column, $orderby, $order, $range, $per_page) {
+        $next_order = 'desc';
+
+        if ($orderby === $column && $order === 'desc') {
+            $next_order = 'asc';
+        }
+
+        return add_query_arg(array(
+            'page' => 'dl-statistics',
+            'tab' => 'users',
+            'range' => $range,
+            'orderby' => $column,
+            'order' => $next_order,
+            'users_per_page' => $per_page,
+            'paged' => 1,
+        ), admin_url('admin.php'));
+    }
+
+    /**
+     * Render a sortable users table header cell.
+     */
+    public static function render_users_sortable_header($label, $column, $orderby, $order, $range, $per_page) {
+        $is_sorted = ($orderby === $column);
+        $header_class = 'manage-column column-' . esc_attr($column);
+
+        if ($is_sorted) {
+            $header_class .= ' sorted ' . esc_attr($order);
+        } else {
+            $header_class .= ' sortable desc';
+        }
+
+        $url = self::get_users_sort_link($column, $orderby, $order, $range, $per_page);
+        ?>
+        <th scope="col" class="<?php echo esc_attr($header_class); ?>">
+            <a href="<?php echo esc_url($url); ?>">
+                <span><?php echo esc_html($label); ?></span>
+                <span class="sorting-indicator"></span>
+            </a>
+        </th>
+        <?php
     }
 }
