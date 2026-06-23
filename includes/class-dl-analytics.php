@@ -372,6 +372,56 @@ class DL_Analytics {
     }
 
     /**
+     * Log Vimeo engagement for a lesson.
+     */
+    public static function track_video_event($event_type, $args = array()) {
+        $event_type = sanitize_key($event_type);
+        $allowed = array(
+            'video_play_start',
+            'video_progress_25',
+            'video_progress_50',
+            'video_progress_75',
+        );
+
+        if (!in_array($event_type, $allowed, true)) {
+            return false;
+        }
+
+        $lesson_id = isset($args['lesson_id']) ? (int) $args['lesson_id'] : 0;
+        $vimeo_id = isset($args['vimeo_id']) ? sanitize_text_field($args['vimeo_id']) : '';
+        $user_id = isset($args['user_id']) ? (int) $args['user_id'] : get_current_user_id();
+        $meta = isset($args['meta']) && is_array($args['meta']) ? $args['meta'] : array();
+
+        if (!$lesson_id || $vimeo_id === '' || !$user_id) {
+            return false;
+        }
+
+        $meta['vimeo_id'] = $vimeo_id;
+        $meta['provider'] = 'vimeo';
+
+        if ($event_type === 'video_play_start') {
+            return self::log_event('video_play_start', array(
+                'user_id' => $user_id,
+                'object_type' => 'lesson',
+                'object_id' => $lesson_id,
+                'meta' => $meta,
+                'dedupe' => self::DEDUPE_MINUTES,
+            ));
+        }
+
+        if (self::has_video_progress_event($user_id, $lesson_id, $vimeo_id, $event_type)) {
+            return false;
+        }
+
+        return self::log_event($event_type, array(
+            'user_id' => $user_id,
+            'object_type' => 'lesson',
+            'object_id' => $lesson_id,
+            'meta' => $meta,
+        ));
+    }
+
+    /**
      * Recent user registrations for the admin report.
      */
     public static function get_registration_report($args = array()) {
@@ -409,9 +459,11 @@ class DL_Analytics {
 
         $basket_adds_sql = '0 AS basket_adds';
         $checkout_starts_sql = '0 AS checkout_starts';
+        $video_plays_sql = '0 AS video_plays';
         if ($has_events) {
             $basket_adds_sql = "(SELECT COUNT(*) FROM $events_table e WHERE e.user_id = u.ID AND e.event_type = 'basket_add') AS basket_adds";
             $checkout_starts_sql = "(SELECT COUNT(*) FROM $events_table e WHERE e.user_id = u.ID AND e.event_type = 'checkout_start') AS checkout_starts";
+            $video_plays_sql = "(SELECT COUNT(*) FROM $events_table e WHERE e.user_id = u.ID AND e.event_type = 'video_play_start') AS video_plays";
         }
 
         $order_by = self::get_registration_order_by($args['orderby'], $args['order']);
@@ -433,6 +485,7 @@ class DL_Analytics {
                     $lesson_views_sql,
                     $basket_adds_sql,
                     $checkout_starts_sql,
+                    $video_plays_sql,
                     $purchase_count_sql
              FROM {$wpdb->users} u
              LEFT JOIN {$wpdb->usermeta} m_first ON u.ID = m_first.user_id AND m_first.meta_key = 'dl_first_login_at'
@@ -461,6 +514,7 @@ class DL_Analytics {
             'lesson_views',
             'basket_adds',
             'checkout_starts',
+            'video_plays',
             'purchase_count',
         );
     }
@@ -482,6 +536,7 @@ class DL_Analytics {
             'lesson_views' => 'lesson_views',
             'basket_adds' => 'basket_adds',
             'checkout_starts' => 'checkout_starts',
+            'video_plays' => 'video_plays',
             'purchase_count' => 'purchase_count',
         );
 
@@ -539,7 +594,12 @@ class DL_Analytics {
                     COUNT(*) AS views,
                     COUNT(DISTINCT e.user_id) AS unique_users,
                     SUM(CASE WHEN e.meta LIKE %s THEN 1 ELSE 0 END) AS full_views,
-                    SUM(CASE WHEN e.meta LIKE %s THEN 1 ELSE 0 END) AS teaser_views
+                    SUM(CASE WHEN e.meta LIKE %s THEN 1 ELSE 0 END) AS teaser_views,
+                    (SELECT COUNT(*) FROM $events_table v
+                     WHERE v.object_id = e.object_id
+                       AND v.object_type = 'lesson'
+                       AND v.event_type = 'video_play_start'
+                       AND v.created_at >= %s) AS video_plays
              FROM $events_table e
              LEFT JOIN {$wpdb->posts} p ON e.object_id = p.ID
              WHERE e.event_type = 'lesson_view'
@@ -550,6 +610,7 @@ class DL_Analytics {
              LIMIT %d",
             '%"access":"full"%',
             '%"access":"teaser"%',
+            $since,
             $since,
             absint($limit)
         ));
@@ -571,6 +632,10 @@ class DL_Analytics {
             'basket_remove',
             'checkout_start',
             'checkout_complete',
+            'video_play_start',
+            'video_progress_25',
+            'video_progress_50',
+            'video_progress_75',
         ));
 
         $registrations = (int) ($events['registration'] ?? 0);
@@ -579,6 +644,7 @@ class DL_Analytics {
         $basket_adds = (int) ($events['basket_add'] ?? 0);
         $checkout_starts = (int) ($events['checkout_start'] ?? 0);
         $checkout_completes = (int) ($events['checkout_complete'] ?? 0);
+        $video_plays = (int) ($events['video_play_start'] ?? 0);
 
         return array(
             'registrations' => $registrations,
@@ -591,8 +657,13 @@ class DL_Analytics {
             'basket_removes' => (int) ($events['basket_remove'] ?? 0),
             'checkout_starts' => $checkout_starts,
             'checkout_completes' => $checkout_completes,
+            'video_plays' => $video_plays,
+            'video_progress_25' => (int) ($events['video_progress_25'] ?? 0),
+            'video_progress_50' => (int) ($events['video_progress_50'] ?? 0),
+            'video_progress_75' => (int) ($events['video_progress_75'] ?? 0),
             'registration_to_login_rate' => self::percentage($first_logins, $registrations),
             'lesson_to_basket_rate' => self::percentage($basket_adds, $lesson_views),
+            'lesson_to_video_rate' => self::percentage($video_plays, $lesson_views),
             'checkout_completion_rate' => self::percentage($checkout_completes, $checkout_starts),
         );
     }
@@ -615,7 +686,8 @@ class DL_Analytics {
                         SUM(CASE WHEN event_type = 'lesson_view' THEN event_count ELSE 0 END) AS lesson_views,
                         SUM(CASE WHEN event_type = 'basket_add' THEN event_count ELSE 0 END) AS basket_adds,
                         SUM(CASE WHEN event_type = 'checkout_start' THEN event_count ELSE 0 END) AS checkout_starts,
-                        SUM(CASE WHEN event_type = 'checkout_complete' THEN event_count ELSE 0 END) AS checkout_completes
+                        SUM(CASE WHEN event_type = 'checkout_complete' THEN event_count ELSE 0 END) AS checkout_completes,
+                        SUM(CASE WHEN event_type = 'video_play_start' THEN event_count ELSE 0 END) AS video_plays
                  FROM $daily_table
                  WHERE event_date >= %s
                  GROUP BY event_date
@@ -641,7 +713,8 @@ class DL_Analytics {
                     SUM(CASE WHEN event_type = 'lesson_view' THEN 1 ELSE 0 END) AS lesson_views,
                     SUM(CASE WHEN event_type = 'basket_add' THEN 1 ELSE 0 END) AS basket_adds,
                     SUM(CASE WHEN event_type = 'checkout_start' THEN 1 ELSE 0 END) AS checkout_starts,
-                    SUM(CASE WHEN event_type = 'checkout_complete' THEN 1 ELSE 0 END) AS checkout_completes
+                    SUM(CASE WHEN event_type = 'checkout_complete' THEN 1 ELSE 0 END) AS checkout_completes,
+                    SUM(CASE WHEN event_type = 'video_play_start' THEN 1 ELSE 0 END) AS video_plays
              FROM $events_table
              WHERE created_at >= %s
              GROUP BY DATE(created_at)
@@ -928,6 +1001,31 @@ class DL_Analytics {
         }
 
         return false;
+    }
+
+    private static function has_video_progress_event($user_id, $lesson_id, $vimeo_id, $event_type) {
+        global $wpdb;
+
+        if (!self::table_exists()) {
+            return false;
+        }
+
+        $events_table = self::table_name();
+        $needle = '"vimeo_id":"' . $vimeo_id . '"';
+
+        return (bool) $wpdb->get_var($wpdb->prepare(
+            "SELECT id FROM $events_table
+             WHERE user_id = %d
+               AND event_type = %s
+               AND object_type = 'lesson'
+               AND object_id = %d
+               AND meta LIKE %s
+             LIMIT 1",
+            $user_id,
+            $event_type,
+            $lesson_id,
+            '%' . $wpdb->esc_like($needle) . '%'
+        ));
     }
 
     private static function is_duplicate_event($event_type, $user_id, $object_type, $object_id, $minutes) {

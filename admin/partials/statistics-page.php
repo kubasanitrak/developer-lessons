@@ -144,13 +144,14 @@ $base_url = admin_url('admin.php?page=dl-statistics');
                         DL_Admin_Statistics::render_users_sortable_header(__('Lesson Views', 'developer-lessons'), 'lesson_views', $orderby, $order, $range, $per_page);
                         DL_Admin_Statistics::render_users_sortable_header(__('Basket Adds', 'developer-lessons'), 'basket_adds', $orderby, $order, $range, $per_page);
                         DL_Admin_Statistics::render_users_sortable_header(__('Checkouts', 'developer-lessons'), 'checkout_starts', $orderby, $order, $range, $per_page);
+                        DL_Admin_Statistics::render_users_sortable_header(__('Video Plays', 'developer-lessons'), 'video_plays', $orderby, $order, $range, $per_page);
                         DL_Admin_Statistics::render_users_sortable_header(__('Purchases', 'developer-lessons'), 'purchase_count', $orderby, $order, $range, $per_page);
                         ?>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($user_stats)) : ?>
-                        <tr><td colspan="10"><?php _e('No registrations in this period.', 'developer-lessons'); ?></td></tr>
+                        <tr><td colspan="11"><?php _e('No registrations in this period.', 'developer-lessons'); ?></td></tr>
                     <?php else : ?>
                         <?php foreach ($user_stats as $stat) :
                             $has_logged_in = !empty($stat->first_login_at);
@@ -190,6 +191,7 @@ $base_url = admin_url('admin.php?page=dl-statistics');
                                 <td><?php echo esc_html((string) intval($stat->lesson_views)); ?></td>
                                 <td><?php echo esc_html((string) intval($stat->basket_adds)); ?></td>
                                 <td><?php echo esc_html((string) intval($stat->checkout_starts)); ?></td>
+                                <td><?php echo esc_html((string) intval($stat->video_plays)); ?></td>
                                 <td><?php echo esc_html((string) intval($stat->purchase_count)); ?></td>
                             </tr>
                         <?php endforeach; ?>
@@ -227,12 +229,13 @@ $base_url = admin_url('admin.php?page=dl-statistics');
                         <th><?php _e('Views', 'developer-lessons'); ?></th>
                         <th><?php _e('Full', 'developer-lessons'); ?></th>
                         <th><?php _e('Teaser', 'developer-lessons'); ?></th>
+                        <th><?php _e('Video Plays', 'developer-lessons'); ?></th>
                         <th><?php _e('Unique Users', 'developer-lessons'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($lesson_view_stats)) : ?>
-                        <tr><td colspan="5"><?php _e('No lesson views recorded in this period.', 'developer-lessons'); ?></td></tr>
+                        <tr><td colspan="6"><?php _e('No lesson views recorded in this period.', 'developer-lessons'); ?></td></tr>
                     <?php else : ?>
                         <?php foreach ($lesson_view_stats as $stat) : ?>
                             <tr>
@@ -248,6 +251,7 @@ $base_url = admin_url('admin.php?page=dl-statistics');
                                 <td><?php echo intval($stat->views); ?></td>
                                 <td><?php echo intval($stat->full_views); ?></td>
                                 <td><?php echo intval($stat->teaser_views); ?></td>
+                                <td><?php echo intval($stat->video_plays); ?></td>
                                 <td><?php echo intval($stat->unique_users); ?></td>
                             </tr>
                         <?php endforeach; ?>
@@ -269,6 +273,11 @@ $base_url = admin_url('admin.php?page=dl-statistics');
             <div class="dl-stat-card">
                 <h3><?php _e('Lesson Views', 'developer-lessons'); ?></h3>
                 <div class="dl-stat-value"><?php echo intval($funnel_summary['lesson_views']); ?></div>
+            </div>
+            <div class="dl-stat-card">
+                <h3><?php _e('Video Plays', 'developer-lessons'); ?></h3>
+                <div class="dl-stat-value"><?php echo intval($funnel_summary['video_plays']); ?></div>
+                <p class="description"><?php printf(esc_html__('%s%% of lesson views', 'developer-lessons'), esc_html((string) $funnel_summary['lesson_to_video_rate'])); ?></p>
             </div>
             <div class="dl-stat-card">
                 <h3><?php _e('Basket Adds', 'developer-lessons'); ?></h3>
@@ -295,6 +304,7 @@ $base_url = admin_url('admin.php?page=dl-statistics');
                         <th><?php _e('Registrations', 'developer-lessons'); ?></th>
                         <th><?php _e('First Logins', 'developer-lessons'); ?></th>
                         <th><?php _e('Lesson Views', 'developer-lessons'); ?></th>
+                        <th><?php _e('Video Plays', 'developer-lessons'); ?></th>
                         <th><?php _e('Basket Adds', 'developer-lessons'); ?></th>
                         <th><?php _e('Checkout Starts', 'developer-lessons'); ?></th>
                         <th><?php _e('Completed Orders', 'developer-lessons'); ?></th>
@@ -302,7 +312,7 @@ $base_url = admin_url('admin.php?page=dl-statistics');
                 </thead>
                 <tbody>
                     <?php if (empty($daily_activity)) : ?>
-                        <tr><td colspan="7"><?php _e('No activity recorded in this period.', 'developer-lessons'); ?></td></tr>
+                        <tr><td colspan="8"><?php _e('No activity recorded in this period.', 'developer-lessons'); ?></td></tr>
                     <?php else : ?>
                         <?php foreach ($daily_activity as $row) : ?>
                             <tr>
@@ -310,6 +320,7 @@ $base_url = admin_url('admin.php?page=dl-statistics');
                                 <td><?php echo intval($row->registrations); ?></td>
                                 <td><?php echo intval($row->first_logins); ?></td>
                                 <td><?php echo intval($row->lesson_views); ?></td>
+                                <td><?php echo intval($row->video_plays); ?></td>
                                 <td><?php echo intval($row->basket_adds); ?></td>
                                 <td><?php echo intval($row->checkout_starts); ?></td>
                                 <td><?php echo intval($row->checkout_completes); ?></td>

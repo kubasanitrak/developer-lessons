@@ -11,6 +11,7 @@ class DL_Public {
 
     public function __construct() {
         add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_video_analytics'), 20);
         add_action('wp_footer', array($this, 'render_basket_sidebar'));
     }
 
@@ -62,6 +63,36 @@ class DL_Public {
             )
         ));
 
+    }
+
+    /**
+     * Enqueue Vimeo analytics on lesson pages with full access.
+     */
+    public function enqueue_video_analytics() {
+        if (!is_singular('lesson') || !is_user_logged_in()) {
+            return;
+        }
+
+        $lesson_id = get_queried_object_id();
+        $access_control = new DL_Access_Control();
+
+        if (!$access_control->user_has_access($lesson_id)) {
+            return;
+        }
+
+        wp_enqueue_script(
+            'dl-video-analytics',
+            DL_PLUGIN_URL . 'public/js/video-analytics.js',
+            array('jquery', 'dl-public-js'),
+            DL_VERSION,
+            true
+        );
+
+        wp_localize_script('dl-video-analytics', 'dl_video_analytics', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('dl_video_analytics'),
+            'lesson_id' => $lesson_id,
+        ));
     }
 
     /**
