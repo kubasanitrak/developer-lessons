@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.25] - 2026-06-02
+
+### Fixed
+
+- Analytics table existence check visibility for dependent features.
+
 ## [1.2.0.24] - 2026-06-02
 
 ### Added

@@ -865,7 +865,7 @@ class DL_Analytics {
         );
     }
 
-    private static function table_exists() {
+    public static function table_exists() {
         global $wpdb;
         $table = self::table_name();
         return $wpdb->get_var("SHOW TABLES LIKE '$table'") === $table;
