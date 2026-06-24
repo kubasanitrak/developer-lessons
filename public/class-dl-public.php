@@ -314,8 +314,13 @@ class DL_Public {
 
         <button type="button" id="dl-basket-toggle" class="dl-basket-toggle">
             <span class="dl-basket-toggle-icon" aria-hidden="true">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" focusable="false">
+                <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" focusable="false">
                     <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0020 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg> -->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" focusable="false" viewBox="0 0 20 20">
+                  <path d="M0 2.006h4.286V3.72H0z"/>
+                  <path d="M4.343 2 6.38 7.26l-1.6.62-2.036-5.261zM15.714 5.434H20V7.15h-4.286z"/>
+                  <path d="M3.833 5.434h16.025l-3.39 7.429H6.572zM9.429 16.72a1.857 1.857 0 1 1-3.715 0 1.857 1.857 0 0 1 3.715 0M17.143 16.72a1.857 1.857 0 1 1-3.715 0 1.857 1.857 0 0 1 3.715 0"/>
                 </svg>
             </span>
             <?php if ($count > 0): ?>
