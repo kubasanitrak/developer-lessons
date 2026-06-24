@@ -28,7 +28,7 @@ class DL_Checkout {
         if (empty($items)) {
             ob_start();
             ?>
-            <div class="dl-checkout-empty">
+            <div class="section padded-content dl-checkout-empty">
                 <p><?php _e('Your basket is empty.', 'developer-lessons'); ?></p>
                 <a href="<?php echo get_post_type_archive_link('lesson'); ?>" class="dl-btn">
                     <?php _e('Browse Lessons', 'developer-lessons'); ?>
