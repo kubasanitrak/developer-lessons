@@ -2,6 +2,12 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.26] - 2026-06-02
+
+### Changed
+
+- Public performance optimizations and updated shopping cart icon.
+
 ## [1.2.0.25] - 2026-06-02
 
 ### Fixed
