@@ -955,6 +955,9 @@ msgstr "např. CZ12345678"
 msgid "Optional - fill in if you are a VAT payer"
 msgstr "Volitelné - vyplňte, pokud jste plátce DPH"
 
+msgid "Optional - not required for invoicing"
+msgstr "Volitelné - pro vystavení faktury není nutné"
+
 msgid "Save these details to my profile for future purchases"
 msgstr "Uložit tyto údaje do mého profilu pro budoucí nákupy"
 

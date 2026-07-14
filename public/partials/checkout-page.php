@@ -24,7 +24,7 @@ $saved_invoice = array(
     'ic' => get_user_meta($user_id, 'dl_invoice_ic', true),
     'dic' => get_user_meta($user_id, 'dl_invoice_dic', true),
 );
-$has_saved_invoice = !empty($saved_invoice['company_name']) && !empty($saved_invoice['ic']);
+$has_saved_invoice_details = !empty($saved_invoice['company_name']);
 ?>
 <div class="section padded-content dl-checkout">
     <div class="dl-checkout-content">
@@ -89,14 +89,14 @@ $has_saved_invoice = !empty($saved_invoice['company_name']) && !empty($saved_inv
                 
                 <div class="dl-invoice-toggle">
                     <label class="dl-checkbox-label">
-                        <input type="checkbox" name="want_invoice" id="dl_want_invoice" value="1" <?php checked($has_saved_invoice); ?>>
+                        <input type="checkbox" name="want_invoice" id="dl_want_invoice" value="1">
                         <span><?php _e('I want an invoice for my purchase', 'developer-lessons'); ?></span>
                     </label>
                 </div>
 
-                <div class="dl-invoice-fields" style="<?php echo $has_saved_invoice ? '' : 'display: none;'; ?>">
+                <div class="dl-invoice-fields" style="display: none;">
                     
-                    <?php if ($has_saved_invoice): ?>
+                    <?php if ($has_saved_invoice_details): ?>
                         <div class="dl-saved-invoice-notice">
                             <p><?php _e('Using your saved invoice details. You can update them below.', 'developer-lessons'); ?></p>
                         </div>
@@ -106,7 +106,8 @@ $has_saved_invoice = !empty($saved_invoice['company_name']) && !empty($saved_inv
                         <label for="dl_invoice_company_name"><?php _e('Company Name', 'developer-lessons'); ?> <span class="required">*</span></label>
                         <input type="text" name="invoice_company_name" id="dl_invoice_company_name" 
                                value="<?php echo esc_attr($saved_invoice['company_name']); ?>" 
-                               placeholder="<?php _e('Enter company name', 'developer-lessons'); ?>">
+                               placeholder="<?php echo esc_attr__('Enter company name', 'developer-lessons'); ?>"
+                               disabled>
                     </div>
 
                     <div class="dl-form-row dl-form-row-half">
@@ -114,13 +115,15 @@ $has_saved_invoice = !empty($saved_invoice['company_name']) && !empty($saved_inv
                             <label for="dl_invoice_street"><?php _e('Street', 'developer-lessons'); ?> <span class="required">*</span></label>
                             <input type="text" name="invoice_street" id="dl_invoice_street" 
                                    value="<?php echo esc_attr($saved_invoice['street']); ?>" 
-                                   placeholder="<?php _e('Street name', 'developer-lessons'); ?>">
+                                   placeholder="<?php echo esc_attr__('Street name', 'developer-lessons'); ?>"
+                                   disabled>
                         </div>
                         <div class="dl-form-col dl-form-col-small">
                             <label for="dl_invoice_street_number"><?php _e('Number', 'developer-lessons'); ?></label>
                             <input type="text" name="invoice_street_number" id="dl_invoice_street_number" 
                                    value="<?php echo esc_attr($saved_invoice['street_number']); ?>" 
-                                   placeholder="<?php _e('No.', 'developer-lessons'); ?>">
+                                   placeholder="<?php echo esc_attr__('No.', 'developer-lessons'); ?>"
+                                   disabled>
                         </div>
                     </div>
 
@@ -129,35 +132,40 @@ $has_saved_invoice = !empty($saved_invoice['company_name']) && !empty($saved_inv
                             <label for="dl_invoice_zip"><?php _e('ZIP Code', 'developer-lessons'); ?> <span class="required">*</span></label>
                             <input type="text" name="invoice_zip" id="dl_invoice_zip" 
                                    value="<?php echo esc_attr($saved_invoice['zip']); ?>" 
-                                   placeholder="<?php _e('ZIP', 'developer-lessons'); ?>">
+                                   placeholder="<?php echo esc_attr__('ZIP', 'developer-lessons'); ?>"
+                                   disabled>
                         </div>
                         <div class="dl-form-col">
                             <label for="dl_invoice_city"><?php _e('City', 'developer-lessons'); ?> <span class="required">*</span></label>
                             <input type="text" name="invoice_city" id="dl_invoice_city" 
                                    value="<?php echo esc_attr($saved_invoice['city']); ?>" 
-                                   placeholder="<?php _e('City', 'developer-lessons'); ?>">
+                                   placeholder="<?php echo esc_attr__('City', 'developer-lessons'); ?>"
+                                   disabled>
                         </div>
                     </div>
 
                     <div class="dl-form-row dl-form-row-half">
                         <div class="dl-form-col">
-                            <label for="dl_invoice_ic"><?php _e('Company ID (IČ)', 'developer-lessons'); ?> <span class="required">*</span></label>
+                            <label for="dl_invoice_ic"><?php _e('Company ID (IČ)', 'developer-lessons'); ?></label>
                             <input type="text" name="invoice_ic" id="dl_invoice_ic" 
                                    value="<?php echo esc_attr($saved_invoice['ic']); ?>" 
-                                   placeholder="<?php _e('e.g., 12345678', 'developer-lessons'); ?>">
+                                   placeholder="<?php echo esc_attr__('e.g., 12345678', 'developer-lessons'); ?>"
+                                   disabled>
+                            <p class="dl-field-hint"><?php _e('Optional - not required for invoicing', 'developer-lessons'); ?></p>
                         </div>
                         <div class="dl-form-col">
                             <label for="dl_invoice_dic"><?php _e('VAT ID (DIČ)', 'developer-lessons'); ?></label>
                             <input type="text" name="invoice_dic" id="dl_invoice_dic" 
                                    value="<?php echo esc_attr($saved_invoice['dic']); ?>" 
-                                   placeholder="<?php _e('e.g., CZ12345678', 'developer-lessons'); ?>">
+                                   placeholder="<?php echo esc_attr__('e.g., CZ12345678', 'developer-lessons'); ?>"
+                                   disabled>
                             <p class="dl-field-hint"><?php _e('Optional - fill in if you are a VAT payer', 'developer-lessons'); ?></p>
                         </div>
                     </div>
 
                     <div class="dl-form-row">
                         <label class="dl-checkbox-label">
-                            <input type="checkbox" name="save_invoice_to_profile" id="dl_save_invoice_to_profile" value="1" checked>
+                            <input type="checkbox" name="save_invoice_to_profile" id="dl_save_invoice_to_profile" value="1" checked disabled>
                             <span><?php _e('Save these details to my profile for future purchases', 'developer-lessons'); ?></span>
                         </label>
                     </div>

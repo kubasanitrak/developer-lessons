@@ -495,11 +495,14 @@
         toggleInvoiceFields: function(e) {
             const $checkbox = $(e.currentTarget);
             const $fields = $('.dl-invoice-fields');
+            const $inputs = $fields.find('input');
             
             if ($checkbox.is(':checked')) {
                 $fields.slideDown(200);
+                $inputs.prop('disabled', false);
             } else {
                 $fields.slideUp(200);
+                $inputs.prop('disabled', true);
             }
         },
 
@@ -529,9 +532,8 @@
                 const street = $form.find('#dl_invoice_street').val().trim();
                 const city = $form.find('#dl_invoice_city').val().trim();
                 const zip = $form.find('#dl_invoice_zip').val().trim();
-                const ic = $form.find('#dl_invoice_ic').val().trim();
 
-                if (!companyName || !street || !city || !zip || !ic) {
+                if (!companyName || !street || !city || !zip) {
                     $messages.html('<div class="dl-error">' + (dl_public.strings.invoice_required || 'Please fill in all required invoice fields.') + '</div>');
                     DeveloperLessons.scrollToElement($messages);
                     return;
@@ -545,8 +547,8 @@
             const formData = {
                 action: 'dl_process_checkout',
                 payment_method: paymentMethod,
-                agree_terms: agreeTerms,
-                want_invoice: wantInvoice,
+                agree_terms: agreeTerms ? 1 : 0,
+                want_invoice: wantInvoice ? 1 : 0,
                 nonce: dl_public.nonce
             };
 
@@ -559,7 +561,7 @@
                 formData.invoice_zip = $form.find('#dl_invoice_zip').val();
                 formData.invoice_ic = $form.find('#dl_invoice_ic').val();
                 formData.invoice_dic = $form.find('#dl_invoice_dic').val();
-                formData.save_invoice_to_profile = $form.find('#dl_save_invoice_to_profile').is(':checked');
+                formData.save_invoice_to_profile = $form.find('#dl_save_invoice_to_profile').is(':checked') ? 1 : 0;
             }
 
             $.ajax({

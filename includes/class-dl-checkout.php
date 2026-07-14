@@ -64,8 +64,8 @@ class DL_Checkout {
 
         $user_id = get_current_user_id();
         $payment_method = isset($_POST['payment_method']) ? sanitize_text_field($_POST['payment_method']) : '';
-        $agree_terms = isset($_POST['agree_terms']) ? (bool)$_POST['agree_terms'] : false;
-        $want_invoice = isset($_POST['want_invoice']) ? (bool)$_POST['want_invoice'] : false;
+        $agree_terms = filter_var($_POST['agree_terms'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $want_invoice = filter_var($_POST['want_invoice'] ?? false, FILTER_VALIDATE_BOOLEAN);
 
         // Validate payment method
         if (!in_array($payment_method, array('stripe', 'comgate', 'bank_transfer'))) {
@@ -109,12 +109,12 @@ class DL_Checkout {
 
             // Validate required invoice fields
             if (empty($invoice_data['company_name']) || empty($invoice_data['street']) || 
-                empty($invoice_data['city']) || empty($invoice_data['zip']) || empty($invoice_data['ic'])) {
+                empty($invoice_data['city']) || empty($invoice_data['zip'])) {
                 wp_send_json_error(array('message' => __('Please fill in all required invoice fields.', 'developer-lessons')));
             }
 
             // Save to user profile if requested
-            $save_to_profile = isset($_POST['save_invoice_to_profile']) ? (bool)$_POST['save_invoice_to_profile'] : false;
+            $save_to_profile = filter_var($_POST['save_invoice_to_profile'] ?? false, FILTER_VALIDATE_BOOLEAN);
             if ($save_to_profile) {
                 update_user_meta($user_id, 'dl_invoice_company_name', $invoice_data['company_name']);
                 update_user_meta($user_id, 'dl_invoice_street', $invoice_data['street']);
