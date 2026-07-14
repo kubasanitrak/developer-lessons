@@ -2,6 +2,13 @@
 
 All notable changes to Developer Lessons are documented here.
 
+## [1.2.0.27] - 2026-07-14
+
+### Changed
+
+- Invoice fields are now truly optional on checkout.
+- Empty checkout page uses padded content CSS class.
+
 ## [1.2.0.26] - 2026-06-02
 
 ### Changed
